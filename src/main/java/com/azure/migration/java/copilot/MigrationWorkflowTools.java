@@ -29,13 +29,17 @@ public class MigrationWorkflowTools {
     public String recommendTargeService() throws IOException {
         Path path2 = Paths.get("api/applications.json");
         String content = new String(Files.readAllBytes(Paths.get(reportUrl).resolve(path2)));
-        return chooseTargetServiceAgent.chooseService(content);
+        String result = chooseTargetServiceAgent.chooseService(content);
+        System.out.println(result);
+        return result;
     }
 
     @Tool("List all the resources used in the application according to the report")
     public String listResources() throws IOException {
         String content = "Technologies: \n"+ getTechnologiesSummary() + "\n\n Issues:\n" + getIssuesSummary() + "\n\n Dependencies:\n" + getDependenciesSummary();
-        return chooseTargetServiceAgent.listResources(content);
+        String result = chooseTargetServiceAgent.listResources(content);
+        System.out.println(result);
+        return result;
     }
 
     @Tool("Configure the given resource in the service")
@@ -43,7 +47,9 @@ public class MigrationWorkflowTools {
         if (service == null) {
             return "Give the service name first";
         }
-        return configureResourceAgent.configureResource(resource, service);
+        String result =  configureResourceAgent.configureResource(resource, service);
+        System.out.println(result);
+        return result;
     }
 
     @Tool({"Set the report path for analysis"})
