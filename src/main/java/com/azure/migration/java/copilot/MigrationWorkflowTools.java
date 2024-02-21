@@ -2,8 +2,6 @@ package com.azure.migration.java.copilot;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.langchain4j.agent.tool.Tool;
-import dev.langchain4j.agent.tool.ToolMemoryId;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -11,9 +9,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 @Component
 public class MigrationWorkflowTools {
@@ -23,19 +19,31 @@ public class MigrationWorkflowTools {
     private String service;
 
     @Autowired
-    private ChooseTargetServiceAgent agent;
+    private ChooseTargetServiceAgent chooseTargetServiceAgent;
+
+
+    @Autowired
+    private ConfigureResourceAgent configureResourceAgent;
 
     @Tool("Recommand the target service the application can be migrated to")
     public String recommendTargeService() throws IOException {
         Path path2 = Paths.get("api/applications.json");
         String content = new String(Files.readAllBytes(Paths.get(reportUrl).resolve(path2)));
-        return agent.chooseService(content);
+        return chooseTargetServiceAgent.chooseService(content);
     }
 
     @Tool("List all the resources used in the application according to the report")
     public String listResources() throws IOException {
         String content = "Technologies: \n"+ getTechnologiesSummary() + "\n\n Issues:\n" + getIssuesSummary() + "\n\n Dependencies:\n" + getDependenciesSummary();
-        return agent.listResources(content);
+        return chooseTargetServiceAgent.listResources(content);
+    }
+
+    @Tool("Configure the given resource in the service")
+    public String configureResources(String resource) throws IOException {
+        if (service == null) {
+            return "Give the service name first";
+        }
+        return configureResourceAgent.configureResource(resource, service);
     }
 
     @Tool({"Set the report path for analysis"})

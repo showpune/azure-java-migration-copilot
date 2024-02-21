@@ -9,6 +9,7 @@ import dev.langchain4j.service.AiServices;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
@@ -35,7 +36,7 @@ public class Agents {
             @Override
             public List<Content> retrieve(Query query) {
                 //TODO query the ms doc
-                return null;
+                return new ArrayList<>();
             }
         };
     }
