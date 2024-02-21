@@ -1,5 +1,4 @@
 package com.azure.migration.java.copilot;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
@@ -27,7 +26,7 @@ public class MigrationWorkflow {
 
     public final static String COMMAND_CONFIG_RESOURCES = "config resource:";
 
-    public String getAvaliableCommand(){
+    public String getAvaliableCommands(){
         List<String> list = new ArrayList<String>();
         list.add(COMMAND_SELECT_REPORT);
         if(reportUrl!=null){
