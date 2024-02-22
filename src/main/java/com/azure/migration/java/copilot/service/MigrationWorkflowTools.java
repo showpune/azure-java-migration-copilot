@@ -1,4 +1,4 @@
-package com.azure.migration.java.copilot;
+package com.azure.migration.java.copilot.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.langchain4j.agent.tool.Tool;
@@ -30,16 +30,14 @@ public class MigrationWorkflowTools {
         Path path2 = Paths.get("api/applications.json");
         String content = new String(Files.readAllBytes(Paths.get(reportUrl).resolve(path2)));
         String result = chooseTargetServiceAgent.chooseService(content);
-        System.out.println(result);
-        return result;
+        return "Print the result: \n"+result;
     }
 
     @Tool("List all the resources used in the application according to the report")
     public String listResources() throws IOException {
         String content = "Technologies: \n"+ getTechnologiesSummary() + "\n\n Issues:\n" + getIssuesSummary() + "\n\n Dependencies:\n" + getDependenciesSummary();
         String result = chooseTargetServiceAgent.listResources(content);
-        System.out.println(result);
-        return result;
+        return "Print the result: \n"+result;
     }
 
     @Tool("Configure the given resource in the service")
@@ -48,8 +46,7 @@ public class MigrationWorkflowTools {
             return "Give the service name first";
         }
         String result =  configureResourceAgent.configureResource(resource, service);
-        System.out.println(result);
-        return result;
+        return "Print the result: \n"+result;
     }
 
     @Tool({"Set the report path for analysis"})

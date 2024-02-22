@@ -1,4 +1,4 @@
-package com.azure.migration.java.copilot;
+package com.azure.migration.java.copilot.service;
 
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
@@ -12,7 +12,7 @@ import java.util.Scanner;
 public class MigrationCopilotApplication {
 
     @Bean
-    ApplicationRunner interactiveChatRunner(MigrationWorkflow flow, WorkflowChatAgent agent) {
+    ApplicationRunner interactiveChatRunner(WorkflowChatAgent agent) {
         return args -> {
             Scanner scanner = new Scanner(System.in);
 

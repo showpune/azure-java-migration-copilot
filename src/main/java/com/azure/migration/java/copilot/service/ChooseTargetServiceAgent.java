@@ -1,4 +1,4 @@
-package com.azure.migration.java.copilot;
+package com.azure.migration.java.copilot.service;
 
 import dev.langchain4j.service.SystemMessage;
 
@@ -19,8 +19,8 @@ public interface ChooseTargetServiceAgent {
             "You are an Azure expert, your responsibility is to help customers migrate their local Java applications to Azure cloud.\n" +
             "The services that can deploy Java applications on Azure include:\n" +
             "Customers will provide application information include technologies, dependencies and issues, please list all the resources need to be created on azure according to the input.\n" +
-                    "If the customer use local file in the application, please ask customer to create storage account and mount to the service.\n" +
-                    "Please give the detail reason why you think the application used the resources";
+                    "If the customer use local file in the application, please ask customer to create persistent storage and mount to the service.\n" +
+                    "Please give the detail reason why you think the application need to config the resources according to which information in the windup report";
     @SystemMessage({LIST_RESOURCE_PROMPT})
     public String listResources(String windupDescription);
 

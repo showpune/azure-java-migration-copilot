@@ -1,4 +1,4 @@
-package com.azure.migration.java.copilot;
+package com.azure.migration.java.copilot.service;
 
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
