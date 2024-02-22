@@ -26,27 +26,28 @@ public class MigrationWorkflowTools {
     private ConfigureResourceAgent configureResourceAgent;
 
     @Tool("Recommand the target service the application can be migrated to")
-    public String recommendTargeService() throws IOException {
+    public void recommendTargeService() throws IOException {
         Path path2 = Paths.get("api/applications.json");
         String content = new String(Files.readAllBytes(Paths.get(reportUrl).resolve(path2)));
-        String result = chooseTargetServiceAgent.chooseService(content);
-        return "Print the result: \n"+result;
+//        System.out.println("======================Migration Copilot======================");
+//        System.out.println(chooseTargetServiceAgent.chooseService(content));
+        chooseTargetServiceAgent.chooseService(content);
     }
 
     @Tool("List all the resources used in the application according to the report")
-    public String listResources() throws IOException {
+    public void listResources() throws IOException {
         String content = "Technologies: \n"+ getTechnologiesSummary() + "\n\n Issues:\n" + getIssuesSummary() + "\n\n Dependencies:\n" + getDependenciesSummary();
-        String result = chooseTargetServiceAgent.listResources(content);
-        return "Print the result: \n"+result;
+//        System.out.println("======================Migration Copilot======================");
+//        System.out.println(chooseTargetServiceAgent.listResources(content));
+        chooseTargetServiceAgent.listResources(content);
+
     }
 
     @Tool("Configure the given resource in the service")
-    public String configureResources(String resource) throws IOException {
-        if (service == null) {
-            return "Give the service name first";
-        }
-        String result =  configureResourceAgent.configureResource(resource, service);
-        return "Print the result: \n"+result;
+    public void configureResources(String resource) throws IOException {
+//        System.out.println("======================Migration Copilot======================");
+//        System.out.println(configureResourceAgent.configureResource(resource, service));
+        configureResourceAgent.configureResource(resource, service);
     }
 
     @Tool({"Set the report path for analysis"})
