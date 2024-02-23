@@ -1,6 +1,5 @@
 package com.azure.migration.java.copilot.service;
 
-import com.azure.core.credential.AzureKeyCredential;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
@@ -21,8 +20,8 @@ import java.io.IOException;
 public class Configure {
 
     @Bean
-    ChooseTargetServiceAgent chooseTargetServiceAgent(ChatLanguageModel chatLanguageModel) {
-        return AiServices.builder(ChooseTargetServiceAgent.class)
+    ServiceAnalysisAgent chooseServiceAnalysisAgent(ChatLanguageModel chatLanguageModel) {
+        return AiServices.builder(ServiceAnalysisAgent.class)
                 .chatLanguageModel(chatLanguageModel)
                 .build();
     }
@@ -35,19 +34,8 @@ public class Configure {
                 .build();
     }
 
-//    @Bean
-//    ContentRetriever contentRetriever(){
-//        return new ContentRetriever() {
-//            @Override
-//            public List<Content> retrieve(Query query) {
-//                //TODO query the ms doc
-//                return new ArrayList<>();
-//            }
-//        };
-//    }
-
     @Bean
-    WorkflowChatAgent configureChatAgent(ChatLanguageModel chatLanguageModel, ContentRetriever contentRetriever, MigrationWorkflowTools migrationWorkflowTools) {
+    WorkflowChatAgent configureWorkflowChatAgent(ChatLanguageModel chatLanguageModel, ContentRetriever contentRetriever, MigrationWorkflowTools migrationWorkflowTools) {
         return AiServices.builder(WorkflowChatAgent.class)
                 .chatLanguageModel(chatLanguageModel)
                 .tools(migrationWorkflowTools)

@@ -16,6 +16,8 @@ public class MigrationCopilotApplication {
         return args -> {
             Scanner scanner = new Scanner(System.in);
 
+            System.out.println("======================Migration Copilot======================:\n"+agent.chat("migration"));
+
             while (true) {
                 try {
                     System.out.print("User:");

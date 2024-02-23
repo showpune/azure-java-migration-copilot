@@ -2,7 +2,7 @@ package com.azure.migration.java.copilot.service;
 
 import dev.langchain4j.service.SystemMessage;
 
-public interface ChooseTargetServiceAgent {
+public interface ServiceAnalysisAgent {
 
     final static String CHOOSE_SERVICE_PROMPT=
             "You are an Azure expert, your responsibility is to help customers migrate their local Java applications to Azure cloud.\n" +
@@ -26,6 +26,13 @@ public interface ChooseTargetServiceAgent {
                     "Please give the detail reason why you think the application need to config the resources according to which information in the windup report";
     @SystemMessage({LIST_RESOURCE_PROMPT})
     public String listResources(String windupDescription);
+
+    final static String OTHER_QUESTION_PROMPT=
+            "You are an Azure expert, your responsibility is to help customers migrate their local Java applications to Azure cloud.\n" +
+                    "The services that can deploy Java applications on Azure include:\n" +
+                    "Customers will provide application information include technologies, dependencies and issues to migration and you will answer question according to customer input \n";
+    @SystemMessage({OTHER_QUESTION_PROMPT})
+    public String chat(String windupDescription);
 
 
 }

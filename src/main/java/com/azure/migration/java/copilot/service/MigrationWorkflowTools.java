@@ -19,35 +19,52 @@ public class MigrationWorkflowTools {
     private String service;
 
     @Autowired
-    private ChooseTargetServiceAgent chooseTargetServiceAgent;
-
+    private ServiceAnalysisAgent serviceAnalysisAgent;
 
     @Autowired
     private ConfigureResourceAgent configureResourceAgent;
 
     @Tool("Recommand the target service the application can be migrated to")
-    public void recommendTargeService() throws IOException {
+    public String recommendTargeService() throws IOException {
+        if (reportUrl == null) {
+            return "please give the report path first";
+        }
         Path path2 = Paths.get("api/applications.json");
         String content = new String(Files.readAllBytes(Paths.get(reportUrl).resolve(path2)));
-//        System.out.println("======================Migration Copilot======================");
-//        System.out.println(chooseTargetServiceAgent.chooseService(content));
-        chooseTargetServiceAgent.chooseService(content);
+        System.out.println("======================Migration Copilot of Report Analysis======================:\n"+serviceAnalysisAgent.chooseService(content));
+        return "Success";
     }
 
     @Tool("List all the resources used in the application according to the report")
-    public void listResources() throws IOException {
+    public String listResources() throws IOException {
+        if (reportUrl == null) {
+            return "please give the report url first";
+        }
         String content = "Technologies: \n"+ getTechnologiesSummary() + "\n\n Issues:\n" + getIssuesSummary() + "\n\n Dependencies:\n" + getDependenciesSummary();
-//        System.out.println("======================Migration Copilot======================");
-//        System.out.println(chooseTargetServiceAgent.listResources(content));
-        chooseTargetServiceAgent.listResources(content);
+        System.out.println("======================Migration Copilot of Report Analysis======================:\n"+serviceAnalysisAgent.listResources(content));
+        return "Success";
+    }
 
+    @Tool("Answer other question about the about report")
+    public String otherQuestion(String question) throws IOException {
+        if (reportUrl == null) {
+            return "please give the report url first";
+        }
+        String content = "Technologies: \n" + getTechnologiesSummary() + "\n\n Issues:\n" + getIssuesSummary() + "\n\n Dependencies:\n" + getDependenciesSummary();
+        System.out.println("======================Migration Copilot of Report Analysis======================:\n"+serviceAnalysisAgent.chat(content));
+        return "Success";
     }
 
     @Tool("Configure the given resource in the service")
-    public void configureResources(String resource) throws IOException {
-//        System.out.println("======================Migration Copilot======================");
-//        System.out.println(configureResourceAgent.configureResource(resource, service));
-        configureResourceAgent.configureResource(resource, service);
+    public String configureResources(String resource, String service) throws IOException {
+        if (service != null) {
+            this.service = service;
+        }
+        if (this.service  == null) {
+            return "please give the set the service first";
+        }
+        System.out.println("======================Migration Copilot of Configure Resource======================:\n"+configureResourceAgent.configureResource(resource, this.service));
+        return "Success";
     }
 
     @Tool({"Set the report path for analysis"})
