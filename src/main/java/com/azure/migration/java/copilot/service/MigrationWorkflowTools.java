@@ -19,7 +19,10 @@ public class MigrationWorkflowTools {
     private String service;
 
     @Autowired
-    private ServiceAnalysisAgent serviceAnalysisAgent;
+    private RecommendServiceAgent recommendServiceAgent;
+
+    @Autowired
+    private ListResourceAgent listResourceAgent;
 
     @Autowired
     private ConfigureResourceAgent configureResourceAgent;
@@ -29,30 +32,23 @@ public class MigrationWorkflowTools {
         if (reportUrl == null) {
             return "please give the report path first";
         }
-        Path path2 = Paths.get("api/applications.json");
+        Path path2 = Paths.get("api/technologies.json");
         String content = new String(Files.readAllBytes(Paths.get(reportUrl).resolve(path2)));
-        System.out.println("======================Migration Copilot of Report Analysis======================:\n"+serviceAnalysisAgent.chooseService(content));
-        return "Success";
+        String recommendResult = recommendServiceAgent.chooseService(content);
+        System.out.println("======================Migration Copilot of Report Analysis======================:\n"+recommendResult);
+        return "PLEASE NOTICE THAT USER ALREADY HAVE GOT SERVICE RECOMMENDATION.";
     }
 
     @Tool("List all the resources used in the application according to the report")
     public String listResources() throws IOException {
         if (reportUrl == null) {
-            return "please give the report url first";
+            return "please give the report path first";
         }
-        String content = "Technologies: \n"+ getTechnologiesSummary() + "\n\n Issues:\n" + getIssuesSummary() + "\n\n Dependencies:\n" + getDependenciesSummary();
-        System.out.println("======================Migration Copilot of Report Analysis======================:\n"+serviceAnalysisAgent.listResources(content));
-        return "Success";
-    }
-
-    @Tool("Answer other question about the about report")
-    public String otherQuestion(String question) throws IOException {
-        if (reportUrl == null) {
-            return "please give the report url first";
-        }
-        String content = "Technologies: \n" + getTechnologiesSummary() + "\n\n Issues:\n" + getIssuesSummary() + "\n\n Dependencies:\n" + getDependenciesSummary();
-        System.out.println("======================Migration Copilot of Report Analysis======================:\n"+serviceAnalysisAgent.chat(content));
-        return "Success";
+        String content = getIssuesSummary();
+        String listResourceResult = listResourceAgent.listResources(content);
+        System.out.println("======================Migration Copilot of Report Analysis======================:\n"+listResourceResult);
+//        return "Resource list information: "+listResourceResult;
+        return "PLEASE NOTICE THAT USER ALREADY HAVE GOT RESOURCE LIST.";
     }
 
     @Tool("Configure the given resource in the service")
@@ -61,10 +57,10 @@ public class MigrationWorkflowTools {
             this.service = service;
         }
         if (this.service  == null) {
-            return "please give the set the service first";
+            return "please set target service first";
         }
         System.out.println("======================Migration Copilot of Configure Resource======================:\n"+configureResourceAgent.configureResource(resource, this.service));
-        return "Success";
+        return "Successfully suggested on how to configure the resource. Please input next step.";
     }
 
     @Tool({"Set the report path for analysis"})
@@ -107,7 +103,10 @@ public class MigrationWorkflowTools {
             String typeName = it.next();
             JsonNode typeNode = issuesNode.get(typeName);
             for (JsonNode detailNode : typeNode) {
-                issues.append(typeName+" -> "+detailNode.get("name")+"\n");
+//                String issueMessage = detailNode.get("affectedFiles").get(0).get("description").toString();
+                String issueMessage = detailNode.get("name").toString();
+//                if (issueMessage.contains("Azure "))
+                    issues.append(typeName+" -> "+issueMessage+"\n");
             }
         }
         return issues.toString();

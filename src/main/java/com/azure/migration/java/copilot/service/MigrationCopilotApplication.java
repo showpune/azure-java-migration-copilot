@@ -26,6 +26,8 @@ public class MigrationCopilotApplication {
                     if ("exit".equalsIgnoreCase(userMessage)) {
                         break;
                     } else {
+                        //String message = agent.chat(userMessage);
+//                        if (agent.)
                         String message = agent.chat(userMessage);
                         System.out.println("======================Migration Copilot======================:\n"+message);
                     }
