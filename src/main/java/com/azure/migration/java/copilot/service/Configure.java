@@ -9,11 +9,8 @@ import dev.langchain4j.rag.content.retriever.ContentRetriever;
 import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.store.embedding.EmbeddingStore;
-import dev.langchain4j.store.embedding.azure.search.AzureAiSearchEmbeddingStore;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.io.IOException;
 
 
 @Configuration
@@ -60,15 +57,6 @@ public class Configure {
                 .build();
     }
 
-    @Bean
-    AzureAiSearchEmbeddingStore azureAiSearchEmbeddingStore() throws IOException {
-        return AzureAiSearchEmbeddingStore.builder()
-                .endpoint(System.getenv("langchain4j.azure.ai-search.endpoint"))
-                .apiKey(System.getenv("langchain4j.azure.ai-search.api-key"))
-                .dimensions(Integer.parseInt(System.getenv("langchain4j.azure.ai-search.dimensions")))
-                .setupIndex(Boolean.parseBoolean(System.getenv("langchain4j.azure.ai-search.setup-index")))
-                .build();
-    }
 
     @Bean
     EmbeddingModel embeddingModel() {

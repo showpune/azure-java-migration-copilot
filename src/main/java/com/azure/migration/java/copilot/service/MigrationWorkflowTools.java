@@ -31,7 +31,7 @@ public class MigrationWorkflowTools {
         }
         Path path2 = Paths.get("api/applications.json");
         String content = new String(Files.readAllBytes(Paths.get(reportUrl).resolve(path2)));
-        System.out.println("======================Migration Copilot of Report Analysis======================:\n"+serviceAnalysisAgent.chooseService(content));
+        //  System.out.println("======================Migration Copilot of Report Analysis======================:\n"+serviceAnalysisAgent.chooseService(content));
         return "Success";
     }
 
