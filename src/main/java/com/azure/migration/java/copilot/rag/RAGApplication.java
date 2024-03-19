@@ -1,20 +1,17 @@
 package com.azure.migration.java.copilot.rag;
 
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import java.util.Scanner;
 
-import static dev.langchain4j.data.document.loader.FileSystemDocumentLoader.loadDocument;
-
 @SpringBootApplication
 public class RAGApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(RAGApplication.class, args);
-    }
+//    public static void main(String[] args) {
+//        SpringApplication.run(RAGApplication.class, args);
+//    }
 
     @Bean
     ApplicationRunner interactiveChatRunner(LocalFileToAISearchRAG ingest) {
