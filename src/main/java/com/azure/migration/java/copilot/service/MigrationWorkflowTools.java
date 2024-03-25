@@ -36,7 +36,8 @@ public class MigrationWorkflowTools {
         String content = new String(Files.readAllBytes(Paths.get(reportUrl).resolve(path2)));
         String recommendResult = recommendServiceAgent.chooseService(content);
         System.out.println("======================Migration Copilot of Report Analysis======================:\n"+recommendResult);
-        return "PLEASE NOTICE THAT USER ALREADY HAVE GOT SERVICE RECOMMENDATION.";
+        String number1service = recommendServiceAgent.number1(recommendResult);
+        return number1service+ "Please go to next step.";
     }
 
     @Tool("List all the resources used in the application according to the report")
@@ -47,8 +48,8 @@ public class MigrationWorkflowTools {
         String content = getIssuesSummary();
         String listResourceResult = listResourceAgent.listResources(content);
         System.out.println("======================Migration Copilot of Report Analysis======================:\n"+listResourceResult);
-//        return "Resource list information: "+listResourceResult;
-        return "PLEASE NOTICE THAT USER ALREADY HAVE GOT RESOURCE LIST.";
+        String summary = listResourceAgent.summarizeResources(listResourceResult);
+        return summary+ "Please go to next step.";
     }
 
     @Tool("Configure the given resource in the service")

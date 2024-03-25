@@ -1,6 +1,8 @@
 package com.azure.migration.java.copilot.service;
 
 import dev.langchain4j.service.SystemMessage;
+import dev.langchain4j.service.UserMessage;
+import dev.langchain4j.service.V;
 
 public interface RecommendServiceAgent {
 
@@ -11,6 +13,9 @@ public interface RecommendServiceAgent {
 
     @SystemMessage({CHOOSE_SERVICE_PROMPT})
     public String chooseService(String windupDescription);
+
+    @UserMessage({ "Please tell me the most recommended service.\n {{recommendResult}}"})
+    public String number1(@V("recommendResult") String recommendResult);
 
 
 }

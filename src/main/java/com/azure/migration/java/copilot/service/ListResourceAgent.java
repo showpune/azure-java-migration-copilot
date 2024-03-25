@@ -1,6 +1,8 @@
 package com.azure.migration.java.copilot.service;
 
 import dev.langchain4j.service.SystemMessage;
+import dev.langchain4j.service.UserMessage;
+import dev.langchain4j.service.V;
 
 public interface ListResourceAgent {
     final static String LIST_RESOURCE_PROMPT=
@@ -16,5 +18,8 @@ public interface ListResourceAgent {
 
     @SystemMessage({LIST_RESOURCE_PROMPT})
     public String listResources(String windupDescription);
+
+    @UserMessage({ "Please summarize what resources are used use concise words:\n {{resourceList}}"})
+    public String summarizeResources(@V("resourceList") String resourceList);
 
 }
