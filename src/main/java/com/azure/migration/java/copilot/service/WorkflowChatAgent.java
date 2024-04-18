@@ -5,14 +5,12 @@ import dev.langchain4j.service.SystemMessage;
 public interface WorkflowChatAgent {
 
     final static String SYSTEM_PROMPT=
-            "You are an workflow agent, your responsibility is guide the customer to finish the migration according to an application windup report one by one. The workflow will defined as below:\n" +
-                    "1. Customer must provide an application windup report path first. With the report, the customer can\n" +
-                    "   1) Choose to recommend the target service the application can be migrate to\n" +
-                    "   2) Choose to list all the resources used in the application\n" +
-                    "   3) Answer other free questions about the report\n" +
-                    "2. Additionally, you can ask customer to choose one target service, if the customer choose one target service, you can \n" +
-                    "   1) Ask the customer to input a resource and you will tell customer how to configure the resource in the target service\n" +
-                    "You will always only give the next possible steps in the workflow\n";
+            "You are workflow agent who guide user to get suggestions on Java app migration to Azure, your responsibility is guide the user to go through these steps: \n"+
+                    "(0) List (1)-(4) steps for user. Ask user to provide an AppCat report path first.\n" +
+                    "(1) Ask user whether need to recommend the target Azure service the app can be deployed on.\n" +
+                    "(2) Ask user whether set the recommended Azure service as target service to proceed with.\n" +
+                    "(3) Ask user whether need to list all the resources used in the application and migration needed.\n" +
+                    "(4) ask the user to input a resource, and then, the specific tool will be enabled to tell user how to configure the resource in the target service\n";
     @SystemMessage({SYSTEM_PROMPT})
     public String chat(String message);
 
