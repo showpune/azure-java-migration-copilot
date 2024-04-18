@@ -37,7 +37,7 @@ public class MigrationWorkflowTools {
         String recommendResult = recommendServiceAgent.chooseService(content);
         System.out.println("======================Migration Copilot of Report Analysis======================:\n"+recommendResult);
         String number1service = recommendServiceAgent.number1(recommendResult);
-        return number1service+ "Please go to next step.";
+        return number1service;
     }
 
     @Tool("List all the resources used in the application according to the report")
@@ -48,8 +48,8 @@ public class MigrationWorkflowTools {
         String content = getIssuesSummary();
         String listResourceResult = listResourceAgent.listResources(content);
         System.out.println("======================Migration Copilot of Report Analysis======================:\n"+listResourceResult);
-        String summary = listResourceAgent.summarizeResources(listResourceResult);
-        return summary+ "Please go to next step.";
+//        String summary = listResourceAgent.summarizeResources(listResourceResult);
+        return "Step(3) completed. Go to step (4)!!";
     }
 
     @Tool("Configure the given resource in the service")
@@ -61,7 +61,7 @@ public class MigrationWorkflowTools {
             return "please set target service first";
         }
         System.out.println("======================Migration Copilot of Configure Resource======================:\n"+configureResourceAgent.configureResource(resource, this.service));
-        return "Successfully suggested on how to configure the resource. Please input next step.";
+        return "Step(4) completed. Ask user whether need to configure another resource in the target service";
     }
 
     @Tool({"Set the report path for analysis"})
