@@ -1,6 +1,7 @@
 package com.azure.migration.java.copilot.rag;
 
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
@@ -25,10 +26,10 @@ public class RAGApplication {
 
                     if ("exit".equalsIgnoreCase(userMessage)) {
                         break;
-                    }else if (userMessage.startsWith("ingest ")) {
-                        ingest.ingest(userMessage.replaceAll("ingest ",""));
+                    } else if (userMessage.startsWith("ingest ")) {
+                        ingest.ingest(userMessage.replaceAll("ingest ", ""));
                     }
-                }catch(Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }

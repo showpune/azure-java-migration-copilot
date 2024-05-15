@@ -1,22 +1,27 @@
-package com.azure.migration.java.copilot.rag;
+package com.azure.migration.java.copilot.service;
 
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import java.util.Scanner;
 
+
 @SpringBootApplication
-public class RAGApplication {
+public class MigrationCopilotApplication {
+
 
     public static void main(String[] args) {
-        SpringApplication.run(RAGApplication.class, args);
+        SpringApplication.run(MigrationCopilotApplication.class, args);
     }
 
     @Bean
-    ApplicationRunner interactiveChatRunner(LocalFileToAISearchRAG ingest) {
+    ApplicationRunner interactiveChatRunner(WorkflowChatAgent agent) {
         return args -> {
             Scanner scanner = new Scanner(System.in);
+
+            System.out.println("======================Migration Copilot======================:\n" + agent.chat("migration"));
 
             while (true) {
                 try {
@@ -25,10 +30,11 @@ public class RAGApplication {
 
                     if ("exit".equalsIgnoreCase(userMessage)) {
                         break;
-                    }else if (userMessage.startsWith("ingest ")) {
-                        ingest.ingest(userMessage.replaceAll("ingest ",""));
+                    } else {
+                        String message = agent.chat(userMessage);
+                        System.out.println("======================Migration Copilot======================:\n" + message);
                     }
-                }catch(Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -36,6 +42,5 @@ public class RAGApplication {
             scanner.close();
         };
     }
-
 
 }
