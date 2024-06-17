@@ -31,7 +31,7 @@ public interface ServiceAnalysisAgent {
     public String chooseService(String windupDescription);
 
     @SystemMessage({LIST_RESOURCE_PROMPT})
-    public String listResources(@V("description") String windupDescription);
+    public String listResources(String windupDescription);
 
     @SystemMessage({OTHER_QUESTION_PROMPT})
     public String chat(String windupDescription);
