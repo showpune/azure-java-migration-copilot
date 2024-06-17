@@ -1,10 +1,7 @@
-langchain4j.azure.open-ai.chat-model.endpoint=
-langchain4j.azure.open-ai.chat-model.api-key=
-langchain4j.azure.open-ai.chat-model.deployment-name=
-langchain4j.azure.ai-search.endpoint=
-langchain4j.azure.ai-search.api-key=
-langchain4j.azure.ai-search.setup-index=false
+langchain4j.azure.ai-search.endpoint=*
+langchain4j.azure.ai-search.api-key=*
 langchain4j.azure.ai-search.dimensions=384
+langchain4j.azure.ai-search.create-or-update-index=true
 logging.level.dev.langchain4j=INFO
 logging.level.dev.ai4j.openai4j=INFO
 
