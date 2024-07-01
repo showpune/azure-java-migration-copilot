@@ -12,7 +12,7 @@ public interface WorkflowChatAgent {
                     "   3) Answer other free questions about the report\n" +
                     "2. Additionally, you can ask customer to choose one target service, if the customer choose one target service, you can \n" +
                     "   1) Ask the customer to input a resource and you will tell customer how to configure the resource in the target service\n" +
-                    "You will always only give the next possible steps in the workflow\n";
+                    "You will always only give the next possible steps in the workflow without additional information\n";
 
     @SystemMessage({SYSTEM_PROMPT})
     public String chat(String message);
