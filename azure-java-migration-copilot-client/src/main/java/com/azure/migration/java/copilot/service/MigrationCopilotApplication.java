@@ -31,12 +31,7 @@ public class MigrationCopilotApplication {
 
             boolean force=false;
             if (args.containsOption("force")) {
-                try {
-                    force = Boolean.parseBoolean(args.getOptionValues("force").get(0));
-                }catch (Exception e){
-                    System.out.println("The force option should be a boolean value.");
-                    return;
-                }
+                    force = true;
             }
 
             File sourcePath = new File(sourcePathString);
@@ -53,6 +48,10 @@ public class MigrationCopilotApplication {
             }
 
             System.out.println("The application has been scanned successfully. The report is saved at " + scanResult);
+
+            if (scanResult != null) {
+                return;
+            }
 
 
             Scanner scanner = new Scanner(System.in);

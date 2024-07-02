@@ -62,6 +62,7 @@ public class DetectTools {
                 + "--batchMode --overwrite";
         if (isAppcatExists) {
             System.out.println("Scanning the application use AppCat and set the report at " + reportUrl + " ...");
+            System.out.println("Execute command to analysis the code" + command + " ...");
             Process process = getCommand(command).start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line;
