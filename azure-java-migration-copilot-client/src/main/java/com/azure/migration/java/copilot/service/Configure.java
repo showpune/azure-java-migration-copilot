@@ -10,6 +10,9 @@ import dev.langchain4j.rag.content.retriever.ContentRetriever;
 import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.store.embedding.EmbeddingStore;
+import org.beryx.textio.TextIO;
+import org.beryx.textio.TextIoFactory;
+import org.beryx.textio.TextTerminal;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -46,4 +49,13 @@ public class Configure {
         return new AllMiniLmL6V2EmbeddingModel();
     }
 
+    @Bean
+    TextTerminal<?> textTerminal() {
+        return TextIoFactory.getTextTerminal();
+    }
+
+    @Bean
+    TextIO textIO() {
+        return TextIoFactory.getTextIO();
+    }
 }

@@ -8,3 +8,5 @@ langchain4j.azure-open-ai.chat-model.api-key=*
 langchain4j.azure-open-ai.chat-model.deployment-name=gpt-4
 logging.level.dev.langchain4j=INFO
 logging.level.dev.ai4j.openai4j=INFO
+copilot.appcat-home=~/appcat
+copilot.openrewrite-home=~/openrewrite
