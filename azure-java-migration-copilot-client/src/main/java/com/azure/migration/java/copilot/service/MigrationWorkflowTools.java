@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.langchain4j.agent.tool.Tool;
 import dev.langchain4j.internal.Json;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -22,7 +21,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 @Component
 public class MigrationWorkflowTools {
@@ -40,12 +38,11 @@ public class MigrationWorkflowTools {
     private String mavenHome;
 
     private final String[] DEFAULT_TARGET_SERVICE = new String[]{
-            "azure-spring-apps",
-            "azure-aks",
-            "openjdk17",
-            "cloud-readiness",
-            "linux"
+            "azure-spring-apps"
     };
+
+    @Autowired
+    private LocalCommandTools localCommandTools;
 
     private final String[] DEFAULT_AZURE_RECIPES = new String[] {
             "com.azure.spring.migration.UpgradeToAzureSpringApps",
@@ -128,24 +125,9 @@ public class MigrationWorkflowTools {
             commands.add("--target");
             commands.add(target);
         }
-
-        Process proc = rt.exec(commands.toArray(new String[]{}));
-
-        BufferedReader stdInput = new BufferedReader(new
-                InputStreamReader(proc.getInputStream()));
-
-        BufferedReader stdError = new BufferedReader(new
-                InputStreamReader(proc.getErrorStream()));
-
-        String s = null;
-        while ((s = stdInput.readLine()) != null) {
-            out.accept(s);
+        if (localCommandTools.executeCommand(out, commands)) {
+            out.accept("Generated AppCat report under: " + reportUrl);
         }
-
-        while ((s = stdError.readLine()) != null) {
-            out.accept(s);
-        }
-        out.accept("Generated AppCat report under: " + reportUrl);
     }
 
     public void upgradeCodeForMavenProject() throws IOException {
