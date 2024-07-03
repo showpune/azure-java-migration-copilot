@@ -10,9 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -21,6 +20,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @Component
 public class MigrationWorkflowTools {
@@ -75,9 +75,8 @@ public class MigrationWorkflowTools {
         if (reportUrl == null) {
             throw new IllegalArgumentException("reportUrl cannot be null");
         }
-        String content = "Technologies: \n" + getTechnologiesSummary() + "\n\n Issues:\n" + getIssuesSummary() + "\n\n Dependencies:\n" + getDependenciesSummary();
+        String content = "Technologies: \n" + getTechnologiesSummary() + "\n\n Issues:\n" + getIssuesSummary() + "\n\n Dependencies:\n" + getDependenciesSummary()+ "\n\n Application Properties:\n" + getApplicationProperties();
         String response = serviceAnalysisAgent.listResources(content);
-        System.out.println(response);
         return Json.fromJson(response, Resources.class);
     }
 
@@ -110,7 +109,6 @@ public class MigrationWorkflowTools {
 
     @Tool({"Scan the code with AppCat"})
     public void scanCodeWithAppCat() throws IOException {
-        Runtime rt = Runtime.getRuntime();
         this.reportUrl = Files.createTempDirectory("report-assessment").toFile().getAbsolutePath();
         out.accept("Start to generate AppCat report, please wait for a few minutes and DO NOT close this window");
         Path cmdPath = Path.of(appCatHome, "/bin", "/appcat");
@@ -131,7 +129,6 @@ public class MigrationWorkflowTools {
     }
 
     public void upgradeCodeForMavenProject() throws IOException {
-        Runtime rt = Runtime.getRuntime();
         String pomFile = Path.of(this.sourceLocation, "pom.xml").toFile().getAbsolutePath();
         out.accept("Begin to upgrade source code with OpenRewrite recipes, please wait for a few minutes and DO NOT close this window");
         Path cmdPath = Path.of(mavenHome, "/bin", "/mvn");
@@ -146,24 +143,10 @@ public class MigrationWorkflowTools {
                 "-Drewrite.activeRecipes=" + String.join(",", DEFAULT_AZURE_RECIPES),
                 "-Drewrite.recipeArtifactCoordinates=" + DEFAULT_AZURE_COORDINATES
         };
-        Process proc = rt.exec(commands);
 
-        BufferedReader stdInput = new BufferedReader(new
-                InputStreamReader(proc.getInputStream()));
-
-        BufferedReader stdError = new BufferedReader(new
-                InputStreamReader(proc.getErrorStream()));
-
-        String s = null;
-        while ((s = stdInput.readLine()) != null) {
-            out.accept(s);
+        if (localCommandTools.executeCommand(out, Arrays.asList(commands))) {
+            out.accept("Code has been upgraded, please use `git status` to check modified files first then commit");
         }
-
-        while ((s = stdError.readLine()) != null) {
-            out.accept(s);
-        }
-
-        out.accept("Code has been upgraded, please use `git status` to check modified files first then commit");
     }
 
     @Tool({"Set the service name"})
@@ -211,4 +194,18 @@ public class MigrationWorkflowTools {
         return issues.toString();
     }
 
+    public String getApplicationProperties() {
+        Path dir = Path.of(sourceLocation, "src/main/resources");
+        File[] files = dir.toFile().listFiles((base, name) -> name.startsWith("application") && (name.endsWith(".properties") || name.endsWith(".yaml") || name.endsWith("yml")));
+        if (files == null) {
+            return "";
+        }
+        return Arrays.stream(files).map(f -> {
+            try {
+                return Files.readString(Path.of(f.getAbsolutePath()));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }).collect(Collectors.joining("\n"));
+    }
 }

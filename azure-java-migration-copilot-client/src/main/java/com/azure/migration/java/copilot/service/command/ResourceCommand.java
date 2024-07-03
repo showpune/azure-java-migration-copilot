@@ -3,12 +3,12 @@ package com.azure.migration.java.copilot.service.command;
 import com.azure.migration.java.copilot.service.MigrationWorkflowTools;
 import com.azure.migration.java.copilot.service.model.Resources;
 import org.beryx.textio.TextIO;
-import org.beryx.textio.TextIoFactory;
+import org.beryx.textio.TextTerminal;
+import org.fusesource.jansi.Ansi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.function.Consumer;
 
 @Component
 public class ResourceCommand implements MigrationCommand {
@@ -19,17 +19,22 @@ public class ResourceCommand implements MigrationCommand {
     @Autowired
     private TextIO textIO;
 
+    @Autowired
+    private TextTerminal<?> terminal;
+
     @Override
-    public void execute(Consumer<String> out) {
+    public void execute(String commandText) {
         Resources resources = null;
         try {
             resources = tools.listResources();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            terminal.println(Ansi.ansi().fg(Ansi.Color.RED).a("Failed to detect resource usage, error: " + e.getMessage()).reset().toString());
+            return;
         }
+
         String selectedItem = textIO.newStringInputReader().
                 withNumberedPossibleValues(resources.formatToList(true)).
-                read("\nPlease select the resource you want to configure");
+                read("Please select the resource you want to configure");
 
         System.out.println(selectedItem);
         //TODO

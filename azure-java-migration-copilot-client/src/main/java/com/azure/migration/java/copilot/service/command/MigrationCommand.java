@@ -1,28 +1,32 @@
 package com.azure.migration.java.copilot.service.command;
 
 import com.azure.migration.java.copilot.service.ApplicationContextUtils;
-import com.azure.migration.java.copilot.service.model.Resources;
 
-import java.util.function.Consumer;
+import java.util.Arrays;
+import java.util.Optional;
 
 public interface MigrationCommand {
 
-    static MigrationCommand of(String commandText) {
+    static Optional<MigrationCommand> of(String commandText) {
         MigrationCommand command = switch (determineCommand(commandText)) {
+            case "help" -> new HelpCommand();
             case "resource:", "resource" -> new ResourceCommand();
             case "code:", "code" -> new CodeCommand();
             case "generate:", "generate" -> new GenerateCommand();
-            default -> throw new IllegalArgumentException("Unrecognized command " + commandText);
+            default -> null;
         };
 
-        return ApplicationContextUtils.autowire(command);
+        if (command == null) {
+            return Optional.empty();
+        }
+        return Optional.of(ApplicationContextUtils.autowire(command));
     }
 
     static String[] availableCommands() {
         return new String[]{
-                "resource: Detect resource usage (including database, file system, environment variables, etc.)",
-                "code: Code Migration",
-                "generate: Generate script"
+                "resource: detect resource usage (including database, file system, environment variables, etc.)",
+                "code: code upgrade by OpenRewrite recipes",
+                "generate: generate script to build and deploy"
         };
     }
 
@@ -34,5 +38,13 @@ public interface MigrationCommand {
         return splits[0];
     }
 
-    void execute(Consumer<String> out);
+    static String restOfCommand(String text) {
+        String[] splits = text.split(" ");
+        if (splits.length == 0) {
+            return "";
+        }
+        return String.join(" ", Arrays.copyOfRange(splits, 1, splits.length));
+    }
+
+    void execute(String commandText);
 }

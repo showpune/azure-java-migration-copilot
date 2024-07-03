@@ -5,15 +5,15 @@ import lombok.Data;
 @Data
 public class Resource {
 
-    private String type;
+    private String category;
 
-    private String resource;
+    private String[] names;
 
-    private String recommendation;
+    private String reason;
 
     private boolean used;
 
     public String format() {
-        return String.join(" ", "[" + type + "]", resource, "recommendation:", recommendation);
+        return String.format("[%s] %s\n%s", category, String.join(", ", names), reason);
     }
 }

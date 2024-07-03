@@ -1,7 +1,6 @@
 package com.azure.migration.java.copilot.service.model;
 
 import lombok.Data;
-import org.apache.logging.log4j.util.Strings;
 
 import java.util.List;
 
