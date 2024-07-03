@@ -27,7 +27,7 @@ public class ResourceCommand implements MigrationCommand {
         Resources resources = null;
         try {
             resources = tools.listResources();
-        } catch (IOException e) {
+        } catch (Exception e) {
             terminal.println(Ansi.ansi().fg(Ansi.Color.RED).a("Failed to detect resource usage, error: " + e.getMessage()).reset().toString());
             return;
         }

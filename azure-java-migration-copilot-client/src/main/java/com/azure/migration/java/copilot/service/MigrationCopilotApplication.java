@@ -23,22 +23,11 @@ public class MigrationCopilotApplication {
     }
 
     @Bean
-    ApplicationRunner interactiveChatRunner(TextTerminal<?> terminal, TextIO textIO, MigrationWorkflowTools tools) {
+    ApplicationRunner interactiveChatRunner(TextTerminal<?> terminal, TextIO textIO, MigrationWorkflowTools tools, MigrationContext migrationContext) {
         return args -> {
             AnsiConsole.systemInstall();
-            tools.setOut(terminal::println);
 
-            terminal.println("I‘m your migration assistant. Could you please provide me with the location of your source code?");
-
-            String sourceCodeLocation = textIO.
-                    newStringInputReader().
-                    withDefaultValue(System.getProperty("user.dir")).
-                    read(">");
-
-            tools.setSourceLocation(sourceCodeLocation);
-
-            tools.scanCodeWithAppCat();
-            //TODO: detect cloud foundry manifest
+            migrationContext.init(args);
 
             RecommendedServices services = tools.recommendTargetService();
 

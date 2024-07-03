@@ -7,7 +7,7 @@ public class Resource {
 
     private String category;
 
-    private String[] names;
+    private String[] names = new String[]{};
 
     private String reason;
 
