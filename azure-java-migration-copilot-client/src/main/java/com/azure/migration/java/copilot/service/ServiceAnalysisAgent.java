@@ -13,7 +13,8 @@ public interface ServiceAnalysisAgent {
                     "If the Application is a Spring Apps, we will recommend customer to deploy the application into Azure Container Apps\n" +
                     "2) Azure Kubernetes Service: The most basic service deployment\n" +
             "Customers will provide a detail analysis report based on windup, which will give the application details, please recommend Azure services above that customers can deploy into.\n" +
-            "Please give the detail reason why you recommend the service and don't return plain text, always return content in JSON format with {type: object, properties: {recommendations: {type: array, properties: {index: {type: string}, service: {type: string}, reason: {type: string}, rating: {type: string, description: 'rating in five stars'}}}}}";
+            "Please give the detail reason why you recommend the service and don't return plain text, always return content in JSON format with {type: object, properties: {recommendations: {type: array, properties: {index: {type: string}, service: {type: string}, reason: {type: string}, rating: {type: string, description: 'rating in five stars'}}}}}" +
+                    "Just return the pure json string without any code mark \n";
     String LIST_RESOURCE_PROMPT =
             "You are an information organization expert. I will provide you a report about a java app migrating to Azure, your responsibility is to find related information and answer below questions in JSON format with schema with schema {type: object, properties: {resources: {type: array, properties: {type: {type: string}, resource: {type: string}, reason: {type: string}, used: {type: boolean}}}}}:\n" +
                     "1. Database - (1) is database used in the app? (2) what database is used? (3) what database on azure is recommended to migrate to?\n" +

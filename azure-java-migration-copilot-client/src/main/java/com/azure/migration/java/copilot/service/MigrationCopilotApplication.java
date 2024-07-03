@@ -4,9 +4,7 @@ import com.azure.migration.java.copilot.service.command.MigrationCommand;
 import com.azure.migration.java.copilot.service.model.RecommendedService;
 import com.azure.migration.java.copilot.service.model.RecommendedServices;
 import org.beryx.textio.TextIO;
-import org.beryx.textio.TextIoFactory;
 import org.beryx.textio.TextTerminal;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,21 +20,11 @@ public class MigrationCopilotApplication {
     }
 
     @Bean
-    ApplicationRunner interactiveChatRunner(TextTerminal<?> terminal, TextIO textIO, MigrationWorkflowTools tools) {
+    ApplicationRunner interactiveChatRunner(TextTerminal<?> terminal, TextIO textIO, MigrationWorkflowTools tools, MigrationContext migrationContext) {
         return args -> {
-            tools.setOut(terminal::println);
 
-            terminal.println("I‘m your migration assistant. Could you please provide me with the location of your source code?");
 
-            String sourceCodeLocation = textIO.
-                    newStringInputReader().
-                    withDefaultValue(System.getProperty("user.dir")).
-                    read(">");
-
-            tools.setSourceLocation(sourceCodeLocation);
-
-            tools.scanCodeWithAppCat();
-            //TODO: detect cloud foundry manifest
+            migrationContext.init(args);
 
             RecommendedServices services = tools.recommendTargetService();
 
