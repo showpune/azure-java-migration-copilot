@@ -9,12 +9,15 @@ import dev.langchain4j.internal.Json;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @Component
 public class MigrationWorkflowTools {
@@ -55,9 +58,8 @@ public class MigrationWorkflowTools {
         if (migrationContext.getWindupReportPath() == null) {
             throw new IllegalArgumentException("reportUrl cannot be null");
         }
-        String content = "Technologies: \n" + getTechnologiesSummary() + "\n\n Issues:\n" + getIssuesSummary() + "\n\n Dependencies:\n" + getDependenciesSummary();
+        String content = "Technologies: \n" + getTechnologiesSummary() + "\n\n Issues:\n" + getIssuesSummary() + "\n\n Dependencies:\n" + getDependenciesSummary()+ "\n\n Application Properties:\n" + getApplicationProperties();
         String response = serviceAnalysisAgent.listResources(content);
-        System.out.println(response);
         return Json.fromJson(response, Resources.class);
     }
 
@@ -114,4 +116,18 @@ public class MigrationWorkflowTools {
         return issues.toString();
     }
 
+    public String getApplicationProperties() {
+        Path dir = Path.of(migrationContext.getSourceCodePath(), "src/main/resources");
+        File[] files = dir.toFile().listFiles((base, name) -> name.startsWith("application") && (name.endsWith(".properties") || name.endsWith(".yaml") || name.endsWith("yml")));
+        if (files == null) {
+            return "";
+        }
+        return Arrays.stream(files).map(f -> {
+            try {
+                return Files.readString(Path.of(f.getAbsolutePath()));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }).collect(Collectors.joining("\n"));
+    }
 }

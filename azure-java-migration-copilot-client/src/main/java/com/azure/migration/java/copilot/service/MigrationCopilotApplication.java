@@ -5,12 +5,15 @@ import com.azure.migration.java.copilot.service.model.RecommendedService;
 import com.azure.migration.java.copilot.service.model.RecommendedServices;
 import org.beryx.textio.TextIO;
 import org.beryx.textio.TextTerminal;
+import org.fusesource.jansi.Ansi;
+import org.fusesource.jansi.AnsiConsole;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import java.util.Optional;
+import java.util.Scanner;
 
 @SpringBootApplication
 public class MigrationCopilotApplication {
@@ -22,7 +25,7 @@ public class MigrationCopilotApplication {
     @Bean
     ApplicationRunner interactiveChatRunner(TextTerminal<?> terminal, TextIO textIO, MigrationWorkflowTools tools, MigrationContext migrationContext) {
         return args -> {
-
+            AnsiConsole.systemInstall();
 
             migrationContext.init(args);
 
@@ -34,19 +37,27 @@ public class MigrationCopilotApplication {
 
             Optional<RecommendedService> recommendedServiceOptional = services.indexOf(selectedItem);
             if (recommendedServiceOptional.isEmpty()) {
-                throw new RuntimeException("Wrong index selected: " + selectedItem);
+                throw new RuntimeException("Wrong index selected: " + Ansi.ansi().bold().a(selectedItem));
             }
-
             RecommendedService targetService = recommendedServiceOptional.get();
             tools.setService(targetService.getService());
-            terminal.println("Target service has been set to " + targetService.getService());
+            terminal.println("Target service has been set to " + Ansi.ansi().bold().a(targetService.getService()) + "\n");
 
-            String selectedText = textIO.newStringInputReader().
-                    withNumberedPossibleValues(MigrationCommand.availableCommands()).
-                    read("\nPlease select next step you want to perform");
+            terminal.println("What do you want to do next? (type `help` to check available commands)");
+            try (Scanner scanner = new Scanner(System.in)) {
+                while (true) {
+                    terminal.print("> ");
+                    String commandText = scanner.nextLine();
 
-            MigrationCommand command = MigrationCommand.of(selectedText);
-            command.execute(terminal::println);
+                    if ("exit".equalsIgnoreCase(commandText)) {
+                        break;
+                    }
+                    Optional<MigrationCommand> commandOptional = MigrationCommand.of(commandText);
+                    commandOptional.ifPresentOrElse(cmd -> cmd.execute(MigrationCommand.restOfCommand(commandText)), () -> terminal.println("Unrecognized command: " + commandText));
+                }
+            }
+
+            AnsiConsole.systemUninstall();
         };
     }
 }

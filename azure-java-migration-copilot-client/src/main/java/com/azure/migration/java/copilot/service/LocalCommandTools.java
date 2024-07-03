@@ -23,11 +23,6 @@ public class LocalCommandTools {
                     "cmd",
                     "/c"
             ));
-        } else if (os.contains("linux")) {
-            return new ArrayList<>(Arrays.asList(
-                    "sh",
-                    "-c"
-            ));
         }
         return new ArrayList<>();
     }
