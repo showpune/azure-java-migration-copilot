@@ -1,4 +1,4 @@
-package com.azure.migration.java.copilot.service.command.code;
+package com.azure.migration.java.copilot.service.code;
 
 
 import com.azure.migration.java.copilot.service.LocalCommandTools;

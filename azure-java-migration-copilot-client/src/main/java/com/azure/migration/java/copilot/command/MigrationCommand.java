@@ -1,9 +1,15 @@
-package com.azure.migration.java.copilot.service.command;
+package com.azure.migration.java.copilot.command;
 
 import com.azure.migration.java.copilot.service.ApplicationContextUtils;
+import com.azure.migration.java.copilot.service.ConsoleContext;
+import org.beryx.textio.StringInputReader;
+import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public interface MigrationCommand {
 
@@ -52,6 +58,38 @@ public interface MigrationCommand {
             return "";
         }
         return String.join(" ", Arrays.copyOfRange(splits, 1, splits.length));
+    }
+
+    static void loop(ConsoleContext context,
+                     Function<String, Boolean> quitFunc,
+                     Consumer<String> inputConsumer) {
+        loop(context, quitFunc, inputConsumer, () -> false);
+    }
+
+    static void loop(ConsoleContext context,
+                     Function<String, Boolean> quitFunc,
+                     Consumer<String> inputConsumer,
+                     Supplier<Boolean> postChecker) {
+        context.getTerminal().println(context.getHint());
+        while(true) {
+            StringInputReader reader = context.getTextIO().newStringInputReader();
+            reader = reader.withMinLength(0);
+            if (StringUtils.hasText(context.getDefaultValue())) {
+                reader = reader.withDefaultValue(context.getDefaultValue());
+            }
+
+            String userInput = reader.read(context.getPrompt());
+
+            if (quitFunc.apply(userInput)) {
+                break;
+            }
+
+            inputConsumer.accept(userInput);
+
+            if (postChecker.get()) {
+                break;
+            }
+        }
     }
 
     void execute(String commandText);

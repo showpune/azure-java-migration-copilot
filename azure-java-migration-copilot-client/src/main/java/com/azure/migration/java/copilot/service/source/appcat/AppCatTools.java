@@ -18,6 +18,11 @@ public class AppCatTools {
     @Autowired
     private MigrationContext migrationContext;
 
+    public String getApplications() throws IOException {
+        Path path2 = Paths.get("api/applications.json");
+        return new String(Files.readAllBytes(Paths.get(migrationContext.getWindupReportPath()).resolve(path2)));
+    }
+
     public String getDependenciesSummary() throws IOException {
         Path path2 = Paths.get("api/dependencies.json");
         String content = new String(Files.readAllBytes(Paths.get(migrationContext.getWindupReportPath()).resolve(path2)));
