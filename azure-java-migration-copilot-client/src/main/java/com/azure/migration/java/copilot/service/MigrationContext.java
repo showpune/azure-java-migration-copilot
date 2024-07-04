@@ -2,8 +2,10 @@ package com.azure.migration.java.copilot.service;
 
 
 import lombok.Getter;
+import lombok.Setter;
 import org.beryx.textio.TextIO;
 import org.beryx.textio.TextTerminal;
+import org.fusesource.jansi.Ansi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
@@ -17,10 +19,8 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static java.lang.System.getProperty;
 
@@ -50,6 +50,14 @@ public class MigrationContext {
 
     @Getter
     private String cfManifestPath;
+
+    @Getter
+    @Setter
+    private String service;
+
+    @Getter
+    private Map<String, String> resourceVariables = new HashMap<>();
+
     @Autowired
     private LocalCommandTools localCommandTools;
 
@@ -64,11 +72,11 @@ public class MigrationContext {
         boolean initSuccess = false;
         while (!initSuccess) {
             if (sourcePathString == null) {
-                terminal.println("I‘m your migration assistant. Could you please provide me with the location of your source code?");
+                terminal.println(Ansi.ansi().bold().a("\nI‘m your migration assistant. Could you please provide me with the location of your source code?").reset().toString());
                 sourcePathString = textIO.
                         newStringInputReader().
                         withDefaultValue(getProperty("user.dir")).
-                        read(">");
+                        read("/>");
             }
             File file = new File(sourcePathString);
             if (!file.exists()) {
@@ -128,7 +136,6 @@ public class MigrationContext {
             this.windupReportPath = appcatReportPath;
             terminal.println("Generated AppCat report under: " + windupReportPath);
         }
-
     }
 
     public String generateMD5Hash(String input) {
@@ -151,5 +158,8 @@ public class MigrationContext {
         }
     }
 
+    public void setVariable(String key, String value) {
+        this.resourceVariables.put(key, value);
+    }
 
 }

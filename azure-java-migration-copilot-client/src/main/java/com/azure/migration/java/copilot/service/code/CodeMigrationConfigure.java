@@ -1,6 +1,5 @@
-package com.azure.migration.java.copilot.service.command.code;
+package com.azure.migration.java.copilot.service.code;
 
-import com.azure.migration.java.copilot.service.MigrationWorkflowTools;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.rag.content.retriever.ContentRetriever;
@@ -20,7 +19,7 @@ public class CodeMigrationConfigure {
     }
 
     @Bean
-    CodeMigrationChatAgent codeMigrationChatAgent(ChatLanguageModel chatLanguageModel, ContentRetriever contentRetriever, MigrationWorkflowTools migrationWorkflowTools, CodeMigrationTools codeMigrationTools) {
+    CodeMigrationChatAgent codeMigrationChatAgent(ChatLanguageModel chatLanguageModel, ContentRetriever contentRetriever, CodeMigrationTools codeMigrationTools) {
         return AiServices.builder(CodeMigrationChatAgent.class)
                 .chatLanguageModel(chatLanguageModel)
                 .tools(codeMigrationTools)
