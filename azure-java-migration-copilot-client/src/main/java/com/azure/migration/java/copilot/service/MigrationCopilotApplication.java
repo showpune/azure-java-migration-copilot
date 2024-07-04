@@ -44,16 +44,21 @@ public class MigrationCopilotApplication {
             terminal.println("Target service has been set to " + Ansi.ansi().bold().a(targetService.getService()) + "\n");
 
             terminal.println("What do you want to do next? (type `help` to check available commands)");
+            int i=0;
             try (Scanner scanner = new Scanner(System.in)) {
                 while (true) {
                     terminal.print("> ");
-                    String commandText = scanner.nextLine();
-
+                    String commandText = "help";
+                    if(i!=0) {
+                        commandText = scanner.nextLine();
+                    }
+                    i++;
                     if ("exit".equalsIgnoreCase(commandText)) {
                         break;
                     }
                     Optional<MigrationCommand> commandOptional = MigrationCommand.of(commandText);
-                    commandOptional.ifPresentOrElse(cmd -> cmd.execute(MigrationCommand.restOfCommand(commandText)), () -> terminal.println("Unrecognized command: " + commandText));
+                    String finalCommandText = commandText;
+                    commandOptional.ifPresentOrElse(cmd -> cmd.execute(MigrationCommand.restOfCommand(MigrationCommand.determineCommandInput(finalCommandText))), () -> terminal.println("Unrecognized command: " + finalCommandText));
                 }
             }
 

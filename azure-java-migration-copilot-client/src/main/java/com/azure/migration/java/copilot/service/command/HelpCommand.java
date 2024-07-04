@@ -14,7 +14,7 @@ public class HelpCommand implements MigrationCommand {
     public void execute(String commandText) {
         terminal.println("Available commands:");
         for (String cmd: MigrationCommand.availableCommands()) {
-            terminal.println(String.format("  %s", cmd));
+            terminal.println("  %s".formatted(cmd));
         }
     }
 }

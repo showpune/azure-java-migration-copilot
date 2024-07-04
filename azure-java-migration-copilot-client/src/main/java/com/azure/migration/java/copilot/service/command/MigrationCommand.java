@@ -1,6 +1,7 @@
 package com.azure.migration.java.copilot.service.command;
 
 import com.azure.migration.java.copilot.service.ApplicationContextUtils;
+import com.azure.migration.java.copilot.service.command.code.CodeCommand;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -36,6 +37,14 @@ public interface MigrationCommand {
             return "";
         }
         return splits[0];
+    }
+
+    static String determineCommandInput(String text) {
+        String[] splits = text.split(" ");
+        if (splits.length == 0) {
+            return "";
+        }
+        return String.join(" ", Arrays.copyOfRange(splits, 1, splits.length));
     }
 
     static String restOfCommand(String text) {
