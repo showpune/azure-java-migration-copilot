@@ -59,6 +59,9 @@ public class MigrationContext {
     private Map<String, String> resourceVariables = new HashMap<>();
 
     @Autowired
+    private Configure appCatTools;
+
+    @Autowired
     private LocalCommandTools localCommandTools;
 
     public void init(ApplicationArguments args) throws IOException {

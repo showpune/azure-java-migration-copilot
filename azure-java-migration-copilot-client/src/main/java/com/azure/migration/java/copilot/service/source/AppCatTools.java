@@ -1,4 +1,4 @@
-package com.azure.migration.java.copilot.service.source.appcat;
+package com.azure.migration.java.copilot.service.source;
 
 import com.azure.migration.java.copilot.service.MigrationContext;
 import com.fasterxml.jackson.databind.JsonNode;

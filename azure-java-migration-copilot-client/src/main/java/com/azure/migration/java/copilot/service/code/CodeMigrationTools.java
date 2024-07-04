@@ -3,7 +3,7 @@ package com.azure.migration.java.copilot.service.code;
 
 import com.azure.migration.java.copilot.service.LocalCommandTools;
 import com.azure.migration.java.copilot.service.MigrationContext;
-import com.azure.migration.java.copilot.service.source.appcat.AppCatTools;
+import com.azure.migration.java.copilot.service.source.AppCatTools;
 import dev.langchain4j.agent.tool.Tool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
