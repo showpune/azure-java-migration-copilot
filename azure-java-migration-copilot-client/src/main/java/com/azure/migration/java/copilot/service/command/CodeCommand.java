@@ -1,6 +1,6 @@
-package com.azure.migration.java.copilot.service.command.code;
+package com.azure.migration.java.copilot.service.command;
 
-import com.azure.migration.java.copilot.service.command.MigrationCommand;
+import com.azure.migration.java.copilot.service.command.code.CodeMigrationChatAgent;
 import org.apache.logging.log4j.util.Strings;
 import org.beryx.textio.TextTerminal;
 import org.springframework.beans.factory.annotation.Autowired;
