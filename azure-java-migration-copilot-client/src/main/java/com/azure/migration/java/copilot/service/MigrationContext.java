@@ -35,8 +35,10 @@ public class MigrationContext {
 
     @Autowired
     TextTerminal<?> terminal;
+
     @Value("${copilot.appcat-home}")
     private String appCatHome;
+
     @Getter
     private String windupReportPath;
 
@@ -81,6 +83,7 @@ public class MigrationContext {
                 this.basePath = baseFile.getAbsolutePath();
                 this.windupReportPath = (new File(basePath, "appcat-report")).getAbsolutePath();
                 this.cfManifestPath = (new File(basePath, "manifest.yml")).getAbsolutePath();
+                terminal.println("Skip rebuild the report because find report and manifest.yml under: " + basePath);
                 return;
             } else {
                 if (baseFile.exists()) {

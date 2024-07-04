@@ -38,6 +38,14 @@ public interface MigrationCommand {
         return splits[0];
     }
 
+    static String determineCommandInput(String text) {
+        String[] splits = text.split(" ");
+        if (splits.length == 0) {
+            return "";
+        }
+        return String.join(" ", Arrays.copyOfRange(splits, 1, splits.length));
+    }
+
     static String restOfCommand(String text) {
         String[] splits = text.split(" ");
         if (splits.length == 0) {

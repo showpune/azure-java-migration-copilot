@@ -2,8 +2,7 @@ package com.azure.migration.java.copilot.service;
 
 import com.azure.migration.java.copilot.service.model.RecommendedServices;
 import com.azure.migration.java.copilot.service.model.Resources;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.azure.migration.java.copilot.service.source.appcat.AppCatTools;
 import dev.langchain4j.agent.tool.Tool;
 import dev.langchain4j.internal.Json;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -25,6 +23,9 @@ public class MigrationWorkflowTools {
 
     @Autowired
     MigrationContext migrationContext;
+
+    @Autowired
+    AppCatTools appCatTools;
 
     private String service;
 
@@ -58,7 +59,7 @@ public class MigrationWorkflowTools {
         if (migrationContext.getWindupReportPath() == null) {
             throw new IllegalArgumentException("reportUrl cannot be null");
         }
-        String content = "Technologies: \n" + getTechnologiesSummary() + "\n\n Issues:\n" + getIssuesSummary() + "\n\n Dependencies:\n" + getDependenciesSummary()+ "\n\n Application Properties:\n" + getApplicationProperties();
+        String content = "Technologies: \n" + appCatTools.getTechnologiesSummary() + "\n\n Issues:\n" + appCatTools.getIssuesSummary() + "\n\n Dependencies:\n" + appCatTools.getDependenciesSummary() + "\n\n Application Properties:\n" + getApplicationProperties();
         String response = serviceAnalysisAgent.listResources(content);
         return Json.fromJson(response, Resources.class);
     }
@@ -80,41 +81,6 @@ public class MigrationWorkflowTools {
         this.service = service;
     }
 
-    public String getDependenciesSummary() throws IOException {
-        Path path2 = Paths.get("api/dependencies.json");
-        String content = new String(Files.readAllBytes(Paths.get(migrationContext.getWindupReportPath()).resolve(path2)));
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode rootNode = mapper.readTree(content);
-        JsonNode dependenciesNode = rootNode.get(0).get("dependencies");
-        StringBuilder issues = new StringBuilder();
-        for (JsonNode dependencyNode : dependenciesNode) {
-            issues.append(dependencyNode.get("name") + "\n");
-        }
-        return issues.toString();
-    }
-
-    public String getTechnologiesSummary() throws IOException {
-        Path path2 = Paths.get("api/technologies.json");
-        return new String(Files.readAllBytes(Paths.get(migrationContext.getWindupReportPath()).resolve(path2)));
-    }
-
-
-    public String getIssuesSummary() throws IOException {
-        Path path2 = Paths.get("api/issues.json");
-        String content = new String(Files.readAllBytes(Paths.get(migrationContext.getWindupReportPath()).resolve(path2)));
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode rootNode = mapper.readTree(content);
-        JsonNode issuesNode = rootNode.get(0).get("issues");
-        StringBuilder issues = new StringBuilder();
-        for (Iterator<String> it = issuesNode.fieldNames(); it.hasNext(); ) {
-            String typeName = it.next();
-            JsonNode typeNode = issuesNode.get(typeName);
-            for (JsonNode detailNode : typeNode) {
-                issues.append(typeName + " -> " + detailNode.get("name") + "\n");
-            }
-        }
-        return issues.toString();
-    }
 
     public String getApplicationProperties() {
         Path dir = Path.of(migrationContext.getSourceCodePath(), "src/main/resources");
