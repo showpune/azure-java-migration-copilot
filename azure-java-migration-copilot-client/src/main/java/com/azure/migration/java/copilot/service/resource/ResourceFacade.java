@@ -1,6 +1,7 @@
 package com.azure.migration.java.copilot.service.resource;
 
 import com.azure.migration.java.copilot.service.MigrationContext;
+import com.azure.migration.java.copilot.service.common.ToolsAgent;
 import com.azure.migration.java.copilot.service.source.AppCatTools;
 import com.azure.migration.java.copilot.service.source.CFManifestTools;
 import dev.langchain4j.internal.Json;
@@ -21,7 +22,7 @@ public class ResourceFacade {
     private ResourceConfigureAgent resourceConfigureAgent;
 
     @Autowired
-    private ResourceConfigureNoChatAgent resourceConfigureNoChatAgent;
+    private ToolsAgent toolsAgent;
 
     @Autowired
     private AppCatTools appCatTools;
@@ -39,7 +40,7 @@ public class ResourceFacade {
         if (migrationContext.getCfManifestPath() == null) {
             return;
         }
-        String result = resourceConfigureNoChatAgent.abstractInfo(ApplicationConfiguration.jsonSchema, Json.toJson(applicationConfiguration),cfManifestTools.getDetails());
+        String result = toolsAgent.abstractInfo(ApplicationConfiguration.jsonSchema, Json.toJson(applicationConfiguration),cfManifestTools.getDetails());
         applicationConfiguration = Json.fromJson(result, ApplicationConfiguration.class);
     }
 

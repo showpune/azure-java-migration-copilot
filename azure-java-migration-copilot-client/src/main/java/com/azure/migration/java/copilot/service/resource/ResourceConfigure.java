@@ -19,11 +19,4 @@ public class ResourceConfigure {
                 .contentRetriever(contentRetriever)
                 .build();
     }
-
-    @Bean
-    ResourceConfigureNoChatAgent resourceConfigureNoChatAgent(ChatLanguageModel chatLanguageModel) {
-        return AiServices.builder(ResourceConfigureNoChatAgent.class)
-                .chatLanguageModel(chatLanguageModel)
-                .build();
-    }
 }
