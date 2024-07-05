@@ -1,9 +1,10 @@
-package com.azure.migration.java.copilot.service.command;
+package com.azure.migration.java.copilot.command;
 
 import com.azure.migration.java.copilot.service.MigrationContext;
 import com.azure.migration.java.copilot.service.util.BicepGenerator;
 import org.beryx.textio.TextIO;
 import org.beryx.textio.TextTerminal;
+import org.fusesource.jansi.Ansi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +23,7 @@ public class GenerateCommand implements MigrationCommand {
 
     @Override
     public void execute(String commandText) {
+        terminal.println(Ansi.ansi().bold().a("\nPlease select which option do you want to generate?").reset().toString());
         String selectedOption = textIO.newStringInputReader().withNumberedPossibleValues(AVAILABLE_OPTIONS).read(">");
         MigrationContext migrationContext = new MigrationContext();
         Map<String, String> inputInfo  = new HashMap<>();
