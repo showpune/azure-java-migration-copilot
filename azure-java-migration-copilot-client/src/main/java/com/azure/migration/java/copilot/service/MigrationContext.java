@@ -2,6 +2,7 @@ package com.azure.migration.java.copilot.service;
 
 
 import lombok.Getter;
+import lombok.Setter;
 import org.beryx.textio.TextIO;
 import org.beryx.textio.TextTerminal;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +18,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static java.lang.System.getProperty;
 
@@ -50,6 +48,9 @@ public class MigrationContext {
     private String cfManifestPath;
     @Autowired
     private LocalCommandTools localCommandTools;
+
+    @Getter @Setter
+    private Map<String, String> inputInfo;
 
     public void init(ApplicationArguments args) throws IOException {
 

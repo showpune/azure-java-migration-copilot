@@ -1,9 +1,13 @@
 package com.azure.migration.java.copilot.service.command;
 
+import com.azure.migration.java.copilot.service.MigrationContext;
+import com.azure.migration.java.copilot.service.util.BicepGenerator;
 import org.beryx.textio.TextIO;
 import org.beryx.textio.TextTerminal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.*;
 
 @Component
 public class GenerateCommand implements MigrationCommand {
@@ -19,9 +23,16 @@ public class GenerateCommand implements MigrationCommand {
     @Override
     public void execute(String commandText) {
         String selectedOption = textIO.newStringInputReader().withNumberedPossibleValues(AVAILABLE_OPTIONS).read(">");
+        MigrationContext migrationContext = new MigrationContext();
+        Map<String, String> inputInfo  = new HashMap<>();
+        migrationContext.setInputInfo(inputInfo);
+        inputInfo.put("DB_NAME", "mysql-szcza4m2d5pkk");
+        inputInfo.put("DB_USER_NAME", "migrationtool");
+        inputInfo.put("DB_PASSWORD", "Password@123");
         switch (selectedOption) {
             case "azd bicep":
                 // TODO: generate bicep scripts here
+                BicepGenerator.genereateBicepPramFile(null, migrationContext);
                 break;
             default:
         }
