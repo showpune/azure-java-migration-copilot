@@ -1,6 +1,7 @@
 package com.azure.migration.java.copilot.service;
 
 
+import com.azure.migration.java.copilot.service.model.template.TemplateContext;
 import lombok.Getter;
 import lombok.Setter;
 import org.beryx.textio.TextIO;
@@ -60,6 +61,9 @@ public class MigrationContext {
 
     @Autowired
     private LocalCommandTools localCommandTools;
+
+    @Getter
+    private TemplateContext templateContext = new TemplateContext();
 
     public void init(ApplicationArguments args) throws IOException {
 
