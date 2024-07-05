@@ -7,22 +7,33 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.victools.jsonschema.generator.*;
 import com.github.victools.jsonschema.module.jackson.JacksonModule;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 @JsonClassDescription("The Application configuration")
 public class ApplicationConfiguration {
 
+    private static final String META_SUFFIX = "";
+
     @JsonPropertyDescription("Application Name")
     public String appName;
 
-    @JsonPropertyDescription("the memory of the application")
+    @JsonPropertyDescription("the memory of the application, default is 2G")
     public String memory;
 
-    @JsonPropertyDescription("the instance number of the application")
+    @JsonPropertyDescription("the CPU of the application, the minimun value is 0.5 and maximun value is 4,  if memory is 1G then cpu is 0.5, if memory is 2G then cpu is 1 and so on. ")
+    public double cpu;
+
+    @JsonPropertyDescription("the instance number of the application, default is 1")
     public int instanceCount;
+
+    @JsonPropertyDescription("The connection string of the database")
+    public String databaseConnectionString;
 
     @JsonPropertyDescription("List of environment variables")
     public List<EnvConfiguration> envConfigurations;
@@ -38,24 +49,34 @@ public class ApplicationConfiguration {
         jsonSchema = jsonSchemaNode.toPrettyString();
     }
 
-    public String jsonObject() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.writeValueAsString(this);
-    }
-
-    public void resetByString(String json){
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            ApplicationConfiguration configuration = objectMapper.readValue(json, ApplicationConfiguration.class);
-            this.appName = configuration.appName;
-            this.memory = configuration.memory;
-            this.instanceCount = configuration.instanceCount;
-            this.envConfigurations = configuration.envConfigurations;
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
+    public Map<String,String> asMap() throws JsonProcessingException {
+        Map<String,String> map= new HashMap<>();
+        if(Strings.isNotEmpty(appName)){
+            map.put(META_SUFFIX+"APP_NAME",appName);
         }
-    }
+        if(Strings.isNotEmpty(memory)){
+            map.put(META_SUFFIX+"APP_MEMORY",memory);
+        }
 
+        if(Strings.isNotEmpty(databaseConnectionString)){
+            map.put("DATABASE_CONNECTION_STRING",databaseConnectionString);
+        }
+        if(instanceCount!=0){
+            map.put(META_SUFFIX+"APP_INSTANCES",instanceCount+"");
+        }
+
+        if(cpu!=0){
+            map.put(META_SUFFIX+"APP_CPU",cpu+"");
+        }
+
+
+        if(envConfigurations!=null){
+            for(EnvConfiguration envConfiguration:envConfigurations){
+                map.put("ENV_"+envConfiguration.key,envConfiguration.value);
+            }
+        }
+        return map;
+    }
 }
 
 

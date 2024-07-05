@@ -22,12 +22,6 @@
             <groupId>org.beryx</groupId>
             <artifactId>text-io</artifactId>
             <version>3.4.1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>jline</groupId>
-                    <artifactId>jline</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.fusesource.jansi</groupId>

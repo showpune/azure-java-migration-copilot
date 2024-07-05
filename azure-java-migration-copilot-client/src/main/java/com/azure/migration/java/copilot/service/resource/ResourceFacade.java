@@ -42,6 +42,7 @@ public class ResourceFacade {
         }
         String result = toolsAgent.abstractInfo(ApplicationConfiguration.jsonSchema, Json.toJson(applicationConfiguration),cfManifestTools.getDetails());
         applicationConfiguration = Json.fromJson(result, ApplicationConfiguration.class);
+        migrationContext.getResourceVariables().putAll(applicationConfiguration.asMap());
     }
 
     public String listResource() throws IOException {
