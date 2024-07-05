@@ -61,9 +61,6 @@ public class MigrationContext {
     @Autowired
     private LocalCommandTools localCommandTools;
 
-    @Getter @Setter
-    private Map<String, String> inputInfo;
-
     public void init(ApplicationArguments args) throws IOException {
 
         boolean force = args.containsOption("force");

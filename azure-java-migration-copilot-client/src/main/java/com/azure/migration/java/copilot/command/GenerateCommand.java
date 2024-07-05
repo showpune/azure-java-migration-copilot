@@ -1,16 +1,10 @@
 package com.azure.migration.java.copilot.command;
 
-import com.azure.migration.java.copilot.service.MigrationContext;
-import com.azure.migration.java.copilot.service.model.template.TemplateContext;
-import com.azure.migration.java.copilot.service.util.BicepGenerator;
-import dev.langchain4j.spi.prompt.PromptTemplateFactory;
 import org.beryx.textio.TextIO;
 import org.beryx.textio.TextTerminal;
 import org.fusesource.jansi.Ansi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.*;
 
 @Component
 public class GenerateCommand implements MigrationCommand {
@@ -27,16 +21,9 @@ public class GenerateCommand implements MigrationCommand {
     public void execute(String commandText) {
         terminal.println(Ansi.ansi().bold().a("\nPlease select which option do you want to generate?").reset().toString());
         String selectedOption = textIO.newStringInputReader().withNumberedPossibleValues(AVAILABLE_OPTIONS).read(">");
-        MigrationContext migrationContext = new MigrationContext();
-        Map<String, String> inputInfo  = new HashMap<>();
-        migrationContext.setInputInfo(inputInfo);
-        inputInfo.put("DB_NAME", "mysql-szcza4m2d5pkk");
-        inputInfo.put("DB_USER_NAME", "migrationtool");
-        inputInfo.put("DB_PASSWORD", "Password@123");
         switch (selectedOption) {
             case "azd bicep":
                 // TODO: generate bicep scripts here
-                BicepGenerator.genereateBicepPramFile(null, migrationContext);
                 break;
             default:
         }
