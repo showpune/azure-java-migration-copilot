@@ -1,0 +1,9 @@
+a) You will abstract the data from customer input and fullfill the json data according to json schema
+The json schema is as below:
+{{schema}}
+
+b) There is already a json data as below, you need to merge json data with the json data in step a)
+{{orignalData}}
+
+Please just return the merged json data in step a) and b) as the result of this function.
+Please provide the data in JSON format without any additional formatting or Markdown code blocks
