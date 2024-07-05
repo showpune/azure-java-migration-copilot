@@ -1,7 +1,9 @@
 package com.azure.migration.java.copilot.command;
 
 import com.azure.migration.java.copilot.service.MigrationContext;
+import com.azure.migration.java.copilot.service.model.template.TemplateContext;
 import com.azure.migration.java.copilot.service.util.BicepGenerator;
+import dev.langchain4j.spi.prompt.PromptTemplateFactory;
 import org.beryx.textio.TextIO;
 import org.beryx.textio.TextTerminal;
 import org.fusesource.jansi.Ansi;
