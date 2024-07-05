@@ -26,6 +26,7 @@ public class ResourceCommand implements MigrationCommand {
         final String resources;
         try {
             resources = resourceFacade.listResource();
+            resourceFacade.initApplicationConfiguration();
         } catch (Exception e) {
             terminal.println(Ansi.ansi().bg(Ansi.Color.RED).a("failed to list resources, error: " + e.getMessage()).reset().toString());
             return;

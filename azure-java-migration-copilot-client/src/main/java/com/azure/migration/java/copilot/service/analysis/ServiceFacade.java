@@ -1,7 +1,7 @@
 package com.azure.migration.java.copilot.service.analysis;
 
 import com.azure.migration.java.copilot.service.MigrationContext;
-import com.azure.migration.java.copilot.service.source.appcat.AppCatTools;
+import com.azure.migration.java.copilot.service.source.AppCatTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;

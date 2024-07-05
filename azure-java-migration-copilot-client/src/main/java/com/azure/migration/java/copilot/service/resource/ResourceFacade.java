@@ -1,7 +1,10 @@
 package com.azure.migration.java.copilot.service.resource;
 
 import com.azure.migration.java.copilot.service.MigrationContext;
-import com.azure.migration.java.copilot.service.source.appcat.AppCatTools;
+import com.azure.migration.java.copilot.service.common.ToolsAgent;
+import com.azure.migration.java.copilot.service.source.AppCatTools;
+import com.azure.migration.java.copilot.service.source.CFManifestTools;
+import dev.langchain4j.internal.Json;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,10 +22,28 @@ public class ResourceFacade {
     private ResourceConfigureAgent resourceConfigureAgent;
 
     @Autowired
+    private ToolsAgent toolsAgent;
+
+    @Autowired
     private AppCatTools appCatTools;
 
     @Autowired
+    private CFManifestTools cfManifestTools;
+
+    @Autowired
     private MigrationContext migrationContext;
+
+    @Autowired
+    private ApplicationConfiguration applicationConfiguration;
+
+    public void initApplicationConfiguration() throws IOException {
+        if (migrationContext.getCfManifestPath() == null) {
+            return;
+        }
+        String result = toolsAgent.abstractInfo(ApplicationConfiguration.jsonSchema, Json.toJson(applicationConfiguration),cfManifestTools.getDetails());
+        applicationConfiguration = Json.fromJson(result, ApplicationConfiguration.class);
+        migrationContext.getResourceVariables().putAll(applicationConfiguration.asMap());
+    }
 
     public String listResource() throws IOException {
         if (migrationContext.getWindupReportPath() == null) {
