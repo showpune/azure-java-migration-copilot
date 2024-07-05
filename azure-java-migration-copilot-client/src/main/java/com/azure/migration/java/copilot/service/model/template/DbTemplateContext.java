@@ -10,13 +10,25 @@ public class DbTemplateContext {
 
     @Getter
     @Setter
-    private String dbName;
+    private String type;
 
     @Getter
     @Setter
-    private String dbUser;
+    private String name;
 
     @Getter
     @Setter
-    private String dbPwd;
+    private int port;
+
+    @Getter
+    @Setter
+    private String schema;
+
+    @Getter
+    @Setter
+    private String user;
+
+    @Getter
+    @Setter
+    private String pwd;
 }
