@@ -32,8 +32,8 @@ public class AzdConfigFilesGenerator {
     ResourceLoader resourceLoader;
 
     public void generateBicepFiles(MigrationContext migrationContext) throws Exception {
-        generateBicepParamsFiles(migrationContext);
         copyBicepFiles(migrationContext.getSourceCodePath());
+        generateBicepParamsFiles(migrationContext);
     }
 
     public void generateBicepParamsFiles(MigrationContext migrationContext) throws IOException {

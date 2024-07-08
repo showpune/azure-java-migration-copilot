@@ -2,8 +2,10 @@ package com.azure.migration.java.copilot.service.resource;
 
 import com.azure.migration.java.copilot.service.MigrationContext;
 import com.azure.migration.java.copilot.service.common.ToolsAgent;
+import com.azure.migration.java.copilot.service.model.template.TemplateContext;
 import com.azure.migration.java.copilot.service.source.AppCatTools;
 import com.azure.migration.java.copilot.service.source.CFManifestTools;
+import com.azure.migration.java.copilot.service.util.JsonUtil;
 import dev.langchain4j.internal.Json;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -42,15 +44,13 @@ public class ResourceFacade {
         }
         String result = toolsAgent.abstractInfo(ApplicationConfiguration.jsonSchema, Json.toJson(applicationConfiguration),cfManifestTools.getDetails());
         applicationConfiguration = Json.fromJson(result, ApplicationConfiguration.class);
-        migrationContext.getResourceVariables().putAll(applicationConfiguration.asMap());
     }
 
     public String listResource() throws IOException {
         if (migrationContext.getWindupReportPath() == null) {
             throw new IllegalArgumentException("AppCat report path cannot be null");
         }
-        String details = appCatTools.getAllDetails() + "\n\n Application Properties:\n" + getApplicationProperties();
-        return resourceConfigureAgent.listResources(details);
+        return resourceConfigureAgent.listResources(getApplicationReport());
     }
 
     public String resourceGuideSelect(String resources) {
@@ -67,13 +67,15 @@ public class ResourceFacade {
         return resourceConfigureAgent.resourceGuide(resources, migrationContext.getService());
     }
 
-    public String resourceConfig(String userMessage) {
-        return resourceConfigureAgent.configResource(userMessage);
+    public String resourceConfig(String userInput) throws IOException {
+        return resourceConfigureAgent.resourceConfig(userInput, getApplicationReport(), JsonUtil.schemaOf(TemplateContext.class));
     }
 
     private String getApplicationProperties() {
         Path dir = Path.of(migrationContext.getSourceCodePath(), "src/main/resources");
-        File[] files = dir.toFile().listFiles((base, name) -> name.startsWith("application") && (name.endsWith(".properties") || name.endsWith(".yaml") || name.endsWith("yml")));
+        File[] files = dir.toFile().listFiles((base, name) ->
+                Arrays.asList("application.properties", "application.yml", "application.yaml").contains(name)
+        );
         if (files == null) {
             return "";
         }
@@ -86,5 +88,13 @@ public class ResourceFacade {
         }).collect(Collectors.joining("\n"));
     }
 
-
+    private String getApplicationReport() throws IOException {
+        String details = appCatTools.getAllDetails()
+                + "\n\n #Applications:\n" + appCatTools.getApplications()
+                + "\n\n #Application Properties:\n" + getApplicationProperties();
+        if (migrationContext.getCfManifestPath() != null) {
+            details += "\n\n #Cloud Foundry Manifest:\n" + Files.readString(Path.of(migrationContext.getCfManifestPath()));
+        }
+        return details;
+    }
 }

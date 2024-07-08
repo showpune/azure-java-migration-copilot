@@ -1,5 +1,17 @@
 You are an information organization expert. I will provide you a report about a java app migrating to Azure, your responsibility is to find related information and answer below questions. If no information is found about the use of the resource, just skip the question!!:
-  [Database] (1) is database used in the app? (2) what database(s) is/are used in the app? Please list the database names (3) what database on Azure is recommended to migrate to? You must give detailed reason for each type of database.
-  [File System] (1) is local file system used in the app? (2) how is the local file system used in the app? please list the java package names (3) Suggest user to use Azure Storage Account - File shares and configure it in the service on which your app going to be deployed.
-  [Environment Variables] (1) is there any env variables other than the one related to the database connection used in the app? (2) which env variable should be explicitly specified when app start? please list the variable names (3) Suggest user continue to use environment variables for containers for insensitive information, and use secret to bind to containers for sensitive information.
-Environment variable is in ${env name:default value} format and you should exclude database related variables
+  1. [Database]
+    (1) is database used in the app?
+    (2) what database(s) is/are used in the app? Please list the database names
+    (3) what database on Azure is recommended to migrate to? You must give detailed reason for each type of database.
+  2. [File System]
+    (1) is local file system used in the app?
+    (2) how is the local file system used in the app? please list the source code
+    (3) suggest user to use Azure Storage Account - File shares and configure it in the service on which your app going to be deployed.
+  3. [Environment Variables]
+    (1) is there any env variables used in the app? environment variable is in ${ENV_NAME:DEFAULT_VALUE} or ${ENV_NAME} format.
+    (2) show environment variables in list format in ENV_NAME=DEFAULT_VALUE format, if DEFAULT_VALUE is empty show nothing
+    (3) suggest user continue to use environment variables for containers for insensitive information, and use secret to bind to containers for sensitive information.
+  4. [Cloud Foundry]
+    (1) is cloud foundry detected?
+    (2) show the location of cloud foundry manifest file
+    (3) suggest user to review the configurations derived from cloud foundry report, and make the change before the migration if necessary.

@@ -7,6 +7,9 @@ import org.beryx.textio.TextTerminal;
 import org.fusesource.jansi.Ansi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+
+import java.io.IOException;
 
 @Component
 public class ResourceCommand implements MigrationCommand {
@@ -20,39 +23,52 @@ public class ResourceCommand implements MigrationCommand {
     @Autowired
     private TextTerminal<?> terminal;
 
+    private static final String[] AVAILABLE_COMMANDS = new String[]{"config: config the resources", "detect: detect the configuration from report"};
+
     @Override
     public void execute(String commandText) {
-
-        final String resources;
-        try {
-            resources = resourceFacade.listResource();
-            resourceFacade.initApplicationConfiguration();
-        } catch (Exception e) {
-            terminal.println(Ansi.ansi().bg(Ansi.Color.RED).a("failed to list resources, error: " + e.getMessage()).reset().toString());
-            return;
+        String selectedCommand = commandText;
+        if (!StringUtils.hasText(selectedCommand)) {
+            terminal.println(Ansi.ansi().bold().a("\nWhat do you want to do with the resources").reset().toString());
+            selectedCommand = textIO.newStringInputReader().withNumberedPossibleValues(AVAILABLE_COMMANDS).read("");
         }
 
-        terminal.println(resources);
+        try {
+            String hint;
+            String resources;
+            switch (MigrationCommand.determineCommand(selectedCommand)) {
+                case "detect", "detect:":
+                    resources = resourceFacade.listResource();
+                    terminal.println(resources);
+                    hint = resourceFacade.resourceGuideSelect(resources);
 
-        String hint;
-        switch (MigrationCommand.determineCommand(commandText)) {
-            case "guide":
-                hint = resourceFacade.resourceGuideSelect(resources);
+                    MigrationCommand.loop(
+                            ConsoleContext.builder().defaultValue("").prompt("/resource/detect>").terminal(terminal).textIO(textIO).hint(hint).build(),
+                            ConsoleContext::exited,
+                            input -> terminal.println(resourceFacade.resourceGuide(input))
+                    );
+                    break;
+                case "config", "config:":
+                    hint = resourceFacade.resourceConfig("config");
+                    MigrationCommand.loop(
+                            ConsoleContext.builder().defaultValue("").prompt("/resource/config>").terminal(terminal).textIO(textIO).hint(hint).build(),
+                            ConsoleContext::exited,
+                            input ->
+                            {
+                                try {
+                                    terminal.println(resourceFacade.resourceConfig(input));
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
 
-                MigrationCommand.loop(
-                        ConsoleContext.builder().defaultValue("").prompt("/resource/guide>").terminal(terminal).textIO(textIO).hint(hint).build(),
-                        ConsoleContext::exited,
-                        input -> terminal.println(resourceFacade.resourceGuide(resources))
-                );
-                break;
-            case "config":
-                hint = resourceFacade.resourceConfig(resources);
-                MigrationCommand.loop(
-                        ConsoleContext.builder().defaultValue("").prompt("/resource/config>").terminal(terminal).textIO(textIO).hint(hint).build(),
-                        ConsoleContext::exited,
-                        input -> terminal.println(resourceFacade.resourceConfig(input))
-                );
-                break;
+                    );
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unrecognized command " + selectedCommand);
+            }
+        } catch (Exception e) {
+            terminal.println(Ansi.ansi().fg(Ansi.Color.RED).a(e.getMessage()).reset().toString());
         }
     }
 
