@@ -1,5 +1,6 @@
 package com.azure.migration.java.copilot.command;
 
+import com.azure.migration.java.copilot.service.util.AzdConfigFilesGenerator;
 import org.beryx.textio.TextIO;
 import org.beryx.textio.TextTerminal;
 import org.fusesource.jansi.Ansi;
@@ -15,6 +16,9 @@ public class GenerateCommand implements MigrationCommand {
     @Autowired
     private TextIO textIO;
 
+    @Autowired
+    private AzdConfigFilesGenerator azdConfigFilesGenerator;
+
     private static final String[] AVAILABLE_OPTIONS = new String[] {"azd bicep"};
 
     @Override
@@ -23,7 +27,8 @@ public class GenerateCommand implements MigrationCommand {
         String selectedOption = textIO.newStringInputReader().withNumberedPossibleValues(AVAILABLE_OPTIONS).read(">");
         switch (selectedOption) {
             case "azd bicep":
-                // TODO: generate bicep scripts here
+                azdConfigFilesGenerator.copyBicepFiles();
+                azdConfigFilesGenerator.genereateBicepParamsFiles();
                 break;
             default:
         }
