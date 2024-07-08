@@ -27,8 +27,8 @@ public class GenerateCommand implements MigrationCommand {
         String selectedOption = textIO.newStringInputReader().withNumberedPossibleValues(AVAILABLE_OPTIONS).read(">");
         switch (selectedOption) {
             case "azd bicep":
-                // TODO: generate bicep scripts here
-                azdConfigFilesGenerator.genereateBicepParamsFsile();
+                azdConfigFilesGenerator.copyBicepFiles();
+                azdConfigFilesGenerator.genereateBicepParamsFiles();
                 break;
             default:
         }

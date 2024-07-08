@@ -26,4 +26,8 @@ public class Parameters {
     @Setter
     private CommonItem principalId = new CommonItem();
 
+    @Getter
+    @Setter
+    private CommonItem dbName = new CommonItem();
+
 }
