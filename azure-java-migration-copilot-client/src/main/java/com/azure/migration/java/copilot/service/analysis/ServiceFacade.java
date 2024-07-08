@@ -24,7 +24,8 @@ public class ServiceFacade {
         if (migrationContext.getWindupReportPath() == null) {
             throw new IllegalArgumentException("AppCat report path should not be null");
         }
-        return serviceAnalysisAgent.chooseService(appCatTools.getAllDetails());
+        String content = "Applications: \n" + appCatTools.getApplications();
+        return serviceAnalysisAgent.chooseService(content);
     }
 
     public String chooseService(String userMessage) throws IOException {

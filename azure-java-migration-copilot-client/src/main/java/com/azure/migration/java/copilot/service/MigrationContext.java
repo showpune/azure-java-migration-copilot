@@ -20,8 +20,10 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 import static java.lang.System.getProperty;
 
@@ -56,16 +58,11 @@ public class MigrationContext {
     @Setter
     private String service;
 
-    @Getter
-    private Map<String, String> resourceVariables = new HashMap<>();
-
-    @Autowired
-    private Configure appCatTools;
-
     @Autowired
     private LocalCommandTools localCommandTools;
 
     @Getter
+    @Setter
     private TemplateContext templateContext = new TemplateContext();
 
     public void init(ApplicationArguments args) throws IOException {
@@ -164,9 +161,4 @@ public class MigrationContext {
             throw new RuntimeException(e);
         }
     }
-
-    public void setVariable(String key, String value) {
-        this.resourceVariables.put(key, value);
-    }
-
 }

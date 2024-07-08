@@ -10,11 +10,11 @@ public interface ResourceConfigureAgent {
     String listResources(String windupDescription);
 
     @SystemMessage({"Let user to choose which resource they want to show the guide"})
-    String resourceGuideSelect(@UserMessage String resourceList);
+    String resourceGuideSelect(@UserMessage String userMessage);
 
     @SystemMessage(fromResource = "/prompts/resource/resource-guide.txt")
-    String resourceGuide(@UserMessage("resource") String userMessage, @V("service") String service);
+    String resourceGuide(@UserMessage String userMessage, @V("service") String service);
 
     @SystemMessage(fromResource = "/prompts/resource/resource-config.txt")
-    String configResource(@UserMessage String userMessage);
+    String resourceConfig(@UserMessage String userInput, @V("report") String report, @V("schema") String schema);
 }
