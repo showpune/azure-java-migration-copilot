@@ -10,3 +10,4 @@ logging.level.dev.langchain4j=INFO
 logging.level.dev.ai4j.openai4j=INFO
 copilot.appcat-home=~/appcat
 copilot.maven-home=/usr/share/maven
+copilot.bicpe.tempalte.path=classpath:/azd-template-fils
