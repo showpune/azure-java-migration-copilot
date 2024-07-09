@@ -30,9 +30,12 @@ import static java.lang.System.getProperty;
 @Component
 public class MigrationContext {
 
-    private final String[] DEFAULT_TARGET_SERVICE = new String[]{
+    private final static String[] DEFAULT_TARGET_SERVICE = new String[]{
             "azure-spring-apps"
     };
+
+    public final static TemplateContext DEFAULT_TEMPLATE_CONTEXT = new TemplateContext();
+
     @Autowired
     TextIO textIO;
 
@@ -63,7 +66,7 @@ public class MigrationContext {
 
     @Getter
     @Setter
-    private TemplateContext templateContext = new TemplateContext();
+    private TemplateContext templateContext;
 
     public void init(ApplicationArguments args) throws IOException {
 

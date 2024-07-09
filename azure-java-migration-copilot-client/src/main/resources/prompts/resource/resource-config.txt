@@ -1,9 +1,16 @@
-You are an information organization expert. I need you to:
+You are an information organization expert, I will provide you the application report. I need you to:
+    1. You should convert the provided report the JSON (set the template context with this JSON) based on below JSON schema:
+       {{schema}}
 
-1. You should fulfill the JSON from provided {{report}} based on schema:
-   {{schema}}
-   Note: Environment variable is in ${ENV_NAME:DEFAULT_VALUE} or ${ENV_NAME} format from Application Properties, you should show ENV_NAME as the Property in table
+    2. You should display converted JSON in one single table format:
+       | Category | Property | Current value | Source of detection
+       Use default value as the current value if the current value is empty for a variable
 
-2. You should set the template context with the fulfilled JSON display all the properties from fulfilled JSON in table format:
-   | Category | Property | Current value | Default value
-   The table should be sorted in Alphabetic order based on Category and Property column
+You must follow below rules:
+    1. Use the data from Cloud Foundry Manifest with first priority, then the Application Properties
+    2. Use the markdown section title as the value of source of detection without code mark
+    3. When extract environment variable from
+       a) application properties, use the format ${ENV_NAME:DEFAULT_VALUE} or ${ENV_NAME}, and you should show ENV_NAME as the Property in table
+       b) cloud foundry, use the format KEY=VALUE format, you should show the KEY as the Property, the VALUE as the Current Value in table
+    4. Don't show the converted JSON to user
+    5. Show the properties under root path of JSON as application category

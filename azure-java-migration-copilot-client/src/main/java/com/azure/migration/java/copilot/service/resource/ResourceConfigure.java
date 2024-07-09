@@ -15,7 +15,7 @@ public class ResourceConfigure {
         return AiServices.builder(ResourceConfigureAgent.class)
                 .chatLanguageModel(chatLanguageModel)
                 .tools(tools)
-//                .chatMemory(MessageWindowChatMemory.withMaxMessages(10))
+                .chatMemory(MessageWindowChatMemory.withMaxMessages(10))
                 //to improve the performance, the guide process skipped first
 //                .contentRetriever(contentRetriever)
                 .build();

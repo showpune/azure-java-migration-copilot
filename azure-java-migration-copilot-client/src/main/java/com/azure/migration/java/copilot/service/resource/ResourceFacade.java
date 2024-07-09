@@ -67,8 +67,12 @@ public class ResourceFacade {
         return resourceConfigureAgent.resourceGuide(resources, migrationContext.getService());
     }
 
-    public String resourceConfig(String userInput) throws IOException {
-        return resourceConfigureAgent.resourceConfig(userInput, getApplicationReport(), JsonUtil.schemaOf(TemplateContext.class));
+    public String resourceConfig() throws IOException {
+        return resourceConfigureAgent.resourceConfig(getApplicationReport(), JsonUtil.schemaOf(TemplateContext.class));
+    }
+
+    public String resourceConfigChat(String userInput) throws IOException {
+        return resourceConfigureAgent.resourceConfig(userInput, JsonUtil.schemaOf(TemplateContext.class));
     }
 
     private String getApplicationProperties() {
@@ -89,11 +93,11 @@ public class ResourceFacade {
     }
 
     private String getApplicationReport() throws IOException {
-        String details = appCatTools.getAllDetails()
-                + "\n\n #Applications:\n" + appCatTools.getApplications()
-                + "\n\n #Application Properties:\n" + getApplicationProperties();
-        if (migrationContext.getCfManifestPath() != null) {
-            details += "\n\n #Cloud Foundry Manifest:\n" + Files.readString(Path.of(migrationContext.getCfManifestPath()));
+        String details = "### AppCat Report:\n" + appCatTools.getAllDetails()
+                + "\n\n ### Applications:\n" + appCatTools.getApplications()
+                + "\n\n ### Application Properties:\n" + getApplicationProperties();
+        if (migrationContext.getCfManifestPath() != null && Files.exists(Path.of(migrationContext.getCfManifestPath()))) {
+            details += "\n\n ### Cloud Foundry Manifest:\n" + Files.readString(Path.of(migrationContext.getCfManifestPath()));
         }
         return details;
     }
