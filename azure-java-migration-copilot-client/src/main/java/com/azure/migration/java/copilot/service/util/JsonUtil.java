@@ -17,4 +17,9 @@ public class JsonUtil {
         ObjectNode jsonSchemaNode = generator.generateSchema(cls);
         return jsonSchemaNode.toPrettyString();
     }
+
+    public static <T> T fromJson(String json, Class<T> cls) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readValue(json, cls);
+    }
 }

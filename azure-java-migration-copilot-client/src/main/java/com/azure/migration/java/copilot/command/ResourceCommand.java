@@ -29,7 +29,7 @@ public class ResourceCommand implements MigrationCommand {
     public void execute(String commandText) {
         String selectedCommand = commandText;
         if (!StringUtils.hasText(selectedCommand)) {
-            terminal.println(Ansi.ansi().bold().a("\nWhat do you want to do with the resources").reset().toString());
+            terminal.println(Ansi.ansi().bold().a("\nCopilot: What do you want to do with the resources").reset().toString());
             selectedCommand = textIO.newStringInputReader().withNumberedPossibleValues(AVAILABLE_COMMANDS).read("");
         }
 
@@ -68,7 +68,7 @@ public class ResourceCommand implements MigrationCommand {
                     throw new IllegalArgumentException("Unrecognized command " + selectedCommand);
             }
         } catch (Exception e) {
-            terminal.println(Ansi.ansi().fg(Ansi.Color.RED).a(e.getMessage()).reset().toString());
+            terminal.println(Ansi.ansi().fg(Ansi.Color.RED).a("Error: " + e.getMessage()).reset().toString());
         }
     }
 
