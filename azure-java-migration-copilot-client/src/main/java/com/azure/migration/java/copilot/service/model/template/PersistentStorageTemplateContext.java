@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import lombok.Getter;
 import lombok.Setter;
 
-public class PersistantStorageTemplateContext {
+public class PersistentStorageTemplateContext {
     @Getter
     @Setter
     @JsonPropertyDescription("specify whether local storage is detected from report, default to false")

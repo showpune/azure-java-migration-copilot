@@ -34,7 +34,7 @@ public class TemplateContext {
     @Getter
     @JsonPropertyDescription(value = "the persistent storage configuration if local storage is detected from report")
     @JsonProperty("persistent")
-    private final PersistantStorageTemplateContext persistantStorageTemplateContext = new PersistantStorageTemplateContext();
+    private final PersistentStorageTemplateContext persistantStorageTemplateContext = new PersistentStorageTemplateContext();
 
     @Getter
     @JsonPropertyDescription(value = "the workload configuration if any workload configuration is detected")

@@ -10,6 +10,13 @@ param exists bool
 @secure()
 param appDefinition object
 
+param cpu string
+
+param memory string
+
+param instanceCount int
+
+
 var appSettingsArray = filter(array(appDefinition.settings), i => i.name != '')
 var secrets = map(filter(appSettingsArray, i => i.?secret != null), i => {
   name: i.name
@@ -108,14 +115,14 @@ resource app 'Microsoft.App/containerApps@2023-05-02-preview' = {
             secretRef: secret.secretRef
           }))
           resources: {
-            cpu: json('1.0')
-            memory: '2.0Gi'
+            cpu: json(cpu)
+            memory: memory
           }
         }
       ]
       scale: {
-        minReplicas: 1
-        maxReplicas: 10
+        minReplicas: instanceCount
+        maxReplicas: instanceCount
       }
       volumes: [
         {
