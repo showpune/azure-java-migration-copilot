@@ -49,14 +49,14 @@ public class ResourceCommand implements MigrationCommand {
                     );
                     break;
                 case "config", "config:":
-                    hint = resourceFacade.resourceConfig("config");
+                    hint = resourceFacade.resourceConfig();
                     MigrationCommand.loop(
                             ConsoleContext.builder().defaultValue("").prompt("/resource/config>").terminal(terminal).textIO(textIO).hint(hint).build(),
                             ConsoleContext::exited,
                             input ->
                             {
                                 try {
-                                    terminal.println(resourceFacade.resourceConfig(input));
+                                    terminal.println(resourceFacade.resourceConfigChat(input));
                                 } catch (IOException e) {
                                     throw new RuntimeException(e);
                                 }

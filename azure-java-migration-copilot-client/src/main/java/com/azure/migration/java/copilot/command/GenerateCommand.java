@@ -39,16 +39,15 @@ public class GenerateCommand implements MigrationCommand {
             switch (MigrationCommand.determineCommand(selectedCommand)) {
                 case "bicep", "bicep:":
                     if (migrationContext.getTemplateContext() == null) {
-                        migrationContext.setTemplateContext(new TemplateContext());
+                        terminal.println(Ansi.ansi().fg(Ansi.Color.YELLOW).bold().a("Using default template context to generate bicep templates").reset().toString());
+                        migrationContext.setTemplateContext(MigrationContext.DEFAULT_TEMPLATE_CONTEXT);
                     }
-
                     TemplateContext templateContext = migrationContext.getTemplateContext();
 
-                    if (!StringUtils.hasText(templateContext.getAcaEnvName())) {
-                        terminal.println(Ansi.ansi().bold().a("\nPlease tell me the Azure Container Apps environment name you want to use?").reset().toString());
-                        String acaEnvName = textIO.newStringInputReader().withDefaultValue("demo").read("/generate/bicep>");
-                        templateContext.setAcaEnvName(acaEnvName);
-                    }
+                    String defaultAcaEnvName = StringUtils.hasText(templateContext.getAcaEnvName()) ? templateContext.getAcaEnvName(): "demo";
+                    terminal.println(Ansi.ansi().bold().a("\nPlease tell me the Azure Container Apps environment name you want to use?").reset().toString());
+                    String acaEnvName = textIO.newStringInputReader().withDefaultValue(defaultAcaEnvName).read("/generate/bicep>");
+                    templateContext.setAcaEnvName(acaEnvName);
 
                     azdConfigFilesGenerator.generateBicepFiles(migrationContext);
                     break;
@@ -57,7 +56,6 @@ public class GenerateCommand implements MigrationCommand {
             }
             terminal.println("Scripts generated, use `git status` to check generated files, then check in");
         } catch (Exception e) {
-            e.printStackTrace();
             terminal.println(Ansi.ansi().fg(Ansi.Color.RED).a("Scripts generation failed, error: " + e.getMessage()).reset().toString());
         }
 
