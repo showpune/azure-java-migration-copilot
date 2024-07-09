@@ -14,9 +14,13 @@ public class ResourceConfigTools {
     MigrationContext migrationContext;
 
     @Tool({"Set the template context"})
-    public void setTemplateContext(String templateContextJson) throws JsonProcessingException {
+    public void setTemplateContext(String templateContextJson) {
         if (templateContextJson != null) {
-            this.migrationContext.setTemplateContext(JsonUtil.fromJson(templateContextJson, TemplateContext.class));
+            try {
+                this.migrationContext.setTemplateContext(JsonUtil.fromJson(templateContextJson, TemplateContext.class));
+            } catch (JsonProcessingException e) {
+                // silently handle this exception as LLM may set an invalid json which cannot be converted to template context
+            }
         }
     }
 }
