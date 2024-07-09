@@ -46,7 +46,7 @@ public class MigrationCopilotApplication {
             String hint = serviceFacade.recommendService();
 
             loop(
-                    ConsoleContext.builder().defaultValue("").prompt("/>").terminal(terminal).textIO(textIO).hint(hint).build(),
+                    ConsoleContext.builder().defaultValue("1").prompt("/>").terminal(terminal).textIO(textIO).hint(hint).build(),
                     ConsoleContext::exited,
                     input -> {
                         try {

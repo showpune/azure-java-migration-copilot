@@ -7,7 +7,7 @@ import lombok.Setter;
 public class PersistantStorageTemplateContext {
     @Getter
     @Setter
-    @JsonPropertyDescription("set to true only when file system usage is detected from report, default to false")
+    @JsonPropertyDescription("specify whether local file system is used in application, default to false")
     private boolean required;
 
     @Getter
