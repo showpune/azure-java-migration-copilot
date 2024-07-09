@@ -18,6 +18,6 @@ public interface ResourceConfigureAgent {
     @SystemMessage(fromResource = "/prompts/resource/resource-config.txt")
     String resourceConfig(@UserMessage String report, @V("schema") String schema);
 
-    @SystemMessage("Fulfill the user request and set the template context when converted JSON based on {{schema} and remind user to enter 'done' when finished }")
+    @SystemMessage(fromResource = "/prompts/resource/resource-config-chat.txt")
     String resourceConfigChat(@UserMessage String userInput, @V("schema") String schema);
 }

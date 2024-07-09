@@ -72,7 +72,7 @@ public class ResourceFacade {
     }
 
     public String resourceConfigChat(String userInput) throws IOException {
-        return resourceConfigureAgent.resourceConfig(userInput, JsonUtil.schemaOf(TemplateContext.class));
+        return resourceConfigureAgent.resourceConfigChat(userInput, JsonUtil.schemaOf(TemplateContext.class));
     }
 
     private String getApplicationProperties() {
@@ -99,6 +99,7 @@ public class ResourceFacade {
                 + "\n" + appCatTools.getIssuesSummary()
                 + "\n\n ### Application Properties:\n" + getApplicationProperties();
         if (migrationContext.getCfManifestPath() != null && Files.exists(Path.of(migrationContext.getCfManifestPath()))) {
+            details += "\n\n ### Cloud Foundry manifest file location:\n" + migrationContext.getCfManifestPath();
             details += "\n\n ### Cloud Foundry Manifest:\n" + Files.readString(Path.of(migrationContext.getCfManifestPath()));
         }
         return details;

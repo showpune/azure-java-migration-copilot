@@ -59,7 +59,7 @@ public class MigrationCopilotApplication {
             );
 
             loop(
-                ConsoleContext.builder().defaultValue("help").prompt("/>").terminal(terminal).textIO(textIO).hint(Ansi.ansi().bold().a("\nWhat do you want to do next? (type `help` to check available commands)").reset().toString()).build(),
+                ConsoleContext.builder().defaultValue("help").prompt("/>").terminal(terminal).textIO(textIO).hint(Ansi.ansi().bold().a("\nCopilot: What do you want to do next? (type `help` to check available commands)").reset().toString()).build(),
                 ConsoleContext::exited,
                 input -> {
                     of(input).ifPresentOrElse(
