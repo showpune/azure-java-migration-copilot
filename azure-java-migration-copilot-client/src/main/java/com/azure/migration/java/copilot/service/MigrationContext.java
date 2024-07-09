@@ -15,9 +15,7 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -79,7 +77,7 @@ public class MigrationContext {
         boolean initSuccess = false;
         while (!initSuccess) {
             if (sourcePathString == null) {
-                terminal.println(Ansi.ansi().bold().a("\nI‘m your migration assistant. Could you please provide me with the location of your source code?").reset().toString());
+                terminal.println(Ansi.ansi().bold().a("\nCopilot: I‘m your migration assistant. Could you please provide me with the location of your source code?").reset().toString());
                 sourcePathString = textIO.
                         newStringInputReader().
                         withDefaultValue(getProperty("user.dir")).
@@ -94,10 +92,11 @@ public class MigrationContext {
             String tempDir = System.getProperty("java.io.tmpdir");
             String basePathPrefix = "migration-pilot/" + generateMD5Hash(this.sourceCodePath);
             File baseFile = new File(tempDir, basePathPrefix);
+            scanCFManifest();
+
             if (!Optional.ofNullable(baseFile.list()).map(arr -> arr.length == 0).orElse(true) && !force) {
                 this.basePath = baseFile.getAbsolutePath();
                 this.windupReportPath = (new File(basePath, "appcat-report")).getAbsolutePath();
-                this.cfManifestPath = (new File(basePath, "manifest.yml")).getAbsolutePath();
                 terminal.println("Skip rebuild the report because find report and manifest.yml under: " + basePath);
                 return;
             } else {
@@ -107,7 +106,6 @@ public class MigrationContext {
             }
             this.basePath = baseFile.getAbsolutePath();
             scanCodeWithAppCat();
-            scanCFManifest();
             initSuccess = true;
         }
     }
@@ -117,10 +115,7 @@ public class MigrationContext {
         if (!fromFile.exists()) {
             return;
         }
-        File toFile = new File(basePath, "manifest.yml");
-        terminal.println("Handle the manifest.yml file");
-        Files.copy(fromFile.toPath(), toFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-        cfManifestPath = toFile.getAbsolutePath();
+        cfManifestPath = fromFile.getAbsolutePath();
     }
 
     public void scanCodeWithAppCat() throws IOException {
