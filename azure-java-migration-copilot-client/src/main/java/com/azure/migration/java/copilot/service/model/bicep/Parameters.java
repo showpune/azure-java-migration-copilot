@@ -28,10 +28,10 @@ public class Parameters {
 
     @Getter
     @Setter
-    private ResourceItem resources = new ResourceItem();
+    private CommonItem<MetadataItem> metadata = new CommonItem();
 
     @Getter
     @Setter
-    private WorkloadItem workload = new WorkloadItem();
+    private CommonItem<WorkloadItem> workload = new CommonItem();
 
 }

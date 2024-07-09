@@ -13,7 +13,9 @@ param springPetclinicExists bool
 @secure()
 param springPetclinicDefinition object
 
-param dbName string
+param metadata object
+
+param workload object
 
 @description('Id of the user or app to assign application roles')
 param principalId string
@@ -106,18 +108,19 @@ module springPetclinic './app/spring-petclinic.bicep' = {
     containerRegistryName: registry.outputs.name
     exists: springPetclinicExists
     appDefinition: springPetclinicDefinition
+    cpu: workload.cpu
+    memory: workload.memory
+    instanceCount: workload.instanceCount
   }
   scope: rg
 }
 
-module mysql './shared/db.bicep' = {
+module mysql './shared/db-existing.bicep' = {
   name: 'mysql'
   params: {
-    serverName: dbName
-    databaseName: 'petclinic'
-    location: 'eastasia'
+    serverName: metadata.db.name
+    resourceGroupName: 'migration-demo'
   }
-  scope: rg
 }
 
 module storageAccount './shared/storageaccount.bicep' = {

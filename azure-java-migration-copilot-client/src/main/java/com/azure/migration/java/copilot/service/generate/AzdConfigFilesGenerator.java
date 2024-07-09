@@ -37,39 +37,8 @@ public class AzdConfigFilesGenerator {
         + "to use the value of 'VAR' from the current environment.";;
 
     public void generateBicepFiles(MigrationContext migrationContext) throws Exception {
-        //TODO mock remove later
-//        mockMigrationContext(migrationContext);
         copyBicepFiles(migrationContext.getSourceCodePath());
         generateBicepParamsFiles(migrationContext);
-    }
-
-    private MigrationContext mockMigrationContext(MigrationContext migrationContext) {
-        TemplateContext templateContext = migrationContext.getTemplateContext();
-        templateContext.setAcaEnvName("demo");
-        templateContext.setAppName("spring-petclinic");
-        DbTemplateContext dbTemplateContext = templateContext.getDbTemplateContext();
-        dbTemplateContext.setType("myqsl");
-        dbTemplateContext.setName("spring-petclinic");
-        dbTemplateContext.setPort(3306);
-        dbTemplateContext.setSchema("myqsl");
-        dbTemplateContext.setUser("migrationtool");
-        dbTemplateContext.setPwd("Password@123");
-
-        WorkloadTemplateContext workloadTemplateContext = templateContext.getWorkloadTemplateContext();
-        workloadTemplateContext.setCpu("1");
-        workloadTemplateContext.setMemory("1G");
-        workloadTemplateContext.setInstanceCount(2);
-
-        List<EnvVariableTemplateContext> list = templateContext.getEnvironments();
-        EnvVariableTemplateContext envVariableTemplateContext = new EnvVariableTemplateContext();
-        envVariableTemplateContext.setKey("a");
-        envVariableTemplateContext.setValue("b");
-        list.add(envVariableTemplateContext);
-
-        PersistentStorageTemplateContext persistentStorageTemplateContext = templateContext.getPersistantStorageTemplateContext();
-        persistentStorageTemplateContext.setMountPath("/mnt");
-
-        return migrationContext;
     }
 
     public void generateBicepParamsFiles(MigrationContext migrationContext) throws IOException {
@@ -91,7 +60,7 @@ public class AzdConfigFilesGenerator {
         parameters.getLocation().setValue("${AZURE_LOCATION}");
         parameters.getSpringPetclinicExists().setValue("${SERVICE_SPRING_PETCLINIC_RESOURCE_EXISTS=false}");
         parameters.getPrincipalId().setValue("${AZURE_PRINCIPAL_ID}");
-        parameters.setResources(assembleResources(templateContext));
+        parameters.setMetadata(assembleMetadata(templateContext));
         parameters.setWorkload(assembleWorkload(templateContext.getWorkloadTemplateContext()));;
         List<SettingItem> settingItems = new ArrayList<>();
         assembleDbEnvParams(settingItems, templateContext.getDbTemplateContext());
@@ -104,17 +73,20 @@ public class AzdConfigFilesGenerator {
         return bicepParams;
     }
 
-    private WorkloadItem assembleWorkload(WorkloadTemplateContext workloadTemplateContext) {
+    private CommonItem assembleWorkload(WorkloadTemplateContext workloadTemplateContext) {
+        CommonItem<WorkloadItem> commonItem = new CommonItem<>();
         WorkloadItem workloadItem = new WorkloadItem();
+        commonItem.setValue(workloadItem);
         workloadItem.setInstanceCount(workloadTemplateContext.getInstanceCount());
         workloadItem.setCpu(workloadTemplateContext.getCpu());
         workloadItem.setMemory(workloadTemplateContext.getMemory());
-        return workloadItem;
+        return commonItem;
     }
 
-    private ResourceItem assembleResources(TemplateContext templateContext) {
-
-        ResourceItem resourceItem = new ResourceItem();
+    private CommonItem assembleMetadata(TemplateContext templateContext) {
+        CommonItem<MetadataItem> commonItem = new CommonItem<>();
+        MetadataItem resourceItem = new MetadataItem();
+        commonItem.setValue(resourceItem);
 
         AcaItem aca = new AcaItem();
         resourceItem.setAca(aca);
@@ -128,7 +100,7 @@ public class AzdConfigFilesGenerator {
         resourceItem.setPersistent(persistent);
         persistent.setMountPath(templateContext.getPersistantStorageTemplateContext().getMountPath());
 
-        return resourceItem;
+        return commonItem;
     }
 
     private void assembleEnvParams(List<SettingItem> settingItems, List<EnvVariableTemplateContext> envsList) {
