@@ -3,10 +3,10 @@ package com.azure.migration.java.copilot.service.model.bicep;
 import lombok.Getter;
 import lombok.Setter;
 
-public class CommonItem<T> {
+public class DbItem {
 
     @Getter
     @Setter
-    private T value;
+    private String name;
 
 }

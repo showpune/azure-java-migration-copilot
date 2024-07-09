@@ -8,12 +8,12 @@ public class WorkloadTemplateContext {
 
     @Getter
     @Setter
-    @JsonPropertyDescription("the workload cpu quota from cloud foundry, default to 1")
+    @JsonPropertyDescription("the workload cpu quota from cloud foundry, default to 0.5")
     private String cpu;
 
     @Getter
     @Setter
-    @JsonPropertyDescription("the workload memory quota from cloud foundry, default to 1G")
+    @JsonPropertyDescription("the workload memory quota from cloud foundry, default to 1Gi")
     private String memory;
 
     @Getter

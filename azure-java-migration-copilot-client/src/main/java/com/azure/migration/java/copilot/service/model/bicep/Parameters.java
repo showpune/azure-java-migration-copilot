@@ -28,6 +28,10 @@ public class Parameters {
 
     @Getter
     @Setter
-    private CommonItem dbName = new CommonItem();
+    private CommonItem<MetadataItem> metadata = new CommonItem();
+
+    @Getter
+    @Setter
+    private CommonItem<WorkloadItem> workload = new CommonItem();
 
 }
