@@ -9,8 +9,4 @@ public class CommonItem<T> {
     @Setter
     private T value;
 
-//    public CommonTemplateItem(String value) {
-//        this.value = value;
-//    }
-
 }

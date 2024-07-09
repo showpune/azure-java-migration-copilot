@@ -11,7 +11,7 @@ public class ResourceConfigTools {
     @Autowired
     MigrationContext migrationContext;
 
-    @Tool({"Set the template context"})
+    @Tool("Set the template context")
     public void setTemplateContext(TemplateContext templateContext) {
         this.migrationContext.setTemplateContext(templateContext);
     }

@@ -3,9 +3,7 @@ package com.azure.migration.java.copilot.service.generate;
 import com.azure.migration.java.copilot.service.MigrationContext;
 import com.azure.migration.java.copilot.service.constant.Constants;
 import com.azure.migration.java.copilot.service.model.bicep.*;
-import com.azure.migration.java.copilot.service.model.template.DbTemplateContext;
-import com.azure.migration.java.copilot.service.model.template.EnvVariableTemplateContext;
-import com.azure.migration.java.copilot.service.model.template.TemplateContext;
+import com.azure.migration.java.copilot.service.model.template.*;
 import com.azure.migration.java.copilot.service.util.FileUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -39,8 +37,39 @@ public class AzdConfigFilesGenerator {
         + "to use the value of 'VAR' from the current environment.";;
 
     public void generateBicepFiles(MigrationContext migrationContext) throws Exception {
+        //TODO mock remove later
+//        mockMigrationContext(migrationContext);
         copyBicepFiles(migrationContext.getSourceCodePath());
         generateBicepParamsFiles(migrationContext);
+    }
+
+    private MigrationContext mockMigrationContext(MigrationContext migrationContext) {
+        TemplateContext templateContext = migrationContext.getTemplateContext();
+        templateContext.setAcaEnvName("demo");
+        templateContext.setAppName("spring-petclinic");
+        DbTemplateContext dbTemplateContext = templateContext.getDbTemplateContext();
+        dbTemplateContext.setType("myqsl");
+        dbTemplateContext.setName("spring-petclinic");
+        dbTemplateContext.setPort(3306);
+        dbTemplateContext.setSchema("myqsl");
+        dbTemplateContext.setUser("migrationtool");
+        dbTemplateContext.setPwd("Password@123");
+
+        WorkloadTemplateContext workloadTemplateContext = templateContext.getWorkloadTemplateContext();
+        workloadTemplateContext.setCpu("1");
+        workloadTemplateContext.setMemory("1G");
+        workloadTemplateContext.setInstanceCount(2);
+
+        List<EnvVariableTemplateContext> list = templateContext.getEnvironments();
+        EnvVariableTemplateContext envVariableTemplateContext = new EnvVariableTemplateContext();
+        envVariableTemplateContext.setKey("a");
+        envVariableTemplateContext.setValue("b");
+        list.add(envVariableTemplateContext);
+
+        PersistentStorageTemplateContext persistentStorageTemplateContext = templateContext.getPersistantStorageTemplateContext();
+        persistentStorageTemplateContext.setMountPath("/mnt");
+
+        return migrationContext;
     }
 
     public void generateBicepParamsFiles(MigrationContext migrationContext) throws IOException {
@@ -62,11 +91,10 @@ public class AzdConfigFilesGenerator {
         parameters.getLocation().setValue("${AZURE_LOCATION}");
         parameters.getSpringPetclinicExists().setValue("${SERVICE_SPRING_PETCLINIC_RESOURCE_EXISTS=false}");
         parameters.getPrincipalId().setValue("${AZURE_PRINCIPAL_ID}");
-        DbTemplateContext dbTemplateContext = templateContext.getDbTemplateContext();
-        parameters.getDbName().setValue(dbTemplateContext.getName());
-
+        parameters.setResources(assembleResources(templateContext));
+        parameters.setWorkload(assembleWorkload(templateContext.getWorkloadTemplateContext()));;
         List<SettingItem> settingItems = new ArrayList<>();
-        assembleDbEnvParams(settingItems, dbTemplateContext);
+        assembleDbEnvParams(settingItems, templateContext.getDbTemplateContext());
         assembleEnvParams(settingItems, templateContext.getEnvironments());
         CommonItem<Settings> springPetclinicDefinition = new CommonItem<>();
         springPetclinicDefinition.setValue(new Settings());
@@ -74,6 +102,33 @@ public class AzdConfigFilesGenerator {
         parameters.setSpringPetclinicDefinition(springPetclinicDefinition);
 
         return bicepParams;
+    }
+
+    private WorkloadItem assembleWorkload(WorkloadTemplateContext workloadTemplateContext) {
+        WorkloadItem workloadItem = new WorkloadItem();
+        workloadItem.setInstanceCount(workloadTemplateContext.getInstanceCount());
+        workloadItem.setCpu(workloadTemplateContext.getCpu());
+        workloadItem.setMemory(workloadTemplateContext.getMemory());
+        return workloadItem;
+    }
+
+    private ResourceItem assembleResources(TemplateContext templateContext) {
+
+        ResourceItem resourceItem = new ResourceItem();
+
+        AcaItem aca = new AcaItem();
+        resourceItem.setAca(aca);
+        aca.setName(templateContext.getAcaEnvName());
+
+        DbItem db = new DbItem();
+        resourceItem.setDb(db);
+        db.setName(templateContext.getDbTemplateContext().getName());
+
+        PersistentStorageItem persistent = new PersistentStorageItem();
+        resourceItem.setPersistent(persistent);
+        persistent.setMountPath(templateContext.getPersistantStorageTemplateContext().getMountPath());
+
+        return resourceItem;
     }
 
     private void assembleEnvParams(List<SettingItem> settingItems, List<EnvVariableTemplateContext> envsList) {
