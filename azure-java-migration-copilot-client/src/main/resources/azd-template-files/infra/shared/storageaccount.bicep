@@ -4,8 +4,16 @@ param location string = resourceGroup().location
 param storageAccountShareName string = 'migrationtest'
 
 resource fileshare 'Microsoft.Storage/storageAccounts/fileServices/shares@2023-01-01' = {
-  name: '${name}/default/${storageAccountShareName}'
+  name: 'default'
+  parent: fileService
   properties: {}
+}
+
+resource fileService 'Microsoft.Storage/storageAccounts/fileServices@2023-01-01' = {
+  name: 'default'
+  parent: storageAccount
+  properties: {
+  }
 }
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' = {

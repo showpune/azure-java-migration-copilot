@@ -7,7 +7,7 @@ public class MetadataItem {
 
     @Getter
     @Setter
-    private AcaItem aca;
+    private String appName;
 
     @Getter
     @Setter
