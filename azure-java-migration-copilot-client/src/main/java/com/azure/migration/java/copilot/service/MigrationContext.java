@@ -135,9 +135,9 @@ public class MigrationContext {
 
     public void findReport(){
         File fromFile = new File(sourceCodePath, "manifest.yml");
+        cfManifestPath = fromFile.getAbsolutePath();
         if (fromFile.exists()) {
             terminal.println("Found the Cloud Foundary manifest.yml under: " + fromFile.getAbsolutePath());
-            cfManifestPath = fromFile.getAbsolutePath();
         }
         fromFile = new File(basePath, "appcat-report");
         if (fromFile.exists()) {

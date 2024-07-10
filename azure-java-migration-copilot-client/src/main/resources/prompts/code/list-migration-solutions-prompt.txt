@@ -4,4 +4,5 @@ Return one or more solutions as flow:
 1. If the customer project is a java project, always return solution "Upgrade JDK To Latest"
 2. If the customer project is a spring project, always return solution "Upgrade Spring To Latest"
 3. If password detected in the project, return solution "Apply passwordless solution"
+4. If messaging detected in the project, return solution "Migrate MQ to Service Bus"
 Remind user to enter 'done' to quit code upgrade

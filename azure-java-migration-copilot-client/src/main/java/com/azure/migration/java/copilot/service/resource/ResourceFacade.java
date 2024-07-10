@@ -38,8 +38,10 @@ public class ResourceFacade {
     @Autowired
     private ApplicationConfiguration applicationConfiguration;
 
+    private String memoryId;
+
     public void initApplicationConfiguration() throws IOException {
-        if (migrationContext.getCfManifestPath() == null) {
+        if (migrationContext.getCfManifestPath() == null||!Files.exists(Path.of(migrationContext.getCfManifestPath()))) {
             return;
         }
         String result = toolsAgent.abstractInfo(ApplicationConfiguration.jsonSchema, Json.toJson(applicationConfiguration),cfManifestTools.getDetails());
@@ -68,11 +70,12 @@ public class ResourceFacade {
     }
 
     public String resourceConfig() throws IOException {
-        return resourceConfigureAgent.resourceConfig(getApplicationReport(), JsonUtil.schemaOf(TemplateContext.class));
+        memoryId = System.currentTimeMillis() + "";
+        return resourceConfigureAgent.resourceConfig(getApplicationReport(), JsonUtil.schemaOf(TemplateContext.class),memoryId);
     }
 
     public String resourceConfigChat(String userInput) throws IOException {
-        return resourceConfigureAgent.resourceConfigChat(userInput, JsonUtil.schemaOf(TemplateContext.class));
+        return resourceConfigureAgent.resourceConfigChat(userInput, JsonUtil.schemaOf(TemplateContext.class),memoryId);
     }
 
     private String getApplicationProperties() {

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Component
@@ -15,7 +16,7 @@ public class CFManifestTools {
     private MigrationContext migrationContext;
 
     public String getDetails() throws IOException {
-        if (migrationContext.getCfManifestPath() == null) {
+        if (Files.exists(Path.of(migrationContext.getCfManifestPath()))) {
             return "";
         }
         return new String(Files.readAllBytes(Paths.get(migrationContext.getCfManifestPath())));

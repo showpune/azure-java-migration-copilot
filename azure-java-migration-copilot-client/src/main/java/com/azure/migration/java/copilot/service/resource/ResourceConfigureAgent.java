@@ -1,5 +1,6 @@
 package com.azure.migration.java.copilot.service.resource;
 
+import dev.langchain4j.service.MemoryId;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
 import dev.langchain4j.service.V;
@@ -15,9 +16,15 @@ public interface ResourceConfigureAgent {
     @SystemMessage(fromResource = "/prompts/resource/resource-guide.txt")
     String resourceGuide(@UserMessage String userMessage, @V("service") String service);
 
+    /**
+     * @param report
+     * @param schem
+     * @param memoryId each round will trigger a new memory loop
+     * @return
+     */
     @SystemMessage(fromResource = "/prompts/resource/resource-config.txt")
-    String resourceConfig(@UserMessage String report, @V("schema") String schema);
+    String resourceConfig(@UserMessage String report, @V("schema") String schem, @MemoryId String memoryId);
 
     @SystemMessage(fromResource = "/prompts/resource/resource-config-chat.txt")
-    String resourceConfigChat(@UserMessage String userInput, @V("schema") String schema);
+    String resourceConfigChat(@UserMessage String userInput, @V("schema") String schema,@MemoryId String memoryId);
 }

@@ -12,7 +12,7 @@ public class DbTemplateContext {
 
     @Getter
     @Setter
-    @JsonPropertyDescription("the database type detected from report, default to mysql")
+    @JsonPropertyDescription("the database type, default to mysql")
     private String type;
 
     @Getter
@@ -39,4 +39,9 @@ public class DbTemplateContext {
     @Setter
     @JsonPropertyDescription("the password used to connect to database, default to password")
     private String pwd;
+
+    @Getter
+    @Setter
+    @JsonPropertyDescription("The connection string of the database")
+    private String connectionString;
 }

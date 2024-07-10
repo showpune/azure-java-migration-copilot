@@ -69,7 +69,6 @@ public class CodeMigrationTools {
         Path cmdPath = Path.of(appCatHome, "bin", "mvn");
         String[] commands = {
                 cmdPath.toString(),
-                "-U",
                 "-f",
                 migrationContext.getSourceCodePath(),
                 "org.openrewrite.maven:rewrite-maven-plugin:run",
