@@ -42,8 +42,6 @@ public class GenerateCommand implements MigrationCommand {
                         terminal.println(Ansi.ansi().fg(Ansi.Color.YELLOW).bold().a("Copilot: Using default template context to generate bicep templates").reset().toString());
                         migrationContext.setTemplateContext(MigrationContext.DEFAULT_TEMPLATE_CONTEXT);
                     }
-                    terminal.println(Ansi.ansi().bold().a("\nCopilot: Please tell me the Azure Container Apps environment name you want to use?").reset().toString());
-                    String acaEnvName = textIO.newStringInputReader().withDefaultValue("demoEnv").read("/generate/bicep>");
 
                     TemplateContext templateContext = migrationContext.getTemplateContext();
                     if (!StringUtils.hasText(templateContext.getAppName())) {
@@ -53,7 +51,7 @@ public class GenerateCommand implements MigrationCommand {
                         templateContext.setAppName(appName);
                     }
 
-                    azdConfigFilesGenerator.generateBicepFiles(acaEnvName, migrationContext);
+                    azdConfigFilesGenerator.generateBicepFiles(migrationContext);
                     break;
                 default:
                     throw new IllegalArgumentException("Unrecognized command: " + selectedCommand);

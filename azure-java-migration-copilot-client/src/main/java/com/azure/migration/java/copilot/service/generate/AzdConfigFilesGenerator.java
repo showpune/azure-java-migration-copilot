@@ -27,9 +27,6 @@ public class AzdConfigFilesGenerator {
     @Value("${copilot.bicpe.tempalte.path}")
     String bicepTemplatePath;
 
-    @Value("classpath:/azd-template-files")
-    private Resource[] files;
-
     @Autowired
     ResourceLoader resourceLoader;
 
@@ -38,20 +35,20 @@ public class AzdConfigFilesGenerator {
     String defaultCommentValue = "The value to provide. This can be a fixed literal, or an expression like ${VAR} "
         + "to use the value of 'VAR' from the current environment.";;
 
-    public void generateBicepFiles(String acaEnvName, MigrationContext migrationContext) throws Exception {
+    public void generateBicepFiles(MigrationContext migrationContext) throws Exception {
         copyBicepFiles(migrationContext.getSourceCodePath());
-        generateBicepParamsFiles(acaEnvName, migrationContext);
+        generateBicepParamsFiles(migrationContext);
     }
 
-    public void generateBicepParamsFiles(String acaEnvName, MigrationContext migrationContext) throws IOException {
+    public void generateBicepParamsFiles(MigrationContext migrationContext) throws IOException {
             Gson gson = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
-            String jsonStr = gson.toJson(this.assembleBicepParams(acaEnvName, migrationContext.getTemplateContext()));
+            String jsonStr = gson.toJson(this.assembleBicepParams(migrationContext.getTemplateContext()));
             Path filePath = Paths.get(migrationContext.getSourceCodePath(),"/infra", "/main.parameters.json");
             Files.write(filePath, jsonStr.getBytes());
 
     }
 
-    public BicepParams assembleBicepParams(String acaEnvName, TemplateContext templateContext) {
+    public BicepParams assembleBicepParams(TemplateContext templateContext) {
         BicepParams bicepParams = new BicepParams();
         bicepParams.setSchema("https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#");
         bicepParams.setContentVersion("1.0.0.0");
@@ -62,7 +59,7 @@ public class AzdConfigFilesGenerator {
         parameters.getLocation().setValue("${AZURE_LOCATION}");
         parameters.getSpringPetclinicExists().setValue("${SERVICE_SPRING_PETCLINIC_RESOURCE_EXISTS=false}");
         parameters.getPrincipalId().setValue("${AZURE_PRINCIPAL_ID}");
-        parameters.setMetadata(assembleMetadata(acaEnvName, templateContext));
+        parameters.setMetadata(assembleMetadata(templateContext));
         parameters.setWorkload(assembleWorkload(templateContext.getWorkloadTemplateContext()));;
         List<SettingItem> settingItems = new ArrayList<>();
         assembleDbEnvParams(settingItems, templateContext.getDbTemplateContext());
@@ -85,14 +82,12 @@ public class AzdConfigFilesGenerator {
         return commonItem;
     }
 
-    private CommonItem assembleMetadata(String acaEnvName, TemplateContext templateContext) {
+    private CommonItem assembleMetadata(TemplateContext templateContext) {
         CommonItem<MetadataItem> commonItem = new CommonItem<>();
         MetadataItem resourceItem = new MetadataItem();
         commonItem.setValue(resourceItem);
 
-        AcaItem aca = new AcaItem();
-        resourceItem.setAca(aca);
-        aca.setName(acaEnvName);
+        resourceItem.setAppName(templateContext.getAppName());
 
         DbItem db = new DbItem();
         resourceItem.setDb(db);
@@ -126,13 +121,11 @@ public class AzdConfigFilesGenerator {
 
     public void copyBicepFiles(String targetPath) throws IOException {
 
-        String classPath = "classpath:/azd-template-files/**/*";
-
         //create direcotries
-        FileUtil.createFiles(classPath, targetPath, true);
+        FileUtil.createFiles(bicepTemplatePath, targetPath, true);
 
         //create files
-        FileUtil.createFiles(classPath, targetPath, false);
+        FileUtil.createFiles(bicepTemplatePath, targetPath, false);
     }
 
 }

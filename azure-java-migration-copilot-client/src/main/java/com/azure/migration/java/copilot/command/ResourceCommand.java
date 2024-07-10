@@ -43,7 +43,7 @@ public class ResourceCommand implements MigrationCommand {
                     hint = resourceFacade.resourceGuideSelect(resources);
 
                     MigrationCommand.loop(
-                            ConsoleContext.builder().defaultValue("").prompt("/resource/usage>").terminal(terminal).textIO(textIO).hint(hint).build(),
+                            ConsoleContext.builder().defaultValue("done").prompt("/resource/usage>").terminal(terminal).textIO(textIO).hint(hint).build(),
                             ConsoleContext::exited,
                             input -> terminal.println(resourceFacade.resourceGuide(input))
                     );
@@ -51,7 +51,7 @@ public class ResourceCommand implements MigrationCommand {
                 case "config", "config:":
                     hint = resourceFacade.resourceConfig();
                     MigrationCommand.loop(
-                            ConsoleContext.builder().defaultValue("").prompt("/resource/config>").terminal(terminal).textIO(textIO).hint(hint).build(),
+                            ConsoleContext.builder().defaultValue("done").prompt("/resource/config>").terminal(terminal).textIO(textIO).hint(hint).build(),
                             ConsoleContext::exited,
                             input ->
                             {

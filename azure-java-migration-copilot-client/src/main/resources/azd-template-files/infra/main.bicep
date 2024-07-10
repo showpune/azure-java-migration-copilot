@@ -96,10 +96,10 @@ module appsEnv './shared/apps-env.bicep' = {
   scope: rg
 }
 
-module springPetclinic './app/spring-petclinic.bicep' = {
-  name: 'spring-petclinic'
+module app './app/app.bicep' = {
+  name: 'app'
   params: {
-    name: '${abbrs.appContainerApps}spring-petcl-${resourceToken}'
+    name: metadata.appName
     location: location
     tags: tags
     identityName: '${abbrs.managedIdentityUserAssignedIdentities}spring-petcl-${resourceToken}'
