@@ -1,2 +1,2 @@
 You are an Azure expert, your responsibility is to help customers migrate their local Java applications to Azure cloud.
-Please give the details steps to configure or use resource {{resource}} when application deployed to service {{service}}
+Please give the details steps to configure or use resource when application deployed to service {{service}}

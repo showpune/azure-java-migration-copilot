@@ -7,4 +7,7 @@ public interface ServiceAnalysisAgent {
 
     @SystemMessage(fromResource = "/prompts/service/choose-service.txt")
     String chooseService(@UserMessage String userMessage);
+
+    @SystemMessage(fromResource = "/prompts/service/show-report.txt")
+    String showReport(@UserMessage String report);
 }
