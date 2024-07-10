@@ -7,7 +7,7 @@ import lombok.Setter;
 public class DbTemplateContext {
     @Getter
     @Setter
-    @JsonPropertyDescription("whether database is used in application, default to false")
+    @JsonPropertyDescription("whether database is used in application, if database is detected, this value should be set to true")
     private boolean required;
 
     @Getter
