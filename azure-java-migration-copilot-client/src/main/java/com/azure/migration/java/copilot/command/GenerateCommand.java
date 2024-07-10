@@ -42,19 +42,23 @@ public class GenerateCommand implements MigrationCommand {
                         terminal.println(Ansi.ansi().fg(Ansi.Color.YELLOW).bold().a("Copilot: Using default template context to generate bicep templates").reset().toString());
                         migrationContext.setTemplateContext(MigrationContext.DEFAULT_TEMPLATE_CONTEXT);
                     }
-                    TemplateContext templateContext = migrationContext.getTemplateContext();
-
-                    String defaultAcaEnvName = StringUtils.hasText(templateContext.getAcaEnvName()) ? templateContext.getAcaEnvName(): "demo";
                     terminal.println(Ansi.ansi().bold().a("\nCopilot: Please tell me the Azure Container Apps environment name you want to use?").reset().toString());
-                    String acaEnvName = textIO.newStringInputReader().withDefaultValue(defaultAcaEnvName).read("/generate/bicep>");
-                    templateContext.setAcaEnvName(acaEnvName);
+                    String acaEnvName = textIO.newStringInputReader().withDefaultValue("demoEnv").read("/generate/bicep>");
 
-                    azdConfigFilesGenerator.generateBicepFiles(migrationContext);
+                    TemplateContext templateContext = migrationContext.getTemplateContext();
+                    if (!StringUtils.hasText(templateContext.getAppName())) {
+                        terminal.println(Ansi.ansi().bold().a("\nCopilot: Please tell me the application name you want to use?").reset().toString());
+                        String defaultAppName = StringUtils.hasText(migrationContext.getAppName())? migrationContext.getAppName() : "demoApp";
+                        String appName = textIO.newStringInputReader().withDefaultValue(defaultAppName).read("/generate/bicep>");
+                        templateContext.setAppName(appName);
+                    }
+
+                    azdConfigFilesGenerator.generateBicepFiles(acaEnvName, migrationContext);
                     break;
                 default:
                     throw new IllegalArgumentException("Unrecognized command: " + selectedCommand);
             }
-            terminal.println("Scripts generated, use `git status` to check generated files, then check in");
+            terminal.println("Scripts generated under you source code path, use `git status` to check generated files, then check in");
         } catch (Exception e) {
             terminal.println(Ansi.ansi().fg(Ansi.Color.RED).a("Scripts generation failed, error: " + e.getMessage()).reset().toString());
         }

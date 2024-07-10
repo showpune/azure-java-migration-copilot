@@ -59,6 +59,10 @@ public class MigrationContext {
     @Setter
     private String service;
 
+    @Getter
+    @Setter
+    private String appName;
+
     @Autowired
     private LocalCommandTools localCommandTools;
 
