@@ -7,12 +7,21 @@ import lombok.Setter;
 public class PersistentStorageTemplateContext {
     @Getter
     @Setter
-    @JsonPropertyDescription("specify whether local storage is detected from report, default to false")
+    @JsonPropertyDescription("whether local file system usage or relative path is detected from report, default to false")
     private boolean required;
 
     @Getter
     @Setter
-    @JsonPropertyDescription("the mounting path in container if persistent storage is required, default to /mnt")
+    @JsonPropertyDescription("the file share name of Azure Storage Account, default to application name")
+    private String fileShare;
+
+    @Getter
+    @Setter
+    @JsonPropertyDescription("the mount path inside container if persistent storage is required, default to /persistent")
     private String mountPath;
 
+    @Getter
+    @Setter
+    @JsonPropertyDescription("the mount options for volume mount into the container, comma separated")
+    private String mountOptions;
 }

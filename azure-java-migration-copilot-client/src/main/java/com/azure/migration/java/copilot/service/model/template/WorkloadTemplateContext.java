@@ -13,11 +13,11 @@ public class WorkloadTemplateContext {
 
     @Getter
     @Setter
-    @JsonPropertyDescription("the workload memory quota from cloud foundry, default to 1Gi")
-    private String memory;
+    @JsonPropertyDescription("the workload memory quota, default to 1Gi")
+    private String memory = "1Gi";
 
     @Getter
     @Setter
-    @JsonPropertyDescription("the workload instance count from cloud foundry, default to 1")
-    private int instanceCount;
+    @JsonPropertyDescription("the workload instance count, default to 1")
+    private int instanceCount = 1;
 }

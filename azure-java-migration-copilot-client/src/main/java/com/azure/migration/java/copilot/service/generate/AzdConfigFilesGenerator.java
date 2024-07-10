@@ -14,7 +14,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -28,6 +27,9 @@ public class AzdConfigFilesGenerator {
     @Value("${copilot.bicpe.tempalte.path}")
     String bicepTemplatePath;
 
+    @Value("classpath:/azd-template-files")
+    private Resource[] files;
+
     @Autowired
     ResourceLoader resourceLoader;
 
@@ -36,20 +38,20 @@ public class AzdConfigFilesGenerator {
     String defaultCommentValue = "The value to provide. This can be a fixed literal, or an expression like ${VAR} "
         + "to use the value of 'VAR' from the current environment.";;
 
-    public void generateBicepFiles(MigrationContext migrationContext) throws Exception {
+    public void generateBicepFiles(String acaEnvName, MigrationContext migrationContext) throws Exception {
         copyBicepFiles(migrationContext.getSourceCodePath());
-        generateBicepParamsFiles(migrationContext);
+        generateBicepParamsFiles(acaEnvName, migrationContext);
     }
 
-    public void generateBicepParamsFiles(MigrationContext migrationContext) throws IOException {
+    public void generateBicepParamsFiles(String acaEnvName, MigrationContext migrationContext) throws IOException {
             Gson gson = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
-            String jsonStr = gson.toJson(this.assembleBicepParmas(migrationContext.getTemplateContext()));
+            String jsonStr = gson.toJson(this.assembleBicepParams(acaEnvName, migrationContext.getTemplateContext()));
             Path filePath = Paths.get(migrationContext.getSourceCodePath(),"/infra", "/main.parameters.json");
             Files.write(filePath, jsonStr.getBytes());
 
     }
 
-    public BicepParams assembleBicepParmas(TemplateContext templateContext) {
+    public BicepParams assembleBicepParams(String acaEnvName, TemplateContext templateContext) {
         BicepParams bicepParams = new BicepParams();
         bicepParams.setSchema("https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#");
         bicepParams.setContentVersion("1.0.0.0");
@@ -60,7 +62,7 @@ public class AzdConfigFilesGenerator {
         parameters.getLocation().setValue("${AZURE_LOCATION}");
         parameters.getSpringPetclinicExists().setValue("${SERVICE_SPRING_PETCLINIC_RESOURCE_EXISTS=false}");
         parameters.getPrincipalId().setValue("${AZURE_PRINCIPAL_ID}");
-        parameters.setMetadata(assembleMetadata(templateContext));
+        parameters.setMetadata(assembleMetadata(acaEnvName, templateContext));
         parameters.setWorkload(assembleWorkload(templateContext.getWorkloadTemplateContext()));;
         List<SettingItem> settingItems = new ArrayList<>();
         assembleDbEnvParams(settingItems, templateContext.getDbTemplateContext());
@@ -83,14 +85,14 @@ public class AzdConfigFilesGenerator {
         return commonItem;
     }
 
-    private CommonItem assembleMetadata(TemplateContext templateContext) {
+    private CommonItem assembleMetadata(String acaEnvName, TemplateContext templateContext) {
         CommonItem<MetadataItem> commonItem = new CommonItem<>();
         MetadataItem resourceItem = new MetadataItem();
         commonItem.setValue(resourceItem);
 
         AcaItem aca = new AcaItem();
         resourceItem.setAca(aca);
-        aca.setName(templateContext.getAcaEnvName());
+        aca.setName(acaEnvName);
 
         DbItem db = new DbItem();
         resourceItem.setDb(db);
@@ -123,9 +125,14 @@ public class AzdConfigFilesGenerator {
     }
 
     public void copyBicepFiles(String targetPath) throws IOException {
-        // Define the source and destination directories
-        Resource resource = resourceLoader.getResource(bicepTemplatePath);
-        File file = resource.getFile();
-        FileUtil.copyFiles(file.getAbsolutePath(), targetPath);
+
+        String classPath = "classpath:/azd-template-files/**/*";
+
+        //create direcotries
+        FileUtil.createFiles(classPath, targetPath, true);
+
+        //create files
+        FileUtil.createFiles(classPath, targetPath, false);
     }
+
 }
