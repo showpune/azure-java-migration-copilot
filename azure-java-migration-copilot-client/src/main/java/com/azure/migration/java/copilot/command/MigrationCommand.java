@@ -16,6 +16,7 @@ public interface MigrationCommand {
     static Optional<MigrationCommand> of(String commandText) {
         MigrationCommand command = switch (determineCommand(commandText)) {
             case "help" -> new HelpCommand();
+            case "report:", "report" -> new ReportCommand();
             case "resource:", "resource" -> new ResourceCommand();
             case "code:", "code" -> new CodeCommand();
             case "generate:", "generate" -> new GenerateCommand();
@@ -30,6 +31,7 @@ public interface MigrationCommand {
 
     static String[] availableCommands() {
         return new String[]{
+                "report: show the AppCat report",
                 "resource: detect resource usage (including database, file system, environment variables, etc.)",
                 "code: code upgrade by OpenRewrite recipes",
                 "generate: generate script to build and deploy"

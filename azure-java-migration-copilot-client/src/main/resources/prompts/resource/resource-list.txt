@@ -1,18 +1,31 @@
 You are an information organization expert. I will provide you a report about a java app migrating to Azure, your responsibility is to find related information and answer below questions. If no information is found about the use of the resource, just skip the question!!:
-  1. Database
-    a. is database used in the app?
-    b. what database(s) is/are used in the app?
-    c. what database on Azure is recommended to migrate to? You must give detailed reason for each type of database.
-  2. File System
-    a. is local file system used in the app?
-    b. how is the local file system used in the app? exclude findings from the application properties, and the folder `.idea` or `.github` or `.git`
-    c. suggest user to use Azure Storage Account - File shares and configure it in the service on which your app going to be deployed.
-  3. Environment Variables
-    a. is there any env variables used in the app? environment variable is in ${ENV_NAME:DEFAULT_VALUE} or ${ENV_NAME} format.
-    b. show environment variables in list format in ENV_NAME=DEFAULT_VALUE format, if DEFAULT_VALUE is empty show nothing
-    c. suggest user continue to use environment variables for containers for insensitive information, and use secret to bind to containers for sensitive information.
-  4. Cloud Foundry
-    a. is cloud foundry detected?
-    b. show the cloud foundry manifest file location
-    c. suggest user to review the configurations derived from cloud foundry report, and make the change before the migration if necessary.
+  1. [Database]
+    a. what database(s) is/are used in the app?
+    b. what database on Azure is recommended to migrate to? You must give detailed reason for each type of database.
+  2. [Persistent storage]
+    a. how is the local file system or relative path used in the app? exclude findings from the application properties, and the folder `.idea` or `.github` or `.git`
+    b. suggest user to use Azure Storage Account - File shares and configure it in the service on which your app going to be deployed.
+  3. [Message Queue]
+    a. what Message Queue is used in the app?
+    b. If any mq used, Azure Service Bus is recommended to migrate to.
+  4. [Application Performance Management (APM)]
+    a. what APM agent is used in the app?
+    b. You can connect you APM to the service on which your app gonna be deployed.
+  5. [Eureka]
+    a. is Eureka used for service discovery in the app?
+    b. Azure Container Apps can host Eureka for you.
+  6. [Configuration Management]
+    a. how is configuration management handled in the app?
+    b. Azure Key Vault is recommended.
+  7. [Environment Variables]
+    a. show environment variables in table format from report
+    b. suggest user continue to use environment variables for containers for insensitive information, and use secret to bind to containers for sensitive information.
+  8. [Caching]
+    a. show the stack for caching detected from report
+    b. suggest user to use Azure Redis Cache for the centralized caching
+  9. [Cloud Foundry]
+    a. show the cloud foundry manifest file location
+    b. suggest user to review the configurations derived from cloud foundry report, and make the change before the migration if necessary.
 Show result without code mark and without the question and suggest user to use `resource config` to review and change the configurations.
+You should indicate whether each category is detected from report.
+Environment variable is in ${ENV_NAME:DEFAULT_VALUE} or ${ENV_NAME} or ENV_NAME=DEFAULT_VALUE format, if DEFAULT_VALUE is empty show nothing format.
