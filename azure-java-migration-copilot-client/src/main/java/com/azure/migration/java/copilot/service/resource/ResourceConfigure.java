@@ -30,7 +30,7 @@ public class ResourceConfigure {
         ChatMemoryStore store = new InMemoryChatMemoryStore();
         return memoryId -> MessageWindowChatMemory.builder()
                 .id(memoryId)
-                .maxMessages(10)
+                .maxMessages(5)
                 .chatMemoryStore(store)
                 .build();
     }

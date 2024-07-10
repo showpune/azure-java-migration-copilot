@@ -1,6 +1,6 @@
 Fulfill the user request and convert the latest report based on below schema:
 {{schema}
-Set the template context with the converted JSON
+Set the template context with parameter name templateContextJson and value as the converted JSON.
 Show the updated table based on previous format.
 
 Remind user to enter 'done' when finished.
