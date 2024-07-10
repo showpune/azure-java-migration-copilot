@@ -23,7 +23,7 @@ public class ResourceCommand implements MigrationCommand {
     @Autowired
     private TextTerminal<?> terminal;
 
-    private static final String[] AVAILABLE_COMMANDS = new String[]{"config: config the resources", "detect: detect the configuration from report"};
+    private static final String[] AVAILABLE_COMMANDS = new String[]{"config: config the resources", "usage: detect resource usage"};
 
     @Override
     public void execute(String commandText) {
@@ -37,13 +37,13 @@ public class ResourceCommand implements MigrationCommand {
             String hint;
             String resources;
             switch (MigrationCommand.determineCommand(selectedCommand)) {
-                case "detect", "detect:":
+                case "usage", "usage:":
                     resources = resourceFacade.listResource();
                     terminal.println(resources);
                     hint = resourceFacade.resourceGuideSelect(resources);
 
                     MigrationCommand.loop(
-                            ConsoleContext.builder().defaultValue("").prompt("/resource/detect>").terminal(terminal).textIO(textIO).hint(hint).build(),
+                            ConsoleContext.builder().defaultValue("").prompt("/resource/usage>").terminal(terminal).textIO(textIO).hint(hint).build(),
                             ConsoleContext::exited,
                             input -> terminal.println(resourceFacade.resourceGuide(input))
                     );

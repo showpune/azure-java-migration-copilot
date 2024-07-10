@@ -15,4 +15,9 @@ public class ServiceAnalysisTools {
     public void setService(String service) {
         this.migrationContext.setService(service);
     }
+
+    @Tool({"Set the application name"})
+    public void setAppName(String appName) {
+        this.migrationContext.setAppName(appName);
+    }
 }

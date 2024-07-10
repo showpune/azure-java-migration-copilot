@@ -93,14 +93,12 @@ public class ResourceFacade {
     }
 
     private String getApplicationReport() throws IOException {
-        String details = "[Applications]\n" + appCatTools.getApplications()
-                + "\n" + appCatTools.getTechnologiesSummary()
-                + "\n" + appCatTools.getDependenciesSummary()
-                + "\n" + appCatTools.getIssuesSummary()
-                + "\n\n[Application Properties]\n" + getApplicationProperties();
+        String details = "[[Applications]]\n" + appCatTools.getApplications()
+                + "\n\n[[AppCat Report]]\n" + appCatTools.getAllDetails()
+                + "\n\n[[Application Properties]]\n" + getApplicationProperties();
         if (migrationContext.getCfManifestPath() != null && Files.exists(Path.of(migrationContext.getCfManifestPath()))) {
-            details += "\n\n[Cloud Foundry manifest file location]\n" + migrationContext.getCfManifestPath();
-            details += "\n\n[Cloud Foundry Manifest]\n" + Files.readString(Path.of(migrationContext.getCfManifestPath()));
+            details += "\n\n[[Cloud Foundry Manifest]]\n" + Files.readString(Path.of(migrationContext.getCfManifestPath()));
+            details += "\n\n[[Cloud Foundry Manifest file location]]\n" + migrationContext.getCfManifestPath();
         }
         return details;
     }

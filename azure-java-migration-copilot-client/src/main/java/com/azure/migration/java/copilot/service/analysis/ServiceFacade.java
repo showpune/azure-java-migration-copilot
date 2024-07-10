@@ -28,6 +28,14 @@ public class ServiceFacade {
         return serviceAnalysisAgent.chooseService(content);
     }
 
+    public String showReport() throws IOException {
+        if (migrationContext.getWindupReportPath() == null) {
+            throw new IllegalArgumentException("AppCat report path should not be null");
+        }
+        String content = "AppCat report: \n" + appCatTools.getAllDetails();
+        return serviceAnalysisAgent.showReport(content);
+    }
+
     public String chooseService(String userMessage) throws IOException {
         return serviceAnalysisAgent.chooseService(userMessage);
     }
