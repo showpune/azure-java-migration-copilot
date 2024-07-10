@@ -30,7 +30,9 @@ public class LocalCommandTools {
     public boolean executeCommand(List<String> commands) {
         try {
             List<String> osRelatedCommands = getShellStartCommand();
+            boolean hasError=false;
             osRelatedCommands.addAll(commands);
+            terminal.println("===============================================================");
             terminal.println("Execute command: " + String.join(" ", osRelatedCommands));
 
             Runtime rt = Runtime.getRuntime();
@@ -49,7 +51,9 @@ public class LocalCommandTools {
 
             while ((s = stdError.readLine()) != null) {
                 terminal.println(s);
+                hasError=true;
             }
+            terminal.println("===============================================================") ;
             return true;
         } catch (Exception e) {
             e.printStackTrace();
