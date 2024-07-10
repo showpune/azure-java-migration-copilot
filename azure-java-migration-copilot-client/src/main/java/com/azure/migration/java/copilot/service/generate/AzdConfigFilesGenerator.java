@@ -14,7 +14,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -27,6 +26,9 @@ public class AzdConfigFilesGenerator {
 
     @Value("${copilot.bicpe.tempalte.path}")
     String bicepTemplatePath;
+
+    @Value("classpath:/azd-template-files")
+    private Resource[] files;
 
     @Autowired
     ResourceLoader resourceLoader;
@@ -123,9 +125,14 @@ public class AzdConfigFilesGenerator {
     }
 
     public void copyBicepFiles(String targetPath) throws IOException {
-        // Define the source and destination directories
-        Resource resource = resourceLoader.getResource(bicepTemplatePath);
-        File file = resource.getFile();
-        FileUtil.copyFiles(file.getAbsolutePath(), targetPath);
+
+        String classPath = "classpath:/azd-template-files/**/*";
+
+        //create direcotries
+        FileUtil.createFiles(classPath, targetPath, true);
+
+        //create files
+        FileUtil.createFiles(classPath, targetPath, false);
     }
+
 }
