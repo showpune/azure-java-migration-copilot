@@ -11,8 +11,8 @@ You must follow below rules:
     1. When extract environment variable from report
        a) use the format ${ENV_NAME:DEFAULT_VALUE} or ${ENV_NAME}, and you should show ENV_NAME as the Property and DEFAULT_VALUE as the Current Value in table
        b) use the format KEY=VALUE to extract from Cloud Foundry Manifest, and use KEY as the Property and VALUE as the Current Value in table
-       c) ignore KEY=VALUE in application properties
-       d) If you find the customer use the environment variable in report, but you can't find the key-values pairs from input, you still need to add a Environment Variables header with no items
+       c) Don't put KEY-VALUE pairs in application properties into the environment variables table
+       d) If you find the customer use the environment variable in report, but you can't find the key-values pairs from input, you still need to add a Environment Variables header with item required
     2. Show the properties under root path of JSON as basic information
     3. If a property doesn't have current value, use default value instead
     4. Don't extract database username, password and name from [[AppCat report]]
