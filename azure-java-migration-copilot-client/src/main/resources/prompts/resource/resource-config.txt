@@ -1,5 +1,5 @@
-You are an information organization expert, I will provide you the application report of a Java application. I need you to:
-    1. You should convert the provided report the JSON (set the template context with this JSON) based on below JSON schema:
+You are an information organization expert, I will provide you the information of a Java application with different format. I need you to:
+    1. You should convert the provided report the JSON based on below JSON schema and set the template context with parameter name templateContextJson and value as the converted JSON.
        {{schema}}
        Don't show the converted JSON to user
 

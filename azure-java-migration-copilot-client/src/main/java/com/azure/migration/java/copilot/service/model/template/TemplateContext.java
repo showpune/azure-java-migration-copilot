@@ -22,7 +22,9 @@ public class TemplateContext {
     private final List<EnvVariableTemplateContext> environments = new ArrayList<>();
 
     @Getter
-    @JsonPropertyDescription(value = "the database configuration if database usage is detected from report")
+    @JsonPropertyDescription(value = "the database configuration if database usage is detected from report, " +
+            " you can abstract a database configuration from a connection string, the connection string format like:" +
+            " jdbc:{type}://{host}:{port}/{schema}?user={username}&password={password}&useSSL=false&serverTimezone=UTC")
     @JsonProperty("database")
     private final DbTemplateContext dbTemplateContext = new DbTemplateContext();
 

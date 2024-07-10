@@ -22,6 +22,11 @@ public class DbTemplateContext {
 
     @Getter
     @Setter
+    @JsonPropertyDescription("the database host, default to localhost")
+    private String host;
+
+    @Getter
+    @Setter
     @JsonPropertyDescription("the database port, default to 3306")
     private int port;
 
