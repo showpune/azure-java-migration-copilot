@@ -4,6 +4,7 @@ package com.azure.migration.java.copilot.service;
 import com.azure.migration.java.copilot.service.model.template.TemplateContext;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.logging.log4j.util.Strings;
 import org.beryx.textio.TextIO;
 import org.beryx.textio.TextTerminal;
 import org.fusesource.jansi.Ansi;
@@ -22,7 +23,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
+import static com.azure.migration.java.copilot.command.MigrationCommand.loop;
 import static java.lang.System.getProperty;
 
 @Component
@@ -78,8 +81,8 @@ public class MigrationContext {
             sourcePathString = args.getOptionValues("path").get(0);
         }
 
-        boolean initSuccess = false;
-        while (!initSuccess) {
+        AtomicBoolean initSuccess = new AtomicBoolean(false);
+        while (!initSuccess.get()) {
             if (sourcePathString == null) {
                 terminal.println(Ansi.ansi().bold().a("\nCopilot: I‘m your migration assistant. Could you please provide me with the location of your source code?").reset().toString());
                 sourcePathString = textIO.
@@ -93,24 +96,53 @@ public class MigrationContext {
                 continue;
             }
             this.sourceCodePath = file.getAbsolutePath();
-            String tempDir = System.getProperty("java.io.tmpdir");
+            String tempDir = getProperty("java.io.tmpdir");
             String basePathPrefix = "migration-pilot/" + generateMD5Hash(this.sourceCodePath);
             File baseFile = new File(tempDir, basePathPrefix);
-            scanCFManifest();
-
+            this.basePath = baseFile.getAbsolutePath();
+            boolean needScan = false;
+            findReport();
             if (!Optional.ofNullable(baseFile.list()).map(arr -> arr.length == 0).orElse(true) && !force) {
-                this.basePath = baseFile.getAbsolutePath();
-                this.windupReportPath = (new File(basePath, "appcat-report")).getAbsolutePath();
                 terminal.println("Skip rebuild the report because find report and manifest.yml under: " + basePath);
-                return;
             } else {
                 if (baseFile.exists()) {
-                    baseFile.delete();
+                    terminal.print("The report already exists, do you want to delete it and rebuild the report?:");
+                    String text = textIO.newStringInputReader().withDefaultValue("N").read("/> ");
+                    if(text.equalsIgnoreCase("Y")) {
+                        baseFile.delete();
+                        needScan=true;
+                    }else {
+                        needScan=false;
+                    }
+                }else{
+                    needScan=true;
                 }
             }
-            this.basePath = baseFile.getAbsolutePath();
-            scanCodeWithAppCat();
-            initSuccess = true;
+
+            if(needScan) {
+                terminal.print("Start to scan the source code with AppCat and Cloud Foundary manifest.yml, it will take some time, continue? (yes/no)");
+                String text = textIO.newStringInputReader().withDefaultValue("N").read("/> [y/N]");
+                if(text.equalsIgnoreCase("Y")) {
+                    scanCodeWithAppCat();
+                    scanCFManifest();
+                }else{
+                    break;
+                }
+            }
+            initSuccess.set(true);
+        }
+    }
+
+    public void findReport(){
+        File fromFile = new File(sourceCodePath, "manifest.yml");
+        if (fromFile.exists()) {
+            terminal.println("Found the Cloud Foundary manifest.yml under: " + fromFile.getAbsolutePath());
+            cfManifestPath = fromFile.getAbsolutePath();
+        }
+        fromFile = new File(basePath, "appcat-report");
+        if (fromFile.exists()) {
+            terminal.println("Found the AppCat Report under: " + fromFile.getAbsolutePath());
+            windupReportPath = fromFile.getAbsolutePath();
         }
     }
 
@@ -164,3 +196,4 @@ public class MigrationContext {
         }
     }
 }
+

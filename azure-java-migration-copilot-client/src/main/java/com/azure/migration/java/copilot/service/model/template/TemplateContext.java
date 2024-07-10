@@ -27,7 +27,7 @@ public class TemplateContext {
     private final DbTemplateContext dbTemplateContext = new DbTemplateContext();
 
     @Getter
-    @JsonPropertyDescription(value = "the persistent storage configuration if local storage is detected from report")
+    @JsonPropertyDescription(value = "the persistent storage configuration if local storage or local file is detected from report")
     @JsonProperty("persistent")
     private final PersistentStorageTemplateContext persistantStorageTemplateContext = new PersistentStorageTemplateContext();
 

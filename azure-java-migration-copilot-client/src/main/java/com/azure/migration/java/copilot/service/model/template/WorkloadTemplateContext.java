@@ -8,8 +8,8 @@ public class WorkloadTemplateContext {
 
     @Getter
     @Setter
-    @JsonPropertyDescription("the workload cpu quota, default to 0.5")
-    private String cpu = "0.5";
+    @JsonPropertyDescription("the CPU of the application, the minimun value is 0.5 and maximun value is 4,  if memory is 1G then cpu is 0.5, if memory is 2G then cpu is 1 and so on. the CPU of the application, the minimun value is 0.5 and maximun value is 4,  if memory is 1G then cpu is 0.5, if memory is 2G then cpu is 1 and so on. ")
+    private String cpu;
 
     @Getter
     @Setter
