@@ -1,6 +1,7 @@
 package com.azure.migration.java.copilot.service.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.victools.jsonschema.generator.*;
@@ -20,6 +21,7 @@ public class JsonUtil {
 
     public static <T> T fromJson(String json, Class<T> cls) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         return objectMapper.readValue(json, cls);
     }
 }

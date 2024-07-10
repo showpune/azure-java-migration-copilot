@@ -14,12 +14,9 @@ import org.springframework.context.annotation.Configuration;
 public class ResourceConfigure {
 
     @Bean
-    ResourceConfigureAgent resourceConfigureAgent(ChatLanguageModel chatLanguageModel, ChatMemoryProvider chatMemoryProvider, ResourceConfigTools tools) {
+    ResourceConfigureAgent resourceConfigureAgent(ChatLanguageModel chatLanguageModel, ContentRetriever contentRetriever) {
         return AiServices.builder(ResourceConfigureAgent.class)
                 .chatLanguageModel(chatLanguageModel)
-                .tools(tools)
-                .chatMemoryProvider(chatMemoryProvider)
-//                .chatMemory(MessageWindowChatMemory.withMaxMessages(10))
                 //to improve the performance, the guide process skipped first
 //                .contentRetriever(contentRetriever)
                 .build();

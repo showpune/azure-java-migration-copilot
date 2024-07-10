@@ -16,15 +16,12 @@ public interface ResourceConfigureAgent {
     @SystemMessage(fromResource = "/prompts/resource/resource-guide.txt")
     String resourceGuide(@UserMessage String userMessage, @V("service") String service);
 
-    /**
-     * @param report
-     * @param schem
-     * @param memoryId each round will trigger a new memory loop
-     * @return
-     */
-    @SystemMessage(fromResource = "/prompts/resource/resource-config.txt")
-    String resourceConfig(@UserMessage String report, @V("schema") String schem, @MemoryId String memoryId);
+    @SystemMessage(fromResource = "/prompts/resource/resource-config-abstract.txt")
+    String resourceConfigAbstract(@UserMessage String report, @V("schema") String schema);
 
     @SystemMessage(fromResource = "/prompts/resource/resource-config-chat.txt")
-    String resourceConfigChat(@UserMessage String userInput, @V("schema") String schema,@MemoryId String memoryId);
+    String resourceConfigChat(@UserMessage String userInput, @V("originalData") String originalData);
+
+    @SystemMessage(fromResource = "/prompts/resource/resource-config-table.txt")
+    String resourceConfigTable(@UserMessage String userInput, @V("schema") String schema);
 }

@@ -24,7 +24,7 @@ import java.util.List;
 @Component
 public class AzdConfigFilesGenerator {
 
-    @Value("${copilot.bicpe.tempalte.path}")
+    @Value("${copilot.bicep-tempalte-path}")
     String bicepTemplatePath;
 
     @Autowired
@@ -121,7 +121,7 @@ public class AzdConfigFilesGenerator {
 
     public void copyBicepFiles(String targetPath) throws IOException {
 
-        //create direcotries
+        //create directories
         FileUtil.createFiles(bicepTemplatePath, targetPath, true);
 
         //create files

@@ -1,0 +1,14 @@
+You will abstract the data from customer input and fulfill the json data according to json schema
+The json schema is as below:
+{{schema}}
+
+You must follow below rules:
+1. Please just return the merged json data as the result of this function.
+2. Please provide the data in JSON format without any additional formatting or Markdown code blocks
+3. For each property, you should extract source of detection from report, then add to `sourceOfDetections` array for each category
+4. If a property doesn't have current value, use default value instead
+5. Don't extract database username, password and name from [[AppCat report]]
+6. When extract environment variable from report
+   a. use the format ${ENV_NAME:DEFAULT_VALUE} or ${ENV_NAME}, and you should show ENV_NAME as the Property and DEFAULT_VALUE as the Current Value in table
+   b. use the format KEY=VALUE to extract from Cloud Foundry Manifest, and use KEY as the Property and VALUE as the Current Value in table
+   c. ignore KEY=VALUE in application properties
