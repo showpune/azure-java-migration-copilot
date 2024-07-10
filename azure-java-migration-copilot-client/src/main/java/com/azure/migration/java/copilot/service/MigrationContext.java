@@ -120,8 +120,8 @@ public class MigrationContext {
             }
 
             if(needScan) {
-                terminal.print("Start to scan the source code with AppCat and Cloud Foundary manifest.yml, it will take some time, continue? (yes/no)");
-                String text = textIO.newStringInputReader().withDefaultValue("N").read("/> [y/N]");
+                terminal.print("Start to scan the source code with AppCat and Cloud Foundary manifest.yml, it will take some time, continue?");
+                String text = textIO.newStringInputReader().withDefaultValue("N").read("/>");
                 if(text.equalsIgnoreCase("Y")) {
                     scanCodeWithAppCat();
                     scanCFManifest();

@@ -20,7 +20,8 @@ public class CodeMigrationTools {
     private final List<String> ALL_CODE_MIGRATION_SOLUTIONS =
             List.of("Upgrade JDK To Latest",
                     "Upgrade Spring Boot To Latest",
-                    "Apply passwordless solution");
+                    "Apply passwordless solution",
+                    "Migrate MQ to Service Bus");
     @Autowired
     LocalCommandTools localCommandTools;
     @Autowired
@@ -50,6 +51,11 @@ public class CodeMigrationTools {
                 break;
             case 1:
                 if (upgradeCodeForMavenProject("org.openrewrite.java.spring.boot3.UpgradeSpringBoot_3_3")) {
+                    return "Success";
+                }
+                break;
+            case 3:
+                if (upgradeCodeForMavenProject("org.openrewrite.java.migrate.MigrateJmsToSpringMessaging")) {
                     return "Success";
                 }
                 break;
