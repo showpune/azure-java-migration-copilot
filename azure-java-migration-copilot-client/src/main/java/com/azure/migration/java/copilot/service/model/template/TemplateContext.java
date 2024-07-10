@@ -27,17 +27,17 @@ public class TemplateContext {
     private final List<EnvVariableTemplateContext> environments = new ArrayList<>();
 
     @Getter
-    @JsonPropertyDescription(value = "the database configuration")
+    @JsonPropertyDescription(value = "the database configuration if database usage is detected from report")
     @JsonProperty("database")
     private final DbTemplateContext dbTemplateContext = new DbTemplateContext();
 
     @Getter
-    @JsonPropertyDescription(value = "the persistent storage configuration")
+    @JsonPropertyDescription(value = "the persistent storage configuration if local storage is detected from report")
     @JsonProperty("persistent")
     private final PersistentStorageTemplateContext persistantStorageTemplateContext = new PersistentStorageTemplateContext();
 
     @Getter
-    @JsonPropertyDescription(value = "the workload configuration")
+    @JsonPropertyDescription(value = "the workload configuration if any workload configuration is detected")
     @JsonProperty("workload")
     private final WorkloadTemplateContext workloadTemplateContext = new WorkloadTemplateContext();
 

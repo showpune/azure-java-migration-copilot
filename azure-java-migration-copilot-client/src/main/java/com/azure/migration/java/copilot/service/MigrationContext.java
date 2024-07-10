@@ -29,7 +29,7 @@ import static java.lang.System.getProperty;
 public class MigrationContext {
 
     private final static String[] DEFAULT_TARGET_SERVICE = new String[]{
-            "azure-spring-apps"
+            "azure-container-apps"
     };
 
     public final static TemplateContext DEFAULT_TEMPLATE_CONTEXT = new TemplateContext();
