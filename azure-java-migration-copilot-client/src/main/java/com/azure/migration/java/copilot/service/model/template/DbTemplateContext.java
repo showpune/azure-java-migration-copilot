@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Set;
+
 public class DbTemplateContext {
     @Getter
     @Setter
@@ -22,17 +24,12 @@ public class DbTemplateContext {
 
     @Getter
     @Setter
-    @JsonPropertyDescription("the database host, default to localhost")
-    private String host;
-
-    @Getter
-    @Setter
     @JsonPropertyDescription("the database port, default to 3306")
     private int port;
 
     @Getter
     @Setter
-    @JsonPropertyDescription("the database schema name, default to demo")
+    @JsonPropertyDescription("the database schema name, default to schema")
     private String schema;
 
     @Getter
@@ -47,6 +44,6 @@ public class DbTemplateContext {
 
     @Getter
     @Setter
-    @JsonPropertyDescription("The connection string of the database")
-    private String connectionString;
+    @JsonPropertyDescription("the source of detection of database properties")
+    private Set<SourceOfDetection> sourceOfDetections;
 }

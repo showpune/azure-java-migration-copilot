@@ -69,13 +69,16 @@ public class ResourceFacade {
         return resourceConfigureAgent.resourceGuide(resources, migrationContext.getService());
     }
 
-    public String resourceConfig() throws IOException {
-        memoryId = System.currentTimeMillis() + "";
-        return resourceConfigureAgent.resourceConfig(getApplicationReport(), JsonUtil.schemaOf(TemplateContext.class),memoryId);
+    public String resourceConfigAbstract() throws IOException {
+        return resourceConfigureAgent.resourceConfigAbstract(getApplicationReport(), JsonUtil.schemaOf(TemplateContext.class));
     }
 
-    public String resourceConfigChat(String userInput) throws IOException {
-        return resourceConfigureAgent.resourceConfigChat(userInput, JsonUtil.schemaOf(TemplateContext.class),memoryId);
+    public String resourceConfigChat(String userInput, String originalData) {
+        return resourceConfigureAgent.resourceConfigChat(userInput, originalData);
+    }
+
+    public String resourceConfigTable(String userInput) {
+        return resourceConfigureAgent.resourceConfigTable(userInput, JsonUtil.schemaOf(TemplateContext.class));
     }
 
     private String getApplicationProperties() {
