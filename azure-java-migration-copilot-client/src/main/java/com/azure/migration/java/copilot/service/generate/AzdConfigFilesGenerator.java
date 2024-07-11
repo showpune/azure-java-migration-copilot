@@ -10,7 +10,6 @@ import com.google.gson.GsonBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
@@ -95,7 +94,7 @@ public class AzdConfigFilesGenerator {
 
         PersistentStorageItem persistent = new PersistentStorageItem();
         resourceItem.setPersistent(persistent);
-        persistent.setMountPath(templateContext.getPersistantStorageTemplateContext().getMountPath());
+        persistent.setMountPath(templateContext.getPersistentStorageTemplateContext().getMountPath());
 
         return commonItem;
     }

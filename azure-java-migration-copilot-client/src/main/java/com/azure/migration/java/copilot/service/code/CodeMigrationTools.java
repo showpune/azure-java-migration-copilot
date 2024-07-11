@@ -31,7 +31,8 @@ public class CodeMigrationTools {
     private MigrationContext migrationContext;
 
     @Value("${copilot.maven-home}")
-    private String appCatHome;
+    private String mvnHome;
+
     @Autowired
     private CodeMigrationAnalysisAgent codeMigrationAnalysisAgent;
 
@@ -66,7 +67,7 @@ public class CodeMigrationTools {
     }
 
     public boolean upgradeCodeForMavenProject(String recipe) throws IOException {
-        Path cmdPath = Path.of(appCatHome, "bin", "mvn");
+        Path cmdPath = Path.of(mvnHome, "bin", "mvn");
         String[] commands = {
                 cmdPath.toString(),
                 "-f",
