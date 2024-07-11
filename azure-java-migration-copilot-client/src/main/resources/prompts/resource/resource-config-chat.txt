@@ -1,6 +1,4 @@
-Fulfill the user request and convert the latest report based on below schema:
-{{schema}
-Set the template context with parameter name templateContextJson and value as the converted JSON.
-Show the updated table based on previous format.
+Fulfill the user request and change the {{originalData}}
 
-Remind user to enter 'done' when finished.
+Please just return the merged json data as the result of this function.
+Please provide the data in JSON format without any additional formatting or Markdown code blocks

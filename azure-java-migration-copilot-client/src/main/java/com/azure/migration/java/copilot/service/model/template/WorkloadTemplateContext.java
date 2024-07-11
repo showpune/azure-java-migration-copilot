@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+import java.util.Set;
+
 public class WorkloadTemplateContext {
 
     @Getter
@@ -20,4 +23,10 @@ public class WorkloadTemplateContext {
     @Setter
     @JsonPropertyDescription("the workload instance count, default to 1")
     private int instanceCount = 1;
+
+    @Getter
+    @Setter
+    @JsonPropertyDescription("the source of detection of workload properties")
+    private Set<SourceOfDetection> sourceOfDetections;
+
 }

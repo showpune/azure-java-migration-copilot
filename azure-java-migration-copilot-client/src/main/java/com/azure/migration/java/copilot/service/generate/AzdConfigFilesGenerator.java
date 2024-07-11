@@ -10,7 +10,6 @@ import com.google.gson.GsonBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +23,7 @@ import java.util.List;
 @Component
 public class AzdConfigFilesGenerator {
 
-    @Value("${copilot.bicpe.tempalte.path}")
+    @Value("${copilot.bicep-tempalte-path}")
     String bicepTemplatePath;
 
     @Autowired
@@ -95,7 +94,7 @@ public class AzdConfigFilesGenerator {
 
         PersistentStorageItem persistent = new PersistentStorageItem();
         resourceItem.setPersistent(persistent);
-        persistent.setMountPath(templateContext.getPersistantStorageTemplateContext().getMountPath());
+        persistent.setMountPath(templateContext.getPersistentStorageTemplateContext().getMountPath());
 
         return commonItem;
     }
@@ -121,7 +120,7 @@ public class AzdConfigFilesGenerator {
 
     public void copyBicepFiles(String targetPath) throws IOException {
 
-        //create direcotries
+        //create directories
         FileUtil.createFiles(bicepTemplatePath, targetPath, true);
 
         //create files

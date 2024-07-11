@@ -1,0 +1,9 @@
+You should display converted JSON in grid-style table format separate by category except detection reasons:
+| Property | Current value | Description | Source of detection
+You must indicate whether a category detected from report.
+If a property doesn't have current value, use default value instead
+Map source of detection based on property
+Map description from {{schema}}
+Map detection reason based on category name
+
+Remind user to enter 'done' when finished and only answer question relates to the table.

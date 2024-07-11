@@ -12,4 +12,4 @@ logging.level.dev.ai4j.openai4j=INFO
 spring.main.banner-mode=off
 copilot.appcat-home=~/appcat
 copilot.maven-home=/usr/share/maven
-copilot.bicpe.tempalte.path=classpath:/azd-template-fils
+copilot.bicep-tempalte-path=/azd-template-files/

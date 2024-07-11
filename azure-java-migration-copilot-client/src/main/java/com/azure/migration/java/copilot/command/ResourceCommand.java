@@ -1,7 +1,11 @@
 package com.azure.migration.java.copilot.command;
 
 import com.azure.migration.java.copilot.service.ConsoleContext;
+import com.azure.migration.java.copilot.service.MigrationContext;
+import com.azure.migration.java.copilot.service.model.template.TemplateContext;
 import com.azure.migration.java.copilot.service.resource.ResourceFacade;
+import com.azure.migration.java.copilot.service.util.JsonUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.beryx.textio.TextIO;
 import org.beryx.textio.TextTerminal;
 import org.fusesource.jansi.Ansi;
@@ -9,13 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.io.IOException;
-
 @Component
 public class ResourceCommand implements MigrationCommand {
 
     @Autowired
     private ResourceFacade resourceFacade;
+
+    @Autowired
+    private MigrationContext migrationContext;
 
     @Autowired
     private TextIO textIO;
@@ -49,19 +54,27 @@ public class ResourceCommand implements MigrationCommand {
                     );
                     break;
                 case "config", "config:":
-                    hint = resourceFacade.resourceConfig();
+                    final String[] json = new String[1];
+                    json[0] = resourceFacade.resourceConfigAbstract();
+                    hint = resourceFacade.resourceConfigTable(json[0]);
+                    try {
+                        migrationContext.setTemplateContext(JsonUtil.fromJson(json[0], TemplateContext.class));
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(e);
+                    }
                     MigrationCommand.loop(
                             ConsoleContext.builder().defaultValue("done").prompt("/resource/config>").terminal(terminal).textIO(textIO).hint(hint).build(),
                             ConsoleContext::exited,
                             input ->
                             {
+                                json[0] = resourceFacade.resourceConfigChat(input, json[0]);
+                                terminal.println(resourceFacade.resourceConfigTable(json[0]));
                                 try {
-                                    terminal.println(resourceFacade.resourceConfigChat(input));
-                                } catch (IOException e) {
-                                    throw new RuntimeException(e);
+                                    migrationContext.setTemplateContext(JsonUtil.fromJson(json[0], TemplateContext.class));
+                                } catch (JsonProcessingException e) {
+                                    terminal.println(Ansi.ansi().fg(Ansi.Color.RED).a("Unable to parse template context " + e.getMessage()).reset().toString());
                                 }
                             }
-
                     );
                     break;
                 default:
