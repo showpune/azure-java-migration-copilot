@@ -17,7 +17,7 @@ import java.util.List;
 @Component
 public class CodeMigrationTools {
 
-    private final List<String> ALL_CODE_MIGRATION_SOLUTIONS =
+    public final static List<String> ALL_CODE_MIGRATION_SOLUTIONS =
             List.of("Upgrade JDK To Latest",
                     "Upgrade Spring Boot To Latest",
                     "Apply passwordless solution",
@@ -40,7 +40,7 @@ public class CodeMigrationTools {
         return codeMigrationAnalysisAgent.listMigrationSolutions(ALL_CODE_MIGRATION_SOLUTIONS, appCatTools.getAllDetails());
     }
 
-    @Tool("Apply a customer selected code migration solution, the input parameter should be one of ")
+    @Tool("Apply a customer selected code migration solution ")
     private String applyMigrationSolution(String solution) throws IOException {
         int solutionIndex = ALL_CODE_MIGRATION_SOLUTIONS.indexOf(solution);
         switch (solutionIndex) {
@@ -72,8 +72,11 @@ public class CodeMigrationTools {
                 "-f",
                 migrationContext.getSourceCodePath(),
                 "org.openrewrite.maven:rewrite-maven-plugin:run",
+                "-Dmaven.test.skip=true",
                 "-Drewrite.recipeArtifactCoordinates=org.openrewrite.recipe:rewrite-spring:RELEASE",
-                "-Drewrite.activeRecipes=" + recipe
+                "-Drewrite.activeRecipes=" + recipe,
+                "--no-transfer-progress",
+                "--batch-mode"
         };
 
         return localCommandTools.executeCommand(List.of(commands));
