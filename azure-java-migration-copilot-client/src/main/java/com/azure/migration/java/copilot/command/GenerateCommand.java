@@ -43,6 +43,9 @@ public class GenerateCommand implements MigrationCommand {
                         migrationContext.setTemplateContext(MigrationContext.DEFAULT_TEMPLATE_CONTEXT);
                     }
 
+                    terminal.println(Ansi.ansi().bold().a("\nCopilot: Please tell me the environment name you want to use?").reset().toString());
+                    String envName = textIO.newStringInputReader().withDefaultValue("demoEnv").read("/generate/bicep>");
+
                     TemplateContext templateContext = migrationContext.getTemplateContext();
                     if (!StringUtils.hasText(templateContext.getAppName())) {
                         terminal.println(Ansi.ansi().bold().a("\nCopilot: Please tell me the application name you want to use?").reset().toString());
@@ -51,7 +54,7 @@ public class GenerateCommand implements MigrationCommand {
                         templateContext.setAppName(appName);
                     }
 
-                    azdConfigFilesGenerator.generateBicepFiles(migrationContext);
+                    azdConfigFilesGenerator.generateBicepFiles(envName, migrationContext);
                     break;
                 default:
                     throw new IllegalArgumentException("Unrecognized command: " + selectedCommand);
