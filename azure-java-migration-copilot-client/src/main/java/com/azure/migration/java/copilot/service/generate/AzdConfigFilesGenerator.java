@@ -26,17 +26,15 @@ public class AzdConfigFilesGenerator {
     @Value("${copilot.bicep-tempalte-path}")
     String bicepTemplatePath;
 
-    @Autowired
-    ResourceLoader resourceLoader;
-
     String defaultCommentName = "The name of the environment variable when running in Azure. If empty, ignored.";
 
     String defaultCommentValue = "The value to provide. This can be a fixed literal, or an expression like ${VAR} "
         + "to use the value of 'VAR' from the current environment.";;
 
-    public void generateBicepFiles(MigrationContext migrationContext) throws Exception {
+    public void generateBicepFiles(String envName, MigrationContext migrationContext) throws Exception {
         copyBicepFiles(migrationContext.getSourceCodePath());
         generateBicepParamsFiles(migrationContext);
+        generateAzdConfig(envName, migrationContext.getSourceCodePath());
     }
 
     public void generateBicepParamsFiles(MigrationContext migrationContext) throws IOException {
@@ -127,4 +125,17 @@ public class AzdConfigFilesGenerator {
         FileUtil.createFiles(bicepTemplatePath, targetPath, false);
     }
 
+
+    private void generateAzdConfig(String envName, String targetPath) throws IOException {
+        Path envDir = Path.of(targetPath, ".azure", envName);
+        if (Files.exists(envDir)) {
+            return;
+        }
+
+        Files.createDirectories(envDir);
+
+        String envContent = "AZURE_ENV_NAME=%s".formatted(envName);
+
+        Files.writeString(Paths.get(envDir.toString(), ".env"), envContent);
+    }
 }
