@@ -9,19 +9,28 @@ import com.github.victools.jsonschema.module.jackson.JacksonModule;
 
 public class JsonUtil {
 
-    public static String schemaOf(Class<?> cls) {
+    public static ObjectNode schemaOf(Class<?> cls) {
         SchemaGeneratorConfigBuilder configBuilder = new SchemaGeneratorConfigBuilder(SchemaVersion.DRAFT_2020_12, OptionPreset.PLAIN_JSON)
                 .with(new JacksonModule())
                 .with(Option.FIELDS_DERIVED_FROM_ARGUMENTFREE_METHODS, Option.NONSTATIC_NONVOID_NONGETTER_METHODS);
         SchemaGeneratorConfig config = configBuilder.build();
         SchemaGenerator generator = new SchemaGenerator(config);
-        ObjectNode jsonSchemaNode = generator.generateSchema(cls);
-        return jsonSchemaNode.toPrettyString();
+        return generator.generateSchema(cls);
+    }
+
+    public static String schemaString(Class<?> cls) {
+        return schemaOf(cls).toString();
     }
 
     public static <T> T fromJson(String json, Class<T> cls) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         return objectMapper.readValue(json, cls);
+    }
+
+    public static String toJson(Object object) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        return objectMapper.writeValueAsString(object);
     }
 }

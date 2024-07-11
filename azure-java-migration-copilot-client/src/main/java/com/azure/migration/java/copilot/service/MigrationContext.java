@@ -4,7 +4,6 @@ package com.azure.migration.java.copilot.service;
 import com.azure.migration.java.copilot.service.model.template.TemplateContext;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.logging.log4j.util.Strings;
 import org.beryx.textio.TextIO;
 import org.beryx.textio.TextTerminal;
 import org.fusesource.jansi.Ansi;
@@ -25,7 +24,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static com.azure.migration.java.copilot.command.MigrationCommand.loop;
 import static java.lang.System.getProperty;
 
 @Component
