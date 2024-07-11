@@ -9,7 +9,7 @@ import java.util.Set;
 public class DbTemplateContext {
     @Getter
     @Setter
-    @JsonPropertyDescription("whether database is detected from report, default to false")
+    @JsonPropertyDescription("whether database is used in application, if database is detected, this value should be set to true")
     private boolean required;
 
     @Getter
@@ -21,6 +21,11 @@ public class DbTemplateContext {
     @Setter
     @JsonPropertyDescription("the database name, default to application name")
     private String name;
+
+    @Getter
+    @Setter
+    @JsonPropertyDescription("the database host, default to localhost")
+    private String host;
 
     @Getter
     @Setter

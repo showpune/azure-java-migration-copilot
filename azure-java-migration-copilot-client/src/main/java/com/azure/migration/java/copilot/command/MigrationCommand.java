@@ -32,8 +32,8 @@ public interface MigrationCommand {
     static String[] availableCommands() {
         return new String[]{
                 "report: show the AppCat report",
-                "resource: detect resource usage (including database, file system, environment variables, etc.)",
-                "code: code upgrade by OpenRewrite recipes",
+                "resource: resource detection and configuration",
+                "code: code upgrade and migration",
                 "generate: generate script to build and deploy"
         };
     }

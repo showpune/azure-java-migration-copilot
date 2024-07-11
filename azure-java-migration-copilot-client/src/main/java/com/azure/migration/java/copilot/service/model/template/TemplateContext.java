@@ -18,16 +18,18 @@ public class TemplateContext {
     private String appName;
 
     @Getter
-    @JsonPropertyDescription(value = "the environment variables")
+    @JsonPropertyDescription(value = "the environment variables, if any environment variables are detected from report")
     private final List<EnvVariableTemplateContext> environments = new ArrayList<>();
 
     @Getter
-    @JsonPropertyDescription(value = "the database configuration if database usage is detected from report")
+    @JsonPropertyDescription(value = "the database configuration if database usage is detected from report,if not detected, set to empty" +
+            " you can abstract a database configuration from a connection string, the connection string format like:" +
+            " jdbc:{type}://{host}:{port}/{schema}?user={username}&password={password}&useSSL=false&serverTimezone=UTC")
     @JsonProperty("database")
     private final DbTemplateContext dbTemplateContext = new DbTemplateContext();
 
     @Getter
-    @JsonPropertyDescription(value = "the persistent storage configuration if local storage or local file is detected from report")
+    @JsonPropertyDescription(value = "the persistent storage configuration if local storage or local file is detected from report, if not detected, set to empty")
     @JsonProperty("persistent")
     private final PersistentStorageTemplateContext persistantStorageTemplateContext = new PersistentStorageTemplateContext();
 
