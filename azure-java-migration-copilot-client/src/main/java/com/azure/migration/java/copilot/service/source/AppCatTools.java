@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Iterator;
+import java.util.*;
 
 @Component
 public class AppCatTools {
@@ -57,6 +57,48 @@ public class AppCatTools {
             }
         }
         return issues.toString();
+    }
+
+    public Set<String> getIssuesFileList(Set<String> ruleIds) throws IOException {
+        Path path2 = Paths.get("api/issues.json");
+        String content = new String(Files.readAllBytes(Paths.get(migrationContext.getWindupReportPath()).resolve(path2)));
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode rootNode = mapper.readTree(content);
+        JsonNode issuesNode = rootNode.get(0).get("issues");
+        Set<String> issues = new TreeSet<>();
+        for (Iterator<String> it = issuesNode.fieldNames(); it.hasNext(); ) {
+            String typeName = it.next();
+            JsonNode typeNode = issuesNode.get(typeName);
+            for (JsonNode detailNode : typeNode) {
+                JsonNode affectedFiles = detailNode.get("affectedFiles");
+                String id = detailNode.get("ruleId").asText();
+                if(!ruleIds.contains(id)){
+                    continue;
+                }
+                for (JsonNode affectedFile : affectedFiles) {
+                    JsonNode files = affectedFile.get("files");
+                    for (JsonNode file : files) {
+                        issues.add(file.get("fileId").asText());
+                    }
+                }
+
+            }
+        }
+
+        Path filesJsonPath = Paths.get("api/files.json");
+        Set<String> result = new TreeSet<>();
+        content = new String(Files.readAllBytes(Paths.get(migrationContext.getWindupReportPath()).resolve(filesJsonPath)));mapper = new ObjectMapper();
+        rootNode = mapper.readTree(content);
+        JsonNode finalRootNode = rootNode;
+
+        finalRootNode.forEach(node -> {
+            String id = node.get("id").asText();
+            if(issues.contains(id)){
+                result.add(node.get("fullPath").asText());
+            }
+        });
+
+        return result;
     }
 
     public String getAllDetails() throws IOException {
