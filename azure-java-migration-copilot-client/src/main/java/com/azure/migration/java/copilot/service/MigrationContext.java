@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static com.azure.migration.java.copilot.service.ConsoleContext.*;
 import static java.lang.System.getProperty;
 
 @Component
@@ -82,18 +84,17 @@ public class MigrationContext {
         AtomicBoolean initSuccess = new AtomicBoolean(false);
         while (!initSuccess.get()) {
             if (sourcePathString == null) {
-                terminal.println(Ansi.ansi().bold().a("\nCopilot: I‘m your migration assistant. Could you please provide me with the location of your source code?").reset().toString());
+                terminal.println(ask("Copilot: I‘m your migration assistant. Could you please provide me with the location of your source code?"));
                 sourcePathString = textIO.
                         newStringInputReader().
                         withDefaultValue(getProperty("user.dir")).
                         read("/>");
             }
-            File file = new File(sourcePathString);
-            if (!file.exists()) {
-                terminal.println("The path does not exist, please check and try again.");
-                continue;
+            Path file = Path.of(sourcePathString);
+            if (!Files.exists(file.toAbsolutePath())) {
+                throw new IOException(error("The path does not exist, please check and try again. " + sourcePathString));
             }
-            this.sourceCodePath = file.getAbsolutePath();
+            this.sourceCodePath = file.toAbsolutePath().toString();
             String tempDir = getProperty("java.io.tmpdir");
             String basePathPrefix = "migration-pilot/" + generateMD5Hash(this.sourceCodePath);
             File baseFile = new File(tempDir, basePathPrefix);
@@ -101,12 +102,12 @@ public class MigrationContext {
             boolean needScan = false;
             findReport();
             if (!Optional.ofNullable(baseFile.list()).map(arr -> arr.length == 0).orElse(true) && !force) {
-                terminal.println("Skip rebuild the report because find report and manifest.yml under: " + basePath);
+                terminal.println(warn("Skip rebuild the report because find report under: " + basePath));
             } else {
                 if (baseFile.exists()) {
                     terminal.print("The report already exists, do you want to delete it and rebuild the report?:");
-                    String text = textIO.newStringInputReader().withDefaultValue("N").read("/> ");
-                    if(text.equalsIgnoreCase("Y")) {
+                    boolean confirm = textIO.newBooleanInputReader().withDefaultValue(false).read("/> ");
+                    if(confirm) {
                         baseFile.delete();
                         needScan=true;
                     }else {
@@ -118,9 +119,9 @@ public class MigrationContext {
             }
 
             if(needScan) {
-                terminal.print("Start to scan the source code with AppCat and Cloud Foundary manifest.yml, it will take some time, continue?");
-                String text = textIO.newStringInputReader().withDefaultValue("N").read("/>");
-                if(text.equalsIgnoreCase("Y")) {
+                terminal.print(ask("Start to scan the source code with AppCat and Cloud Foundry manifest.yml, it will take some time, continue?"));
+                boolean confirm = textIO.newBooleanInputReader().withDefaultValue(false).read("/> ");
+                if(confirm) {
                     scanCodeWithAppCat();
                     scanCFManifest();
                 }else{
@@ -132,15 +133,15 @@ public class MigrationContext {
     }
 
     public void findReport(){
-        File fromFile = new File(sourceCodePath, "manifest.yml");
-        cfManifestPath = fromFile.getAbsolutePath();
-        if (fromFile.exists()) {
-            terminal.println("Found the Cloud Foundary manifest.yml under: " + fromFile.getAbsolutePath());
+        Path fromFile = Path.of(sourceCodePath, "manifest.yml");
+        cfManifestPath = fromFile.toAbsolutePath().toString();
+        if (Files.exists(fromFile)) {
+            terminal.println("Found the Cloud Foundry manifest.yml under: " + fromFile);
         }
-        fromFile = new File(basePath, "appcat-report");
-        if (fromFile.exists()) {
-            terminal.println("Found the AppCat Report under: " + fromFile.getAbsolutePath());
-            windupReportPath = fromFile.getAbsolutePath();
+        fromFile = Path.of(basePath, "appcat-report");
+        if (Files.exists(fromFile)) {
+            terminal.println("Found the AppCat Report under: " + fromFile);
+            windupReportPath = fromFile.toAbsolutePath().toString();
         }
     }
 

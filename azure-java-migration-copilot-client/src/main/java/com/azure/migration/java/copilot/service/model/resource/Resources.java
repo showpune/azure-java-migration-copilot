@@ -91,12 +91,15 @@ public class Resources {
         TemplateContext templateContext = new TemplateContext();
 
         for (ResourceCategory resourceCategory : this.categories) {
-            switch (resourceCategory.getName()) {
-                case "Basic Information":
+            switch (resourceCategory.getName().toLowerCase()) {
+                case "basic information":
                     resourceCategory.apply(templateContext);
                     break;
                 case "database":
                     resourceCategory.apply(templateContext.getDbTemplateContext());
+                    break;
+                case "databaseconnect":
+                    resourceCategory.apply(templateContext.getDbServiceConnectTemplateContext());
                     break;
                 case "persistent":
                     resourceCategory.apply(templateContext.getPersistentStorageTemplateContext());

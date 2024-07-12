@@ -44,15 +44,16 @@ public class GenerateCommand implements MigrationCommand {
                         migrationContext.setTemplateContext(MigrationContext.DEFAULT_TEMPLATE_CONTEXT);
                     }
 
-                    terminal.println(ask("\nCopilot: Please tell me the environment name you want to use?"));
-                    String envName = textIO.newStringInputReader().withDefaultValue("demoEnv").read("/generate/bicep>");
+                    String envName = askForEnvName(migrationContext);
 
                     TemplateContext templateContext = migrationContext.getTemplateContext();
                     if (!StringUtils.hasText(templateContext.getAppName())) {
-                        terminal.println(ask("Copilot: Please tell me the application name you want to use?"));
-                        String defaultAppName = StringUtils.hasText(migrationContext.getAppName())? migrationContext.getAppName() : "demoApp";
-                        String appName = textIO.newStringInputReader().withDefaultValue(defaultAppName).read("/generate/bicep>");
-                        templateContext.setAppName(appName);
+                        templateContext.setAppName(askForAppName(migrationContext));
+                    }
+
+                    if (templateContext.getDbServiceConnectTemplateContext().isRequired()) {
+                        templateContext.getDbServiceConnectTemplateContext().setSubscriptionId(askForSub(migrationContext));
+                        templateContext.getDbServiceConnectTemplateContext().setResourceGroup(askForRg(migrationContext));
                     }
 
                     azdConfigFilesGenerator.generateBicepFiles(envName, migrationContext);
@@ -65,5 +66,38 @@ public class GenerateCommand implements MigrationCommand {
             terminal.println(error("Scripts generation failed, error: " + e.getMessage()));
         }
 
+    }
+
+    private String askForEnvName(MigrationContext migrationContext) {
+        terminal.println(ask("\nCopilot: Please tell me the environment name you want to use?"));
+        return textIO.newStringInputReader().withDefaultValue("demoEnv").read("/generate/bicep>");
+    }
+
+    private String askForAppName(MigrationContext migrationContext) {
+        terminal.println(ask("Copilot: Please tell me the application name you want to use?"));
+        String defaultAppName = StringUtils.hasText(migrationContext.getAppName())? migrationContext.getAppName() : "demoApp";
+        return textIO.newStringInputReader().withDefaultValue(defaultAppName).read("/generate/bicep>");
+    }
+
+    private String askForSub(MigrationContext migrationContext) {
+        if (!StringUtils.hasText(migrationContext.getTemplateContext().getDbServiceConnectTemplateContext().getSubscriptionId())) {
+            terminal.println(ask("Copilot: Please tell me the subscription Id you want to use for the database service connect?"));
+            String defaultSub = StringUtils.hasText(migrationContext.getTemplateContext().getDbServiceConnectTemplateContext().getSubscriptionId()) ?
+                    migrationContext.getTemplateContext().getDbServiceConnectTemplateContext().getSubscriptionId() : "00000000-0000-0000-0000-000000000000";
+            return textIO.newStringInputReader().withDefaultValue(defaultSub).read("/generate/bicep>");
+        }
+
+        return migrationContext.getTemplateContext().getDbServiceConnectTemplateContext().getSubscriptionId();
+    }
+
+    private String askForRg(MigrationContext migrationContext) {
+        if (!StringUtils.hasText(migrationContext.getTemplateContext().getDbServiceConnectTemplateContext().getResourceGroup())) {
+            terminal.println(ask("Copilot: Please tell me the resource group name you want to use for the database service connect?"));
+            String defaultRg = StringUtils.hasText(migrationContext.getTemplateContext().getDbServiceConnectTemplateContext().getResourceGroup()) ?
+                    migrationContext.getTemplateContext().getDbServiceConnectTemplateContext().getResourceGroup() : "resourceGroup";
+            return textIO.newStringInputReader().withDefaultValue(defaultRg).read("/generate/bicep>");
+        }
+
+        return migrationContext.getTemplateContext().getDbServiceConnectTemplateContext().getResourceGroup();
     }
 }

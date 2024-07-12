@@ -51,7 +51,7 @@ public class ResourceCategory {
                     field.set(object, p.getValue());
                 }
             } catch (NoSuchFieldException | IllegalAccessException e) {
-                throw new RuntimeException(e);
+                // just silently catch
             }
         });
     }

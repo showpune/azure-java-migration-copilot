@@ -31,7 +31,7 @@ public class ConsoleContext {
     }
 
     public static String warn(String output) {
-        return Ansi.ansi().newline().bold().fg(Ansi.Color.YELLOW).a(output).reset().toString();
+        return Ansi.ansi().bold().fg(Ansi.Color.YELLOW).a(output).reset().toString();
     }
 
     public static String ask(String output) {
@@ -39,11 +39,11 @@ public class ConsoleContext {
     }
 
     public static String error(String output) {
-        return Ansi.ansi().newline().bold().fg(Ansi.Color.RED).a(output).reset().toString();
+        return Ansi.ansi().bold().fg(Ansi.Color.RED).a(output).reset().toString();
     }
 
     public static String answer(String output) {
-        output = "\n========================================================================================================================================================================================================================\n" + output;
+        output = "========================================================================================================================================================================================================================\n" + output;
         output += "\n========================================================================================================================================================================================================================";
         return Ansi.ansi().a(output).reset().toString();
     }

@@ -6,8 +6,7 @@ import org.beryx.textio.TextTerminal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static com.azure.migration.java.copilot.service.ConsoleContext.answer;
-import static com.azure.migration.java.copilot.service.ConsoleContext.error;
+import static com.azure.migration.java.copilot.service.ConsoleContext.*;
 
 @Component
 public class ReportCommand implements MigrationCommand {
@@ -25,6 +24,7 @@ public class ReportCommand implements MigrationCommand {
     public void execute(String commandText) {
         try {
             terminal.println(answer(serviceFacade.showReport()));
+            terminal.println("AppCat Report: " + "file://" + migrationContext.getWindupReportPath());
         } catch (Exception e) {
             terminal.println(error(e.getMessage()));
         }

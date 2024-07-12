@@ -89,7 +89,8 @@ public class AzdConfigFilesGenerator {
 
         DbItem db = new DbItem();
         resourceItem.setDb(db);
-        db.setName(templateContext.getDbTemplateContext().getName());
+        // TODO: should consider what to set here
+//        db.setName(templateContext.getDbTemplateContext().getHost());
 
         PersistentStorageItem persistent = new PersistentStorageItem();
         resourceItem.setPersistent(persistent);
@@ -106,14 +107,9 @@ public class AzdConfigFilesGenerator {
 
     @NotNull
     private List<SettingItem> assembleDbEnvParams(List<SettingItem> settingItems, DbTemplateContext dbTemplateContext) {
-        String dbUrl = Constants.JDBC + Constants.COLON
-            + dbTemplateContext.getType() + Constants.COLON + Constants.DOUBLE_SLASH
-            + dbTemplateContext.getName() + Constants.Azure_MYSQL_DOMAIN_SUFFIX + Constants.COLON
-            + dbTemplateContext.getPort() + Constants.SLASH
-            + dbTemplateContext.getSchema() + Constants.Azure_MYSQL_CONN_STRING_SUFFIX;
-        settingItems.add(new SettingItem(Constants.SPRING_DATASOURCE_URL, dbUrl, null, defaultCommentName, defaultCommentValue));
-        settingItems.add(new SettingItem(Constants.SPRING_DATASOURCE_USERNAME, dbTemplateContext.getUser(), true, defaultCommentName, defaultCommentValue));
-        settingItems.add(new SettingItem(Constants.SPRING_DATASOURCE_PASSWORD, dbTemplateContext.getPwd(), true, defaultCommentName, defaultCommentValue));
+        settingItems.add(new SettingItem(Constants.SPRING_DATASOURCE_URL, dbTemplateContext.getConnectionString(), null, defaultCommentName, defaultCommentValue));
+        settingItems.add(new SettingItem(Constants.SPRING_DATASOURCE_USERNAME, dbTemplateContext.getUsername(), true, defaultCommentName, defaultCommentValue));
+        settingItems.add(new SettingItem(Constants.SPRING_DATASOURCE_PASSWORD, dbTemplateContext.getPassword(), true, defaultCommentName, defaultCommentValue));
         return settingItems;
     }
 

@@ -27,6 +27,11 @@ public class TemplateContext {
     private final DbTemplateContext dbTemplateContext = new DbTemplateContext();
 
     @Getter
+    @JsonPropertyDescription(value = "service connect info for Azure Database")
+    @JsonProperty("databaseConnect")
+    private final DbServiceConnectTemplateContext dbServiceConnectTemplateContext = new DbServiceConnectTemplateContext();
+
+    @Getter
     @JsonPropertyDescription(value = "persistent storage configuration if local storage usage is detected from report")
     @JsonProperty("persistent")
     private final PersistentStorageTemplateContext persistentStorageTemplateContext = new PersistentStorageTemplateContext();
