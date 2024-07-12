@@ -25,4 +25,9 @@ public class PersistentStorageItem extends MetadataItem {
     @Setter
     private String mountOptions;
 
+    @Getter
+    @Setter
+    //the pre installed resources should be under this group(storage accounts, db.. etc)
+    private String resourceGroup;
+
 }

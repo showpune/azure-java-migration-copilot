@@ -90,7 +90,7 @@ module appsEnv './shared/apps-env.bicep' = {
 }
 
 resource demoRg 'Microsoft.Resources/resourceGroups@2021-04-01' existing = {
-  name: 'migration-demo'
+  name: metadata.persistent.resourceGroup
 }
 
 module app './app/app.bicep' = {
