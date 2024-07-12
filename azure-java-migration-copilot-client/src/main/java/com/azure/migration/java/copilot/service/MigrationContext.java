@@ -90,11 +90,11 @@ public class MigrationContext {
                         withDefaultValue(getProperty("user.dir")).
                         read("/>");
             }
-            Path file = Path.of(sourcePathString);
-            if (!Files.exists(file.toAbsolutePath())) {
+            File file = new File(sourcePathString);
+            if (!file.exists()) {
                 throw new IOException(error("The path does not exist, please check and try again. " + sourcePathString));
             }
-            this.sourceCodePath = file.toAbsolutePath().toString();
+            this.sourceCodePath = file.getCanonicalPath();
             String tempDir = getProperty("java.io.tmpdir");
             String basePathPrefix = "migration-pilot/" + generateMD5Hash(this.sourceCodePath);
             File baseFile = new File(tempDir, basePathPrefix);

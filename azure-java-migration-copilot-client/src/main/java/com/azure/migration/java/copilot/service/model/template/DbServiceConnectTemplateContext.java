@@ -8,22 +8,22 @@ public class DbServiceConnectTemplateContext {
 
     @Getter
     @Setter
-    @JsonPropertyDescription("whether use this service connect for the application to connect to database, default to false")
+    @JsonPropertyDescription("whether use Azure Service Connector for connecting database, default to false")
     private boolean required;
 
     @Getter
     @Setter
-    @JsonPropertyDescription("the database type for the service connect, should be extracted from database type, default to mysql")
+    @JsonPropertyDescription("the Azure Database type for the service connector, should be extracted from connection string, default to mysql")
     private String type;
 
     @Getter
     @Setter
-    @JsonPropertyDescription("the Azure Database resource name, should be extracted from database host the first part, default to application name")
+    @JsonPropertyDescription("the Azure Database resource name, should be extracted from the first part of host from connection string, default to application name")
     private String resourceName;
 
     @Getter
     @Setter
-    @JsonPropertyDescription("the Azure Database schema name, should be extracted from database, default to test")
+    @JsonPropertyDescription("the Azure Database schema name, should be extracted from connection string, default to test")
     private String database;
 
     @Getter
