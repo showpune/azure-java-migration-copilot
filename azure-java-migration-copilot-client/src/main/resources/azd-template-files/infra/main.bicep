@@ -84,7 +84,7 @@ module keyVault './shared/keyvault.bicep' = {
 module appsEnv './shared/apps-env.bicep' = {
   name: 'appsEnv'
   params: {
-    name: 'spring-petclinic-env-demo'
+    name: metadata.aca.name
   }
   scope: demoRg
 }

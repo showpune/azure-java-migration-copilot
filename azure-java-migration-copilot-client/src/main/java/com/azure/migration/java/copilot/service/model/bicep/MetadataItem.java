@@ -11,6 +11,10 @@ public class MetadataItem {
 
     @Getter
     @Setter
+    private AcaItem aca;
+
+    @Getter
+    @Setter
     private DbItem db;
 
     @Getter
