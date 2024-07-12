@@ -20,6 +20,7 @@ param fileShareName string
 
 param mountPath string
 
+
 var appSettingsArray = filter(array(appDefinition.settings), i => i.name != '')
 var secrets = map(filter(appSettingsArray, i => i.?secret != null), i => {
   name: i.name
