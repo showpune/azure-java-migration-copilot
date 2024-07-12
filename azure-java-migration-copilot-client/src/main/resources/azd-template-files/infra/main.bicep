@@ -82,7 +82,7 @@ module keyVault './shared/keyvault.bicep' = {
 }
 
 module appsEnv './shared/apps-env.bicep' = {
-  name: 'apps-env'
+name: 'apps-env'
   params: {
     name: '${abbrs.appManagedEnvironments}${resourceToken}'
     location: location
@@ -93,13 +93,14 @@ module appsEnv './shared/apps-env.bicep' = {
   scope: rg
 }
 
+
 module app './app/app.bicep' = {
   name: 'app'
   params: {
     name: metadata.appName
     location: location
     tags: tags
-    identityName: '${abbrs.managedIdentityUserAssignedIdentities}spring-petcl-${resourceToken}'
+    identityName: '${abbrs.managedIdentityUserAssignedIdentities}${metadata.appName}-${resourceToken}'
     applicationInsightsName: monitoring.outputs.applicationInsightsName
     containerAppsEnvironmentName: appsEnv.outputs.name
     containerRegistryName: registry.outputs.name

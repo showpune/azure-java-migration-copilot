@@ -13,7 +13,7 @@ public class WorkloadTemplateContext {
 
     @Getter
     @Setter
-    @JsonPropertyDescription("the memory quota of application, default to 1Gi")
+    @JsonPropertyDescription("the memory quota of application, must contain a decimal value to no more than 2 decimal places followed by 'Gi' to denote the unit (Gibibytes), default to 1G")
     private String memory = "1Gi";
 
     @Getter
