@@ -12,12 +12,12 @@ public class PersistentStorageTemplateContext {
 
     @Getter
     @Setter
-    @JsonPropertyDescription("the file share name of Azure Storage Account, default to data")
+    @JsonPropertyDescription("the file share or file device name of Storage, default to data")
     private String fileShare;
 
     @Getter
     @Setter
-    @JsonPropertyDescription("the mount path inside container if persistent storage is required, default to /data")
+    @JsonPropertyDescription("the volume mount path inside container if persistent storage is required, known as container dir, default to /data")
     private String mountPath;
 
     @Getter
