@@ -82,15 +82,15 @@ module keyVault './shared/keyvault.bicep' = {
 }
 
 module appsEnv './shared/apps-env.bicep' = {
-  name: 'appsEnv'
+  name: 'apps-env'
   params: {
-    name: metadata.aca.name
+    name: 'cae-p4kkdcp6u7wdc'
+    location: location
+    tags: tags
+    applicationInsightsName: monitoring.outputs.applicationInsightsName
+    logAnalyticsWorkspaceName: monitoring.outputs.logAnalyticsWorkspaceName
   }
-  scope: demoRg
-}
-
-resource demoRg 'Microsoft.Resources/resourceGroups@2021-04-01' existing = {
-  name: metadata.persistent.resourceGroup
+  scope: rg
 }
 
 module app './app/app.bicep' = {
@@ -110,17 +110,8 @@ module app './app/app.bicep' = {
     instanceCount: workload.instanceCount
     fileShareName: metadata.persistent.fileShare
     mountPath: metadata.persistent.mountPath
-    migrationGgName: demoRg.name
   }
   scope: rg
-}
-
-module mysql './shared/db-existing.bicep' = {
-  name: 'mysql'
-  params: {
-    serverName: metadata.db.name
-  }
-  scope: demoRg
 }
 
 output AZURE_CONTAINER_REGISTRY_ENDPOINT string = registry.outputs.loginServer

@@ -18,11 +18,6 @@ public class TemplateContext {
     private String appName;
 
     @Getter
-    @Setter
-    @JsonPropertyDescription(value = "the application name")
-    private String appEnv;
-
-    @Getter
     @JsonPropertyDescription(value = "environment variable list detected from report")
     private final List<EnvVariableTemplateContext> environments = new ArrayList<>();
 
