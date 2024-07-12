@@ -45,7 +45,7 @@ public class GenerateCommand implements MigrationCommand {
                     }
 
                     terminal.println(ask("\nCopilot: Please tell me the environment name you want to use?"));
-                    String envName = textIO.newStringInputReader().withDefaultValue("demoEnv").read("/generate/bicep>");
+                    String envName = textIO.newStringInputReader().withDefaultValue(migrationContext.getTemplateContext().getAppEnv()).read("/generate/bicep>");
 
                     TemplateContext templateContext = migrationContext.getTemplateContext();
                     if (!StringUtils.hasText(templateContext.getAppName())) {

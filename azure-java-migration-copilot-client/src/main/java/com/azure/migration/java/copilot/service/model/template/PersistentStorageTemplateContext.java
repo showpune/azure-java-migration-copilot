@@ -22,12 +22,7 @@ public class PersistentStorageTemplateContext {
 
     @Getter
     @Setter
-    @JsonPropertyDescription("the mount options for volume mount into the container, default to 'uid=0,gid=0,file_mode=0777,dir_mode=0777,mfsymlinks,nobrl'")
+    @JsonPropertyDescription("the mount options for volume mount into the container")
     private String mountOptions;
-
-    @Getter
-    @Setter
-    @JsonPropertyDescription("the resource group for persistent resources, default to 'migration-demo'")
-    private String resourceGroup;
 
 }

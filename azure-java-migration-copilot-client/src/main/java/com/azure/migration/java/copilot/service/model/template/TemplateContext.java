@@ -19,7 +19,7 @@ public class TemplateContext {
 
     @Getter
     @Setter
-    @JsonPropertyDescription(value = "the application name")
+    @JsonPropertyDescription(value = "the azure container app environment to host multiple applications")
     private String appEnv;
 
     @Getter

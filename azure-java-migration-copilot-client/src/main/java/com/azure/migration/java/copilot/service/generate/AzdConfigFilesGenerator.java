@@ -101,7 +101,6 @@ public class AzdConfigFilesGenerator {
         persistent.setMountOptions(templateContext.getPersistentStorageTemplateContext().getMountOptions());
         persistent.setFileShare(templateContext.getPersistentStorageTemplateContext().getFileShare());
         persistent.setRequired(templateContext.getPersistentStorageTemplateContext().isRequired());
-        persistent.setResourceGroup(templateContext.getPersistentStorageTemplateContext().getResourceGroup());
 
         return commonItem;
     }

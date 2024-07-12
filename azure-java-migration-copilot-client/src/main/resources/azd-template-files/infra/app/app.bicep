@@ -20,9 +20,6 @@ param fileShareName string
 
 param mountPath string
 
-param migrationGgName string
-
-
 var appSettingsArray = filter(array(appDefinition.settings), i => i.name != '')
 var secrets = map(filter(appSettingsArray, i => i.?secret != null), i => {
   name: i.name
@@ -45,7 +42,6 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-01-01-pr
 
 resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' existing = {
   name: containerAppsEnvironmentName
-  scope: resourceGroup(migrationGgName)
 }
 
 resource applicationInsights 'Microsoft.Insights/components@2020-02-02' existing = {
