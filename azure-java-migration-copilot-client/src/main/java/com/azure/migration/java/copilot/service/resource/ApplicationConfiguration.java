@@ -3,7 +3,6 @@ package com.azure.migration.java.copilot.service.resource;
 import com.fasterxml.jackson.annotation.JsonClassDescription;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.victools.jsonschema.generator.*;
 import com.github.victools.jsonschema.module.jackson.JacksonModule;

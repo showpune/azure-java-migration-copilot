@@ -2,10 +2,10 @@ package com.azure.migration.java.copilot.service.resource;
 
 import dev.langchain4j.memory.chat.ChatMemoryProvider;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
-import dev.langchain4j.store.memory.chat.ChatMemoryStore;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.rag.content.retriever.ContentRetriever;
 import dev.langchain4j.service.AiServices;
+import dev.langchain4j.store.memory.chat.ChatMemoryStore;
 import dev.langchain4j.store.memory.chat.InMemoryChatMemoryStore;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

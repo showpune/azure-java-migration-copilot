@@ -3,14 +3,15 @@ package com.azure.migration.java.copilot.service.generate;
 import com.azure.migration.java.copilot.service.MigrationContext;
 import com.azure.migration.java.copilot.service.constant.Constants;
 import com.azure.migration.java.copilot.service.model.bicep.*;
-import com.azure.migration.java.copilot.service.model.template.*;
+import com.azure.migration.java.copilot.service.model.template.DbTemplateContext;
+import com.azure.migration.java.copilot.service.model.template.EnvVariableTemplateContext;
+import com.azure.migration.java.copilot.service.model.template.TemplateContext;
+import com.azure.migration.java.copilot.service.model.template.WorkloadTemplateContext;
 import com.azure.migration.java.copilot.service.util.FileUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -26,17 +27,15 @@ public class AzdConfigFilesGenerator {
     @Value("${copilot.bicep-tempalte-path}")
     String bicepTemplatePath;
 
-    @Autowired
-    ResourceLoader resourceLoader;
-
     String defaultCommentName = "The name of the environment variable when running in Azure. If empty, ignored.";
 
     String defaultCommentValue = "The value to provide. This can be a fixed literal, or an expression like ${VAR} "
         + "to use the value of 'VAR' from the current environment.";;
 
-    public void generateBicepFiles(MigrationContext migrationContext) throws Exception {
+    public void generateBicepFiles(String envName, MigrationContext migrationContext) throws Exception {
         copyBicepFiles(migrationContext.getSourceCodePath());
         generateBicepParamsFiles(migrationContext);
+        generateAzdConfig(envName, migrationContext.getSourceCodePath());
     }
 
     public void generateBicepParamsFiles(MigrationContext migrationContext) throws IOException {
@@ -127,4 +126,17 @@ public class AzdConfigFilesGenerator {
         FileUtil.createFiles(bicepTemplatePath, targetPath, false);
     }
 
+
+    private void generateAzdConfig(String envName, String targetPath) throws IOException {
+        Path envDir = Path.of(targetPath, ".azure", envName);
+        if (Files.exists(envDir)) {
+            return;
+        }
+
+        Files.createDirectories(envDir);
+
+        String envContent = "AZURE_ENV_NAME=%s".formatted(envName);
+
+        Files.writeString(Paths.get(envDir.toString(), ".env"), envContent);
+    }
 }
