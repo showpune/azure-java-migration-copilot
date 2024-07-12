@@ -32,8 +32,8 @@ public interface MigrationCommand {
     static String[] availableCommands() {
         return new String[]{
                 "report: show the AppCat report",
-                "resource: resource detection and configuration",
                 "code: code upgrade and migration",
+                "resource: resource detection and configuration",
                 "generate: generate script to build and deploy"
         };
     }
@@ -66,22 +66,26 @@ public interface MigrationCommand {
                      Supplier<Boolean> postChecker) {
         context.getTerminal().println(context.getHint());
         while(true) {
-            StringInputReader reader = context.getTextIO().newStringInputReader();
-            reader = reader.withMinLength(0);
-            if (StringUtils.hasText(context.getDefaultValue())) {
-                reader = reader.withDefaultValue(context.getDefaultValue());
-            }
+            try {
+                StringInputReader reader = context.getTextIO().newStringInputReader();
+                reader = reader.withMinLength(0);
+                if (StringUtils.hasText(context.getDefaultValue())) {
+                    reader = reader.withDefaultValue(context.getDefaultValue());
+                }
 
-            String userInput = reader.read(context.getPrompt());
+                String userInput = reader.read(context.getPrompt());
 
-            if (quitFunc.apply(userInput)) {
-                break;
-            }
+                if (quitFunc.apply(userInput)) {
+                    break;
+                }
 
-            inputConsumer.accept(userInput);
+                inputConsumer.accept(userInput);
 
-            if (postChecker.get()) {
-                break;
+                if (postChecker.get()) {
+                    break;
+                }
+            }catch(Exception e){
+                e.printStackTrace();
             }
         }
     }

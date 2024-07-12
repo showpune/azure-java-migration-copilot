@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static com.azure.migration.java.copilot.command.MigrationCommand.loop;
+import static com.azure.migration.java.copilot.service.ConsoleContext.answer;
 
 @Component
 public class CodeCommand implements MigrationCommand {
@@ -30,10 +31,10 @@ public class CodeCommand implements MigrationCommand {
         }
         String hint = codeMigrationChatAgent.chat(commandText,CodeMigrationTools.ALL_CODE_MIGRATION_SOLUTIONS);
         loop(
-                ConsoleContext.builder().hint(hint).prompt("/code>").terminal(terminal).textIO(textIO).build(),
+                ConsoleContext.builder().hint(answer(hint)).prompt("/code>").defaultValue("done").terminal(terminal).textIO(textIO).build(),
                 ConsoleContext::exited,
                 input -> {
-                    terminal.println(codeMigrationChatAgent.chat(input, CodeMigrationTools.ALL_CODE_MIGRATION_SOLUTIONS));
+                    terminal.println(answer(codeMigrationChatAgent.chat(input, CodeMigrationTools.ALL_CODE_MIGRATION_SOLUTIONS)));
                 }
         );
     }

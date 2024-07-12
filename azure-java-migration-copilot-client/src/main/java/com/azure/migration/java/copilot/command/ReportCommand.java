@@ -1,10 +1,13 @@
 package com.azure.migration.java.copilot.command;
 
+import com.azure.migration.java.copilot.service.MigrationContext;
 import com.azure.migration.java.copilot.service.analysis.ServiceFacade;
 import org.beryx.textio.TextTerminal;
-import org.fusesource.jansi.Ansi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import static com.azure.migration.java.copilot.service.ConsoleContext.answer;
+import static com.azure.migration.java.copilot.service.ConsoleContext.error;
 
 @Component
 public class ReportCommand implements MigrationCommand {
@@ -15,12 +18,15 @@ public class ReportCommand implements MigrationCommand {
     @Autowired
     private TextTerminal<?> terminal;
 
+    @Autowired
+    private MigrationContext migrationContext;
+
     @Override
     public void execute(String commandText) {
         try {
-            terminal.println(serviceFacade.showReport());
+            terminal.println(answer(serviceFacade.showReport()));
         } catch (Exception e) {
-            terminal.println(Ansi.ansi().fg(Ansi.Color.RED).a(e.getMessage()).reset().toString());
+            terminal.println(error(e.getMessage()));
         }
     }
 }

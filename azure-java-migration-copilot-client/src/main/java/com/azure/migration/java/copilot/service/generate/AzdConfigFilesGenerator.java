@@ -3,14 +3,15 @@ package com.azure.migration.java.copilot.service.generate;
 import com.azure.migration.java.copilot.service.MigrationContext;
 import com.azure.migration.java.copilot.service.constant.Constants;
 import com.azure.migration.java.copilot.service.model.bicep.*;
-import com.azure.migration.java.copilot.service.model.template.*;
+import com.azure.migration.java.copilot.service.model.template.DbTemplateContext;
+import com.azure.migration.java.copilot.service.model.template.EnvVariableTemplateContext;
+import com.azure.migration.java.copilot.service.model.template.TemplateContext;
+import com.azure.migration.java.copilot.service.model.template.WorkloadTemplateContext;
 import com.azure.migration.java.copilot.service.util.FileUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;

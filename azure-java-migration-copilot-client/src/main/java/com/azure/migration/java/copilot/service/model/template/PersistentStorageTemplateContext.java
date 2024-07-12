@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Set;
-
 public class PersistentStorageTemplateContext {
     @Getter
     @Setter
@@ -26,10 +24,5 @@ public class PersistentStorageTemplateContext {
     @Setter
     @JsonPropertyDescription("the mount options for volume mount into the container, default to 'uid=0,gid=0,file_mode=0777,dir_mode=0777,mfsymlinks,nobrl'")
     private String mountOptions;
-
-    @Getter
-    @Setter
-    @JsonPropertyDescription("the source of detection of persistent storage properties")
-    private Set<SourceOfDetection> sourceOfDetections;
 
 }

@@ -19,6 +19,13 @@ public class CodeMigrationConfigure {
     }
 
     @Bean
+    CodeOpenAIRewriteAgent codeOpenAIRewriteAgent(ChatLanguageModel chatLanguageModel) {
+        return AiServices.builder(CodeOpenAIRewriteAgent.class)
+                .chatLanguageModel(chatLanguageModel)
+                .build();
+    }
+
+    @Bean
     CodeMigrationChatAgent codeMigrationChatAgent(ChatLanguageModel chatLanguageModel, ContentRetriever contentRetriever, CodeMigrationTools codeMigrationTools) {
         return AiServices.builder(CodeMigrationChatAgent.class)
                 .chatLanguageModel(chatLanguageModel)

@@ -1,6 +1,5 @@
 package com.azure.migration.java.copilot.service.resource;
 
-import dev.langchain4j.service.MemoryId;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
 import dev.langchain4j.service.V;

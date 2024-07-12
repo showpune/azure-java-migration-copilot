@@ -1,15 +1,16 @@
 package com.azure.migration.java.copilot.command;
 
+import com.azure.migration.java.copilot.service.ConsoleContext;
 import com.azure.migration.java.copilot.service.MigrationContext;
 import com.azure.migration.java.copilot.service.generate.AzdConfigFilesGenerator;
 import com.azure.migration.java.copilot.service.model.template.TemplateContext;
-import dev.langchain4j.internal.Json;
 import org.beryx.textio.TextIO;
 import org.beryx.textio.TextTerminal;
-import org.fusesource.jansi.Ansi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+
+import static com.azure.migration.java.copilot.service.ConsoleContext.*;
 
 @Component
 public class GenerateCommand implements MigrationCommand {
@@ -32,23 +33,23 @@ public class GenerateCommand implements MigrationCommand {
     public void execute(String commandText) {
         String selectedCommand = commandText;
         if (!StringUtils.hasText(selectedCommand)) {
-            terminal.println(Ansi.ansi().bold().a("\nCopilot: Please select which option do you want to generate?").reset().toString());
+            terminal.println(ConsoleContext.ask("Copilot: Please select which option do you want to generate?"));
             selectedCommand = textIO.newStringInputReader().withNumberedPossibleValues(AVAILABLE_COMMANDS).read(">");
         }
         try {
             switch (MigrationCommand.determineCommand(selectedCommand)) {
                 case "bicep", "bicep:":
                     if (migrationContext.getTemplateContext() == null) {
-                        terminal.println(Ansi.ansi().fg(Ansi.Color.YELLOW).bold().a("Copilot: Using default template context to generate bicep templates").reset().toString());
+                        terminal.println(warn("Copilot: Using default template context to generate bicep templates"));
                         migrationContext.setTemplateContext(MigrationContext.DEFAULT_TEMPLATE_CONTEXT);
                     }
 
-                    terminal.println(Ansi.ansi().bold().a("\nCopilot: Please tell me the environment name you want to use?").reset().toString());
+                    terminal.println(ask("\nCopilot: Please tell me the environment name you want to use?"));
                     String envName = textIO.newStringInputReader().withDefaultValue("demoEnv").read("/generate/bicep>");
 
                     TemplateContext templateContext = migrationContext.getTemplateContext();
                     if (!StringUtils.hasText(templateContext.getAppName())) {
-                        terminal.println(Ansi.ansi().bold().a("\nCopilot: Please tell me the application name you want to use?").reset().toString());
+                        terminal.println(ask("Copilot: Please tell me the application name you want to use?"));
                         String defaultAppName = StringUtils.hasText(migrationContext.getAppName())? migrationContext.getAppName() : "demoApp";
                         String appName = textIO.newStringInputReader().withDefaultValue(defaultAppName).read("/generate/bicep>");
                         templateContext.setAppName(appName);
@@ -59,9 +60,9 @@ public class GenerateCommand implements MigrationCommand {
                 default:
                     throw new IllegalArgumentException("Unrecognized command: " + selectedCommand);
             }
-            terminal.println("Scripts generated under you source code path, use `git status` to check generated files, then check in");
+            terminal.println(answer("Scripts generated under you source code path, use `git status` to check generated files, then check in"));
         } catch (Exception e) {
-            terminal.println(Ansi.ansi().fg(Ansi.Color.RED).a("Scripts generation failed, error: " + e.getMessage()).reset().toString());
+            terminal.println(error("Scripts generation failed, error: " + e.getMessage()));
         }
 
     }

@@ -4,29 +4,20 @@ import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-import java.util.Set;
-
 public class WorkloadTemplateContext {
 
     @Getter
     @Setter
-    @JsonPropertyDescription("the CPU of the application, the minimun value is 0.5 and maximun value is 4,  if memory is 1G then cpu is 0.5, if memory is 2G then cpu is 1 and so on. the CPU of the application, the minimun value is 0.5 and maximun value is 4,  if memory is 1G then cpu is 0.5, if memory is 2G then cpu is 1 and so on. ")
+    @JsonPropertyDescription("the CPU quota of application, the minimum value is 0.5 and maximum value is 4,  if memory is 1G then cpu is 0.5, if memory is 2G then cpu is 1 and so on.")
     private String cpu;
 
     @Getter
     @Setter
-    @JsonPropertyDescription("the workload memory quota, default to 1Gi")
+    @JsonPropertyDescription("the memory quota of application, default to 1Gi")
     private String memory = "1Gi";
 
     @Getter
     @Setter
     @JsonPropertyDescription("the workload instance count, default to 1")
     private int instanceCount = 1;
-
-    @Getter
-    @Setter
-    @JsonPropertyDescription("the source of detection of workload properties")
-    private Set<SourceOfDetection> sourceOfDetections;
-
 }
