@@ -18,6 +18,16 @@ public class TemplateContext {
     private String appName;
 
     @Getter
+    @Setter
+    @JsonPropertyDescription(value = "the Java version used by application, default to empty")
+    private String javaVersion;
+
+    @Getter
+    @Setter
+    @JsonPropertyDescription(value = "the SpringBoot version used by application default to empty")
+    private String springBootVersion;
+
+    @Getter
     @JsonPropertyDescription(value = "environment variable list detected from report")
     private final List<EnvVariableTemplateContext> environments = new ArrayList<>();
 

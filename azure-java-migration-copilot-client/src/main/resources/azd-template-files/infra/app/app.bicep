@@ -16,6 +16,12 @@ param memory string
 
 param instanceCount int
 
+param fileShareName string
+
+param mountPath string
+
+param migrationGgName string
+
 
 var appSettingsArray = filter(array(appDefinition.settings), i => i.name != '')
 var secrets = map(filter(appSettingsArray, i => i.?secret != null), i => {
@@ -39,6 +45,7 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-01-01-pr
 
 resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' existing = {
   name: containerAppsEnvironmentName
+  scope: resourceGroup(migrationGgName)
 }
 
 resource applicationInsights 'Microsoft.Insights/components@2020-02-02' existing = {
@@ -118,6 +125,12 @@ resource app 'Microsoft.App/containerApps@2023-05-02-preview' = {
             cpu: json(cpu)
             memory: memory
           }
+          volumeMounts: [
+            {
+              mountPath: mountPath
+              volumeName: fileShareName
+            }
+          ]
         }
       ]
       scale: {
@@ -126,8 +139,8 @@ resource app 'Microsoft.App/containerApps@2023-05-02-preview' = {
       }
       volumes: [
         {
-          name: 'azure-file-volume'
-          storageName: 'test'
+          name: fileShareName
+          storageName: fileShareName
           storageType: 'AzureFile'
           mountOptions: 'uid=0,gid=0,file_mode=0777,dir_mode=0777,mfsymlinks,nobrl'
         }
@@ -135,6 +148,7 @@ resource app 'Microsoft.App/containerApps@2023-05-02-preview' = {
     }
   }
 }
+
 
 output defaultDomain string = containerAppsEnvironment.properties.defaultDomain
 output name string = app.name
