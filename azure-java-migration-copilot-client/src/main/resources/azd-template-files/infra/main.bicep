@@ -84,7 +84,7 @@ module keyVault './shared/keyvault.bicep' = {
 module appsEnv './shared/apps-env.bicep' = {
   name: 'apps-env'
   params: {
-    name: 'cae-p4kkdcp6u7wdc'
+    name: '${abbrs.appManagedEnvironments}${resourceToken}'
     location: location
     tags: tags
     applicationInsightsName: monitoring.outputs.applicationInsightsName
