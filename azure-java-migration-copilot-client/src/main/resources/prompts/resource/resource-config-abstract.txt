@@ -5,8 +5,8 @@ The json schema is as below:
 You must follow below rules:
 1. Please just return the merged json data as the result of this function.
 2. Please provide the data in JSON format without any additional formatting or Markdown code blocks
-3. For each property, you should extract source of detection from report, then add to `sourceOfDetections` array for each category
-4. If a property doesn't have current value, use default value instead, and use the value extracted from Cloud Foundry Manifest with first priority.
+3. For each property, you should extract source of detection from report
+4. If a property doesn't have current value, use default value instead, and use the value extracted from Cloud Foundry Manifest with the highest priority.
 5. Don't extract database username, password and name from [[AppCat report]]
 6. You should try to extract volume mount path or directory from [[Cloud Foundry Manifest]]
 7. When extract environment variable from report

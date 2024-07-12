@@ -32,8 +32,8 @@ public interface MigrationCommand {
     static String[] availableCommands() {
         return new String[]{
                 "report: show the AppCat report",
-                "resource: resource detection and configuration",
                 "code: code upgrade and migration",
+                "resource: resource detection and configuration",
                 "generate: generate script to build and deploy"
         };
     }

@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Set;
-
 public class DbTemplateContext {
     @Getter
     @Setter
@@ -41,9 +39,4 @@ public class DbTemplateContext {
     @Setter
     @JsonPropertyDescription("the password used to connect to database, default to password")
     private String pwd;
-
-    @Getter
-    @Setter
-    @JsonPropertyDescription("the source of detection of database properties")
-    private Set<SourceOfDetection> sourceOfDetections;
 }
