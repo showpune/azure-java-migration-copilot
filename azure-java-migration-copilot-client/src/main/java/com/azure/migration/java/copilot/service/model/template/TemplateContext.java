@@ -19,18 +19,20 @@ public class TemplateContext {
 
     @Getter
     @Setter
-    @JsonPropertyDescription(value = "the application name")
-    private String appEnv;
+    @JsonPropertyDescription(value = "the Java version used by application, default to empty")
+    private String javaVersion;
+
+    @Getter
+    @Setter
+    @JsonPropertyDescription(value = "the SpringBoot version used by application default to empty")
+    private String springBootVersion;
 
     @Getter
     @JsonPropertyDescription(value = "environment variable list detected from report")
     private final List<EnvVariableTemplateContext> environments = new ArrayList<>();
 
     @Getter
-    @JsonPropertyDescription(value = "the database configuration if database usage is detected from report,if not detected, set to empty" +
-            " you can abstract a database configuration from a connection string, the connection string format like:" +
-            " jdbc:{type}://{host}:{port}/{schema}?user={username}&password={password}&useSSL=false&serverTimezone=UTC" +
-            "\n if the host is an azure host, it will looks like {database name}.mysql.database.azure.com ")
+    @JsonPropertyDescription(value = "database related configuration detected from report")
     @JsonProperty("database")
     private final DbTemplateContext dbTemplateContext = new DbTemplateContext();
 
