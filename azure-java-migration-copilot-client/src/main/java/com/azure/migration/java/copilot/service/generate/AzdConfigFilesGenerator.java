@@ -87,10 +87,6 @@ public class AzdConfigFilesGenerator {
 
         resourceItem.setAppName(templateContext.getAppName());
 
-        AcaItem acaItem = new AcaItem();
-        resourceItem.setAca(acaItem);
-        acaItem.setName("${AZURE_ENV_NAME}");
-
         DbItem db = new DbItem();
         resourceItem.setDb(db);
         db.setName(templateContext.getDbTemplateContext().getName());
