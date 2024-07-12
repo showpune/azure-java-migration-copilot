@@ -124,8 +124,26 @@ public class ResourceFacade {
         }).collect(Collectors.joining("\n"));
     }
 
+    private String getBuildFile() {
+        Path dir = Path.of(migrationContext.getSourceCodePath());
+        File[] files = dir.toFile().listFiles((base, name) ->
+                Arrays.asList("pom.xml", "build.gradle").contains(name)
+        );
+        if (files == null) {
+            return "";
+        }
+        return Arrays.stream(files).map(f -> {
+            try {
+                return Files.readString(Path.of(f.getAbsolutePath()));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }).collect(Collectors.joining("\n"));
+    }
+
     private String getApplicationReport() throws IOException {
         String details = "[[Applications]]\n" + appCatTools.getApplications()
+                + "\n\n[[POM or Gradle]]\n" + getBuildFile()
                 + "\n\n[[AppCat Report]]\n" + appCatTools.getAllDetails()
                 + "\n\n[[Application Properties]]\n" + getApplicationProperties();
         if (migrationContext.getCfManifestPath() != null && Files.exists(Path.of(migrationContext.getCfManifestPath()))) {
