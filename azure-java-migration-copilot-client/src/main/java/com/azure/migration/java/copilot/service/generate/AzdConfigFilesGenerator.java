@@ -87,6 +87,10 @@ public class AzdConfigFilesGenerator {
 
         resourceItem.setAppName(templateContext.getAppName());
 
+        AcaItem acaItem = new AcaItem();
+        resourceItem.setAca(acaItem);
+        acaItem.setName("${AZURE_ENV_NAME}");
+
         DbItem db = new DbItem();
         resourceItem.setDb(db);
         db.setName(templateContext.getDbTemplateContext().getName());
@@ -94,6 +98,9 @@ public class AzdConfigFilesGenerator {
         PersistentStorageItem persistent = new PersistentStorageItem();
         resourceItem.setPersistent(persistent);
         persistent.setMountPath(templateContext.getPersistentStorageTemplateContext().getMountPath());
+        persistent.setMountOptions(templateContext.getPersistentStorageTemplateContext().getMountOptions());
+        persistent.setFileShare(templateContext.getPersistentStorageTemplateContext().getFileShare());
+        persistent.setRequired(templateContext.getPersistentStorageTemplateContext().isRequired());
 
         return commonItem;
     }

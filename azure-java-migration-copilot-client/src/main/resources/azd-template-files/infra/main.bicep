@@ -82,18 +82,15 @@ module keyVault './shared/keyvault.bicep' = {
 }
 
 module appsEnv './shared/apps-env.bicep' = {
-  name: 'apps-env'
+  name: 'appsEnv'
   params: {
-    name: '${abbrs.appManagedEnvironments}${resourceToken}'
-    location: location
-    tags: tags
-    applicationInsightsName: monitoring.outputs.applicationInsightsName
-    logAnalyticsWorkspaceName: monitoring.outputs.logAnalyticsWorkspaceName
-    storageAccountName: storageAccount.outputs.storageAccountName
-    storageAccountShareName: 'test'
-    storageAccountKey: storageAccount.outputs.storageAccountKey
+    name: metadata.aca.name
   }
-  scope: rg
+  scope: demoRg
+}
+
+resource demoRg 'Microsoft.Resources/resourceGroups@2021-04-01' existing = {
+  name: 'migration-demo'
 }
 
 module app './app/app.bicep' = {
@@ -111,6 +108,9 @@ module app './app/app.bicep' = {
     cpu: workload.cpu
     memory: workload.memory
     instanceCount: workload.instanceCount
+    fileShareName: metadata.persistent.fileShare
+    mountPath: metadata.persistent.mountPath
+    migrationGgName: demoRg.name
   }
   scope: rg
 }
@@ -119,16 +119,8 @@ module mysql './shared/db-existing.bicep' = {
   name: 'mysql'
   params: {
     serverName: metadata.db.name
-    resourceGroupName: 'migration-demo'
   }
-}
-
-module storageAccount './shared/storageaccount.bicep' = {
-  name: 'storageAccount'
-  params: {
-      name: '${abbrs.storageStorageAccounts}${resourceToken}'
-  }
-  scope: rg
+  scope: demoRg
 }
 
 output AZURE_CONTAINER_REGISTRY_ENDPOINT string = registry.outputs.loginServer
