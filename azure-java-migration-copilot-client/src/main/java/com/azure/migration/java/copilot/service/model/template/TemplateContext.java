@@ -19,8 +19,13 @@ public class TemplateContext {
 
     @Getter
     @Setter
-    @JsonPropertyDescription(value = "the azure container app environment to host multiple applications")
-    private String appEnv;
+    @JsonPropertyDescription(value = "the Java version used by application, default to empty")
+    private String javaVersion;
+
+    @Getter
+    @Setter
+    @JsonPropertyDescription(value = "the SpringBoot version used by application default to empty")
+    private String springBootVersion;
 
     @Getter
     @JsonPropertyDescription(value = "environment variable list detected from report")

@@ -100,7 +100,7 @@ module app './app/app.bicep' = {
     name: metadata.appName
     location: location
     tags: tags
-    identityName: '${abbrs.managedIdentityUserAssignedIdentities}spring-petcl-${resourceToken}'
+    identityName: '${abbrs.managedIdentityUserAssignedIdentities}${metadata.appName}-${resourceToken}'
     applicationInsightsName: monitoring.outputs.applicationInsightsName
     containerAppsEnvironmentName: appsEnv.outputs.name
     containerRegistryName: registry.outputs.name
@@ -111,17 +111,8 @@ module app './app/app.bicep' = {
     instanceCount: workload.instanceCount
     fileShareName: metadata.persistent.fileShare
     mountPath: metadata.persistent.mountPath
-    migrationGgName: demoRg.name
   }
   scope: rg
-}
-
-module mysql './shared/db-existing.bicep' = {
-  name: 'mysql'
-  params: {
-    serverName: metadata.db.name
-  }
-  scope: demoRg
 }
 
 output AZURE_CONTAINER_REGISTRY_ENDPOINT string = registry.outputs.loginServer
