@@ -32,7 +32,7 @@ public class TemplateContext {
     private final DbServiceConnectTemplateContext dbServiceConnectTemplateContext = new DbServiceConnectTemplateContext();
 
     @Getter
-    @JsonPropertyDescription(value = "persistent storage configuration if local storage usage is detected from report")
+    @JsonPropertyDescription(value = "persistent storage configuration if local storage usage is detected from report, also known as volume-mount setting")
     @JsonProperty("persistent")
     private final PersistentStorageTemplateContext persistentStorageTemplateContext = new PersistentStorageTemplateContext();
 

@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 @Component
 public class ServiceFacade {
@@ -33,7 +35,7 @@ public class ServiceFacade {
             throw new IllegalArgumentException("AppCat report path should not be null");
         }
         String content = "AppCat report: \n" + appCatTools.getAllDetails();
-        return serviceAnalysisAgent.showReport(content);
+        return serviceAnalysisAgent.showReport(content, new File(migrationContext.getWindupReportPath(),"index.html").getCanonicalPath());
     }
 
     public String chooseService(String userMessage) throws IOException {
