@@ -63,7 +63,7 @@ public class CodeMigrationTools {
                 }
                 break;
             case 1:
-                if (upgradeCodeForMavenProject("org.openrewrite.java.spring.boot3.UpgradeSpringBoot_3_3")) {
+                if (upgradeCodeForMavenProject("org.openrewrite.java.spring.boot3.UpgradeSpringBoot_3_1")) {
                     return "Success";
                 }
                 break;
@@ -112,7 +112,7 @@ public class CodeMigrationTools {
         String[] commands = {
                 cmdPath.toString(),
                 "-f",
-                migrationContext.getSourceCodePath(),
+                new File((migrationContext.getSourceCodePath())).getCanonicalPath(),
                 "org.openrewrite.maven:rewrite-maven-plugin:run",
                 "-Dmaven.test.skip=true",
                 "-Drewrite.recipeArtifactCoordinates=org.openrewrite.recipe:rewrite-spring:RELEASE",

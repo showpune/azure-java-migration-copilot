@@ -93,7 +93,7 @@ public class MigrationContext {
                 terminal.println("The path does not exist, please check and try again.");
                 continue;
             }
-            this.sourceCodePath = file.getAbsolutePath();
+            this.sourceCodePath = file.getCanonicalPath();
             String tempDir = getProperty("java.io.tmpdir");
             String basePathPrefix = "migration-pilot/" + generateMD5Hash(this.sourceCodePath);
             File baseFile = new File(tempDir, basePathPrefix);
