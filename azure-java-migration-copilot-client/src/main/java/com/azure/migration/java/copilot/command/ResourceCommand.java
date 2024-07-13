@@ -36,13 +36,8 @@ public class ResourceCommand implements MigrationCommand {
         try {
             final String[] json = new String[1];
             json[0] = resourceFacade.resourceConfigAbstract();
-            Resources resources;
-            try {
-                resources = JsonUtil.fromJson(json[0], Resources.class);
-                migrationContext.setTemplateContext(resources.toContext());
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
+            Resources resources = JsonUtil.fromJson(json[0], Resources.class);;
+            migrationContext.setTemplateContext(resources.toContext());
             String hint = resourceFacade.resourceConfigTable(resources);
             hint += "\n" + comment;
             MigrationCommand.loop(
@@ -64,6 +59,7 @@ public class ResourceCommand implements MigrationCommand {
                     }
             );
         } catch (Exception e) {
+            e.printStackTrace();
             terminal.println(error("Error: " + e.getMessage()));
         }
     }
