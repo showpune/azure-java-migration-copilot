@@ -25,8 +25,8 @@ import java.util.Set;
 public class CodeMigrationTools {
 
     public final static List<String> ALL_CODE_MIGRATION_SOLUTIONS =
-            List.of("Upgrade JDK To Latest",
-                    "Upgrade Spring Boot To Latest",
+            List.of("Upgrade JDK To 17",
+                    "Upgrade Spring To Spring3",
                     "Apply passwordless solution",
                     "Migrate MQ to Service Bus");
     @Autowired

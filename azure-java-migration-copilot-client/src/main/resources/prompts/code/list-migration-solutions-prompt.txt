@@ -1,7 +1,8 @@
 Return one or more solutions as flow:
 {{solutions}}
 
-1. If the customer project is a java project, always return solution "Upgrade JDK To Latest"
-2. If the customer project is a spring project, always return solution "Upgrade Spring To Latest"
+1. If the customer project is a java project and use a non-LTS java version, return solution "Upgrade JDK To 17"
+2. If the customer project is a spring project, always return solution "Upgrade Spring To Spring3"
+    2.1 if customer has already upgrade to spring 3, no need to return solution "Upgrade JDK To 17"
 3. If password usage detected in the project, return solution "Apply passwordless solution"
 4. If messaging/activemq detected in the project, return solution "Migrate MQ to Service Bus"
