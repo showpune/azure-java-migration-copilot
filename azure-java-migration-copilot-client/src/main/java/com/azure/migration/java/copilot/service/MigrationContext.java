@@ -104,8 +104,8 @@ public class MigrationContext {
                 terminal.println("Skip rebuild the report because find report and manifest.yml under: " + basePath);
             } else {
                 if (baseFile.exists()) {
-                    terminal.print("The report already exists, do you want to delete it and rebuild the report?:");
-                    String text = textIO.newStringInputReader().withDefaultValue("N").read("/> ");
+                    terminal.print(Ansi.ansi().bold().a("\nThe report already exists, do you want to delete it and rebuild the report?").reset().toString());
+                    String text = textIO.newStringInputReader().withDefaultValue("N").read("");
                     if(text.equalsIgnoreCase("Y")) {
                         baseFile.delete();
                         needScan=true;

@@ -1,8 +1,9 @@
-Return one or more solutions as flow:
+Return one or more upgrade solutions the project need be applied according to customer provided project information. The solutions are as follows:
 {{solutions}}
 
-1. If the customer project is a java project and use a non-LTS java version, return solution "Upgrade JDK To 17"
-2. If the customer project is a spring project, always return solution "Upgrade Spring To Spring3"
+1. If the customer project uses a non-LTS java version, return solution "Upgrade JDK To 17"
+2. If the customer project is a spring project, return solution "Upgrade Spring To Spring3"
     2.1 if customer has already upgrade to spring 3, no need to return solution "Upgrade JDK To 17"
 3. If password usage detected in the project, return solution "Apply passwordless solution"
-4. If messaging/activemq detected in the project, return solution "Migrate MQ to Service Bus"
+4. If messaging/activemq usage detected in the project, return solution "Migrate MQ to Service Bus", don't return the solution if customer don't use messaging/activemq in code or configuration
+Just return the solution need be applied according to customer input, tell me the reason and rules why the solution need to be applied and don't return the solution if it's not needed

@@ -25,6 +25,7 @@ public class JsonUtil {
     public static <T> T fromJson(String json, Class<T> cls) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        objectMapper.disable(DeserializationFeature.FAIL_ON_NULL_CREATOR_PROPERTIES);
         return objectMapper.readValue(json, cls);
     }
 

@@ -12,31 +12,31 @@ public class DbTemplateContext {
 
     @Getter
     @Setter
-    @JsonPropertyDescription("the database type, default to mysql")
+    @JsonPropertyDescription("the database type")
     private String type;
 
     @Getter
     @Setter
-    @JsonPropertyDescription("the database name, default to application name")
+    @JsonPropertyDescription("the database name")
     private String name;
 
     @Getter
     @Setter
-    @JsonPropertyDescription("the database port, default to 3306")
-    private int port;
+    @JsonPropertyDescription("the database port")
+    private String port;
 
     @Getter
     @Setter
-    @JsonPropertyDescription("the database schema name, default to schema")
+    @JsonPropertyDescription("the database schema name")
     private String schema;
 
     @Getter
     @Setter
-    @JsonPropertyDescription("the username used to connect to database, default to username")
+    @JsonPropertyDescription("the username used to connect to database")
     private String user;
 
     @Getter
     @Setter
-    @JsonPropertyDescription("the password used to connect to database, default to password")
+    @JsonPropertyDescription("the password used to connect to database")
     private String pwd;
 }

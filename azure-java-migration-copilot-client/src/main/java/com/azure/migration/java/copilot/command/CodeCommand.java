@@ -29,12 +29,12 @@ public class CodeCommand implements MigrationCommand {
         if(Strings.isEmpty(commandText) || commandText.equals("help")) {
             commandText = "list migration solutions";
         }
-        String hint = codeMigrationChatAgent.chat(commandText,CodeMigrationTools.ALL_CODE_MIGRATION_SOLUTIONS);
+        String hint = codeMigrationChatAgent.chat(commandText);
         loop(
                 ConsoleContext.builder().hint(answer(hint)).prompt("/code>").defaultValue("done").terminal(terminal).textIO(textIO).build(),
                 ConsoleContext::exited,
                 input -> {
-                    terminal.println(answer(codeMigrationChatAgent.chat(input, CodeMigrationTools.ALL_CODE_MIGRATION_SOLUTIONS)));
+                    terminal.println(answer(codeMigrationChatAgent.chat(input)));
                 }
         );
     }

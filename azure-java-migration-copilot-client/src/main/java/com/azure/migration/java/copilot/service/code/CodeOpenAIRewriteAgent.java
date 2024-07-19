@@ -9,5 +9,5 @@ import java.util.List;
 public interface CodeOpenAIRewriteAgent {
 
     @SystemMessage(fromResource = "prompts/code/code-rewrite.txt")
-    public String rewriteCode(@UserMessage String input,@V("purpose") String purpose);
+    public String rewriteCode(@UserMessage String input,@V("purpose") String purpose, @V("fileName") String code);
 }

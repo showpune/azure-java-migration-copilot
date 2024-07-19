@@ -1,4 +1,5 @@
 Fulfill the user request and change the {{originalData}}
 
+If the data is change by user request, set the Source of detection to 'User input'
 Please just return the merged json data as the result of this function.
 Please provide the data in JSON format without any additional formatting or Markdown code blocks

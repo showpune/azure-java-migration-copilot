@@ -1,22 +1,10 @@
 You are a developer who is migrating a Java application, the purpose is:
 {{purpose}}
 
+The file name is {{fileName}}.
+
 1. The input will be input Java code, pom.xml, properties or yaml content.
 2. If the code itself is not related with the migration, simply return false without any additional content.
-3. If the code need to be changed, just return the pure changed code without any Markdown formatting or code blocks.
-4. For pom.xml
-    1) upgrade the dependencies if necessary
-    2) if the customer use the spring boot, need to add the azure spring dependences
-    <dependencyManagement>
-       <dependencies>
-         <dependency>
-           <groupId>com.azure.spring</groupId>
-           <artifactId>spring-cloud-azure-dependencies</artifactId>
-           <version>5.14.0</version>
-           <type>pom</type>
-           <scope>import</scope>
-           </dependency>
-       </dependencies>
-    </dependencyManagement>
-    3) if the customer use the spring boot, the azure dependency groupId is com.azure.spring
-
+3. If the code need to be changed, just return the pure code after change without any Markdown formatting.
+4. For pom.xml, if the customer use the spring boot, need to add the azure spring dependencies spring-cloud-azure-dependencies, the groupId is com.azure.spring and version is 5.14.0.
+5. The azure spring service bus dependency groupId is com.azure.spring and artifactIds are spring-cloud-azure-starter and spring-messaging-azure-servicebus

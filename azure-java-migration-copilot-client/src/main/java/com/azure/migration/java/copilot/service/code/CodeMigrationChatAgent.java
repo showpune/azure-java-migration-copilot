@@ -9,5 +9,5 @@ import java.util.List;
 public interface CodeMigrationChatAgent {
 
     @SystemMessage(fromResource = "prompts/code/code-robot.txt")
-    String chat(@UserMessage String input, @V("solutions") List<String> supportedSolutions);
+    String chat(@UserMessage String input);
 }

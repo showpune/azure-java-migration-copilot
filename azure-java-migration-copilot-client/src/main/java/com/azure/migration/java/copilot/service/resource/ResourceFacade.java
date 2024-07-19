@@ -143,9 +143,10 @@ public class ResourceFacade {
 
     private String getApplicationReport() throws IOException {
         String details = "[[Applications]]\n" + appCatTools.getApplications()
-                + "\n\n[[POM or Gradle]]\n" + getBuildFile()
+//                + "\n\n[[POM or Gradle]]\n" + getBuildFile()
                 + "\n\n[[AppCat Report]]\n" + appCatTools.getAllDetails()
-                + "\n\n[[Application Properties]]\n" + getApplicationProperties();
+//                + "\n\n[[Application Properties]]\n" + getApplicationProperties()
+                ;
         if (migrationContext.getCfManifestPath() != null && Files.exists(Path.of(migrationContext.getCfManifestPath()))) {
             details += "\n\n[[Cloud Foundry Manifest]]\n" + Files.readString(Path.of(migrationContext.getCfManifestPath()));
             details += "\n\n[[Cloud Foundry Manifest file location]]\n" + migrationContext.getCfManifestPath();

@@ -29,6 +29,13 @@ public class CodeMigrationTools {
                     "Upgrade Spring To Spring3",
                     "Apply passwordless solution",
                     "Migrate MQ to Service Bus");
+
+    public static final String SOLUTIONS_STRING= "Apply a customer selected code migration solution, the solution name must be one of:\n" +
+    		        "Upgrade JDK To 17," +
+                    "Upgrade SpringBoot To Spring3," +
+                    "Apply passwordless solution," +
+                    "Migrate MQ to Service Bus";
+
     @Autowired
     LocalCommandTools localCommandTools;
     @Autowired
@@ -48,12 +55,13 @@ public class CodeMigrationTools {
     @Autowired
     private CodeOpenAIRewriteAgent codeOpenAIRewriteAgent;
 
-    @Tool("List all the possible code migration solutions")
+    @Tool("List the code migration solutions suitable for the project and reasons for the migration.")
     private String listMigrationSolutions() throws IOException {
-        return codeMigrationAnalysisAgent.listMigrationSolutions(ALL_CODE_MIGRATION_SOLUTIONS, appCatTools.getAllDetails());
+        String analysisResult = codeMigrationAnalysisAgent.listMigrationSolutions(ALL_CODE_MIGRATION_SOLUTIONS, appCatTools.getAllDetails());
+        return "The migration solutions suitable for the project and reasons are as: \n" + analysisResult;
     }
 
-    @Tool("Apply a customer selected code migration solution ")
+    @Tool(SOLUTIONS_STRING)
     private String applyMigrationSolution(String solution) throws IOException {
         int solutionIndex = ALL_CODE_MIGRATION_SOLUTIONS.indexOf(solution);
         switch (solutionIndex) {
@@ -87,12 +95,14 @@ public class CodeMigrationTools {
                 String content = Files.readString(file.toPath());
                 terminal.println("Try to rewrite code file: " + fileString + " ...");
                 if (!Strings.isEmpty(content)){
-                    String result = codeOpenAIRewriteAgent.rewriteCode(content, purpose);
+                    String result = codeOpenAIRewriteAgent.rewriteCode(content, purpose, file.getName());
                     if (!result.equalsIgnoreCase("false")) {
                         Files.writeString(file.toPath(), result);
                         terminal.println("Rewrote code file: " + fileString  + " ...");
                     }
                 }
+            }else{
+                terminal.println("File not found: " + fileString + " ...");
             }
         }
         return true;
@@ -100,10 +110,10 @@ public class CodeMigrationTools {
 
     private @NotNull List<String> getStrings(Set<String> files) {
         String base = migrationContext.getSourceCodePath();
-
-        List<String> filesToRewrite = new ArrayList<>(files.stream().map(f -> Path.of(base, "..", f).toString()).toList());
+        List<String> filesToRewrite = new ArrayList<>();
         filesToRewrite.add((Path.of(base, "src/main/resources", "application.properties")).toString());
         filesToRewrite.add(Path.of(base, "pom.xml").toString());
+        filesToRewrite.addAll(files.stream().map(f -> Path.of(base, "..", f).toString()).toList());
         return filesToRewrite;
     }
 
