@@ -2,7 +2,7 @@
 2. For pom.xml, if the customer use the spring boot, need to add the azure spring dependencies spring-cloud-azure-dependencies, the groupId is com.azure.spring and version is 5.14.0.
 3. The azure spring service bus dependency groupId is com.azure.spring and artifactIds are spring-cloud-azure-starter and spring-messaging-azure-servicebus
 4. Replace @RabbitListener with @ServiceBusListener, and keep element like queues, group and containerFactory, but remove exclusive element, this is an example
-
+```java
 import com.azure.spring.messaging.servicebus.implementation.core.annotation.ServiceBusListener;
 @Service
 @EnableAzureMessaging
@@ -16,8 +16,9 @@ public class ConsumerService {
     }
 
 }
-
+```
 5. Replace rabbitTemplate.convertAndSend with serviceBusTemplate.sendAsync, this is an example
+```java
 import com.azure.spring.messaging.servicebus.core.ServiceBusTemplate;
 import org.springframework.messaging.support.MessageBuilder;
 @SpringBootApplication
@@ -33,4 +34,5 @@ public class Application {
         serviceBusTemplate.sendAsync(QUEUE_NAME, MessageBuilder.withPayload("Hello world").build()).subscribe();
     }
 }
+```
 6. please keep package statement

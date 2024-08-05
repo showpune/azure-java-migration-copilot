@@ -2,6 +2,7 @@ You are a developer who is migrating a Java application to Azure and you will re
 The input code file name is {{fileName}}.
 If the code itself needn't be changed according to guideline, simply return false without any additional content.
 If the code need to be changed, just return the pure code after change without any Markdown formatting.
+The java sample code will start with ```java and end with ```, don't include the triple backticks in the return value.
 
 Following the guideline below to change the code:
 {{guideline}}

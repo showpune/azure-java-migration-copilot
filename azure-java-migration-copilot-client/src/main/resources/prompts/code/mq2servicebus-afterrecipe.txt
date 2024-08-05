@@ -1,6 +1,6 @@
-You need to rewrite the code to use Azure Service Bus instead of RabbitMQ, change the code follwing below steps:
+You need to rewrite the code to use Azure Service Bus instead of RabbitMQ, change the code following below steps:
 1. Check if class com.azure.spring.messaging.servicebus.core.ServiceBusTemplate is used in the java code, If so, fix syntax error according to below sample:
-
+```java
 import com.azure.spring.messaging.servicebus.core.ServiceBusTemplate;
 import org.springframework.messaging.support.MessageBuilder;
 @SpringBootApplication
@@ -9,11 +9,12 @@ public class Application {
 
     private static final String QUEUE_NAME = "<service-bus-queue-name>";
 
-    public static void main(String[] args) {
-        ConfigurableApplicationContext applicationContext = SpringApplication.run(Application.class);
-        ServiceBusTemplate serviceBusTemplate = applicationContext.getBean(ServiceBusTemplate.class);
-        System.out.println("Sending a message to the queue.");
-        serviceBusTemplate.sendAsync(QUEUE_NAME, MessageBuilder.withPayload("Hello world").build()).subscribe();
+    private final ServiceBusTemplate serviceBusTemplate;
+
+    public void sendMessage(String message) {
+        serviceBusTemplate.sendAsync(QUEUE_NAME, MessageBuilder.withPayload(message).build()).subscribe();
     }
 }
+```
 2. please keep package statement and don't change the import statement.
+3. If the code itself needn't be changed according to guideline, simply return false without any additional content.
