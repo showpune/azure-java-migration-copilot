@@ -76,7 +76,9 @@ public class CodeMigrationTools {
                 }
                 break;
             case 3:
-                if (rewriteWithOpenAI(Set.of("azure-mq-config-amqp-101000"), "You need to rewrite the code to use Azure Service Bus instead of RabbitMQ.")) {
+                if (upgradeCodeForMavenProject("com.microsoft.azure.migration.RabbitmqToServiceBus")
+                & rewriteWithOpenAI(Set.of("azure-mq-config-amqp-101000"), "You need to rewrite the code to use Spring Messaging Azure Service Bus instead of Spring AMQP RabbitMQ."))
+                {
                     return "Success";
                 }
                 break;
@@ -112,7 +114,6 @@ public class CodeMigrationTools {
         String base = migrationContext.getSourceCodePath();
         List<String> filesToRewrite = new ArrayList<>();
         filesToRewrite.add((Path.of(base, "src/main/resources", "application.properties")).toString());
-        filesToRewrite.add(Path.of(base, "pom.xml").toString());
         filesToRewrite.addAll(files.stream().map(f -> Path.of(base, "..", f).toString()).toList());
         return filesToRewrite;
     }
@@ -123,12 +124,13 @@ public class CodeMigrationTools {
                 cmdPath.toString(),
                 "-f",
                 new File((migrationContext.getSourceCodePath())).getCanonicalPath(),
-                "org.openrewrite.maven:rewrite-maven-plugin:run",
+                "org.openrewrite.maven:rewrite-maven-plugin:5.37.0:run",
                 "-Dmaven.test.skip=true",
                 "-Drewrite.recipeArtifactCoordinates=org.openrewrite.recipe:rewrite-spring:RELEASE",
                 "-Drewrite.activeRecipes=" + recipe,
                 "--no-transfer-progress",
-                "--batch-mode"
+                "--batch-mode",
+                "-e"
         };
 
         return localCommandTools.executeCommand(List.of(commands));
