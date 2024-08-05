@@ -1,0 +1,1 @@
+1. You need to rewrite the code to use Azure Service Bus with Spring Messaging instead of RabbitMQ with Spring Messaging.

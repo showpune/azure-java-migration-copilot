@@ -64,6 +64,18 @@ class CodeMigrationToolsTest {
     @CsvSource({
             "C:\\IdeaProjects\\rabbitmq-servicebus, ai",
     })
+    void testMQtoServiceBusWithSimpleAI(String sourceCodeUrl, String method) {
+        testCodeRewrite(sourceCodeUrl,
+                method,
+                null,
+                Set.of("azure-mq-config-amqp-101000"),
+                "mq2servicebus-simpleai");
+    }
+
+    @ParameterizedTest(name = "Source Code: {0}, method {1}")
+    @CsvSource({
+            "C:\\IdeaProjects\\rabbitmq-servicebus, ai",
+    })
     void testMQtoServiceBusWithAI(String sourceCodeUrl, String method) {
         testCodeRewrite(sourceCodeUrl,
                 method,
