@@ -1,0 +1,42 @@
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: com.microsoft.azure.migration.RabbitmqToServiceBus
+displayName: Change code from rabbitmq to azure service bus
+recipeList:
+  - org.openrewrite.maven.AddManagedDependency:
+      groupId: com.azure.spring
+      artifactId: spring-cloud-azure-dependencies
+      version: 5.14.0
+      scope: import
+      type: pom
+  - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
+      oldGroupId: org.springframework.boot
+      oldArtifactId: spring-boot-starter-amqp
+      newGroupId: com.azure.spring
+      newArtifactId: spring-messaging-azure-servicebus
+  - org.openrewrite.maven.AddDependency:
+      groupId: com.azure.spring
+      artifactId: spring-cloud-azure-starter
+      version: 5.14.0
+  - org.openrewrite.java.ChangeAnnotationAttributeName:
+      annotationType: org.springframework.amqp.rabbit.annotation.RabbitListener
+      oldAttributeName: queues
+      newAttributeName: destination
+  - org.openrewrite.java.RemoveAnnotationAttribute:
+      annotationType: org.springframework.amqp.rabbit.annotation.RabbitListener
+      attributeName: exclusive
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: org.springframework.amqp.rabbit.annotation.RabbitListener
+      newFullyQualifiedTypeName: com.azure.spring.messaging.servicebus.implementation.core.annotation.ServiceBusListener
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: org.springframework.amqp.rabbit.core.RabbitTemplate
+      newFullyQualifiedTypeName: com.azure.spring.messaging.servicebus.core.ServiceBusTemplate
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: org.springframework.amqp.core.MessageBuilder
+      newFullyQualifiedTypeName: org.springframework.messaging.support.MessageBuilder
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: org.springframework.amqp.core.Message
+      newFullyQualifiedTypeName: org.springframework.messaging.Message
+
+
+      

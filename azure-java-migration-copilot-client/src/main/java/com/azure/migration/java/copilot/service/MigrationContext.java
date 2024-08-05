@@ -45,9 +45,11 @@ public class MigrationContext {
     private String appCatHome;
 
     @Getter
+    @Setter
     private String windupReportPath;
 
     @Getter
+    @Setter
     private String sourceCodePath;
 
     @Getter

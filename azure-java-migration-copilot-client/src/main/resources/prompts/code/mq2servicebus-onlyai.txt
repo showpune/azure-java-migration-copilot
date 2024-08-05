@@ -1,0 +1,36 @@
+1. You need to rewrite the code to use Azure Service Bus instead of RabbitMQ.
+2. For pom.xml, if the customer use the spring boot, need to add the azure spring dependencies spring-cloud-azure-dependencies, the groupId is com.azure.spring and version is 5.14.0.
+3. The azure spring service bus dependency groupId is com.azure.spring and artifactIds are spring-cloud-azure-starter and spring-messaging-azure-servicebus
+4. Replace @RabbitListener with @ServiceBusListener, and keep element like queues, group and containerFactory, but remove exclusive element, this is an example
+
+import com.azure.spring.messaging.servicebus.implementation.core.annotation.ServiceBusListener;
+@Service
+@EnableAzureMessaging
+public class ConsumerService {
+
+    private static final String QUEUE_NAME = "<service-bus-queue-name>";
+
+    @ServiceBusListener(destination = QUEUE_NAME)
+    public void handleMessageFromServiceBus(String message) {
+        System.out.printf("Consume message: %s%n", message);
+    }
+
+}
+
+5. Replace rabbitTemplate.convertAndSend with serviceBusTemplate.sendAsync, this is an example
+import com.azure.spring.messaging.servicebus.core.ServiceBusTemplate;
+import org.springframework.messaging.support.MessageBuilder;
+@SpringBootApplication
+@EnableAzureMessaging
+public class Application {
+
+    private static final String QUEUE_NAME = "<service-bus-queue-name>";
+
+    public static void main(String[] args) {
+        ConfigurableApplicationContext applicationContext = SpringApplication.run(Application.class);
+        ServiceBusTemplate serviceBusTemplate = applicationContext.getBean(ServiceBusTemplate.class);
+        System.out.println("Sending a message to the queue.");
+        serviceBusTemplate.sendAsync(QUEUE_NAME, MessageBuilder.withPayload("Hello world").build()).subscribe();
+    }
+}
+6. please keep package statement

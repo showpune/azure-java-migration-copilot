@@ -5,19 +5,24 @@ import com.azure.migration.java.copilot.service.LocalCommandTools;
 import com.azure.migration.java.copilot.service.MigrationContext;
 import com.azure.migration.java.copilot.service.source.AppCatTools;
 import dev.langchain4j.agent.tool.Tool;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.beryx.textio.TextTerminal;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Set;
 
 
@@ -62,7 +67,7 @@ public class CodeMigrationTools {
     }
 
     @Tool(SOLUTIONS_STRING)
-    private String applyMigrationSolution(String solution) throws IOException {
+    private String applyMigrationSolution(String solution) throws Exception {
         int solutionIndex = ALL_CODE_MIGRATION_SOLUTIONS.indexOf(solution);
         switch (solutionIndex) {
             case 0:
@@ -77,7 +82,9 @@ public class CodeMigrationTools {
                 break;
             case 3:
                 if (upgradeCodeForMavenProject("com.microsoft.azure.migration.RabbitmqToServiceBus")
-                & rewriteWithOpenAI(Set.of("azure-mq-config-amqp-101000"), "You need to rewrite the code to use Spring Messaging Azure Service Bus instead of Spring AMQP RabbitMQ."))
+                & rewriteWithOpenAI(
+                        Set.of("azure-mq-config-amqp-101000")
+                        , "mq2servicebus",false))
                 {
                     return "Success";
                 }
@@ -88,16 +95,19 @@ public class CodeMigrationTools {
         return "Failed";
     }
 
-    private boolean rewriteWithOpenAI(Set<String> ruleIds, String purpose) throws IOException {
+    public boolean rewriteWithOpenAI(Set<String> ruleIds,String specificGuideline,boolean includePom) throws IOException {
+
         Set<String> files = appCatTools.getIssuesFileList(ruleIds);
-        List<String> filesToRewrite = getStrings(files);
+        List<String> filesToRewrite = getStrings(files,includePom);
+        InputStream reader = CodeMigrationTools.class.getResourceAsStream("/prompts/code/"+specificGuideline+".txt");
+        String guideline = getText(reader);
         for (String fileString : filesToRewrite) {
             File file = new File(fileString);
             if (file.exists()) {
                 String content = Files.readString(file.toPath());
-                terminal.println("Try to rewrite code file: " + fileString + " ...");
+                terminal.println("Try to rewrite code file: " + file.getCanonicalPath() + " ...");
                 if (!Strings.isEmpty(content)){
-                    String result = codeOpenAIRewriteAgent.rewriteCode(content, purpose, file.getName());
+                    String result = codeOpenAIRewriteAgent.rewriteCode(content, file.getName(),guideline);
                     if (!result.equalsIgnoreCase("false")) {
                         Files.writeString(file.toPath(), result);
                         terminal.println("Rewrote code file: " + fileString  + " ...");
@@ -110,15 +120,36 @@ public class CodeMigrationTools {
         return true;
     }
 
-    private @NotNull List<String> getStrings(Set<String> files) {
+    private static String getText(InputStream inputStream) {
+        if (inputStream == null) {
+            return null;
+        }
+        try (Scanner scanner = new Scanner(inputStream);
+             Scanner s = scanner.useDelimiter("\\A")) {
+            return s.hasNext() ? s.next() : "";
+        }
+    }
+
+
+    private @NotNull List<String> getStrings(Set<String> files, boolean includePom) {
         String base = migrationContext.getSourceCodePath();
         List<String> filesToRewrite = new ArrayList<>();
         filesToRewrite.add((Path.of(base, "src/main/resources", "application.properties")).toString());
+        if(includePom) {
+            filesToRewrite.add((Path.of(base, "pom.xml")).toString());
+        }
         filesToRewrite.addAll(files.stream().map(f -> Path.of(base, "..", f).toString()).toList());
         return filesToRewrite;
     }
 
-    public boolean upgradeCodeForMavenProject(String recipe) throws IOException {
+    public boolean upgradeCodeForMavenProject(String recipe) throws Exception {
+        // if recipe name is com.microsoft.azure.migration.RabbitmqToServiceBus, return RabbitmqToServiceBus
+        if(StringUtils.isEmpty(recipe)){
+            return true;
+        }
+        String fileName = recipe.substring(recipe.lastIndexOf('.') + 1)+".yml";
+        //reource the path file as the resource stream /recipe/fileName
+        File recipeFile = new File(CodeMigrationTools.class.getResource("/recipe/"+fileName).toURI());
         Path cmdPath = Path.of(mvnHome, "bin", "mvn");
         String[] commands = {
                 cmdPath.toString(),
@@ -128,6 +159,7 @@ public class CodeMigrationTools {
                 "-Dmaven.test.skip=true",
                 "-Drewrite.recipeArtifactCoordinates=org.openrewrite.recipe:rewrite-spring:RELEASE",
                 "-Drewrite.activeRecipes=" + recipe,
+                "-Drewrite.configLocation=" + recipeFile.getCanonicalPath(),
                 "--no-transfer-progress",
                 "--batch-mode",
                 "-e"

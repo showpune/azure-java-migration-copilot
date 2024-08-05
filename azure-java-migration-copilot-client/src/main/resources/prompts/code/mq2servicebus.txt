@@ -1,0 +1,18 @@
+
+You are fixing the java code issue migrating from RabbitMQ using Spring Messaging to Azure Service Bus using Spring Messaging, change the input code only if below conditions are met:
+1. class com.azure.spring.messaging.servicebus.core.ServiceBusTemplate is used in the java code, if so, check if there is any syntax error from class ServiceBusTemplate, fix them according to below sample:
+import com.azure.spring.messaging.servicebus.core.ServiceBusTemplate;
+import org.springframework.messaging.support.MessageBuilder;
+@SpringBootApplication
+@EnableAzureMessaging
+public class Application {
+
+    private static final String QUEUE_NAME = "<service-bus-queue-name>";
+
+    public static void main(String[] args) {
+        ConfigurableApplicationContext applicationContext = SpringApplication.run(Application.class);
+        ServiceBusTemplate serviceBusTemplate = applicationContext.getBean(ServiceBusTemplate.class);
+        System.out.println("Sending a message to the queue.");
+        serviceBusTemplate.sendAsync(QUEUE_NAME, MessageBuilder.withPayload("Hello world").build()).subscribe();
+    }
+}

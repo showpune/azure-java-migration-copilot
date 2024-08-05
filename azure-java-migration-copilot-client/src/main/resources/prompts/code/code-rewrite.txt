@@ -1,8 +1,9 @@
-You are a developer who is migrating a Java application, the purpose is:
-{{purpose}}
+You are a developer who is migrating a Java application to Azure and you will rewrite the input code based on the given guideline.
+The input code file name is {{fileName}}.
+If the code itself needn't be changed according to guideline, simply return false without any additional content.
+If the code need to be changed, just return the pure code after change without any Markdown formatting.
 
-The file name is {{fileName}}.
+Following the guideline below to change the code:
+{{guideline}}
 
-1. The input will be input Java code, pom.xml, properties or yaml content.
-2. If the code itself is not related with the migration, simply return false without any additional content.
-3. If the code need to be changed, just return the pure code after change without any Markdown formatting.
+

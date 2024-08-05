@@ -26,7 +26,7 @@ public class CodeMigrationConfigure {
     }
 
     @Bean
-    CodeMigrationChatAgent codeMigrationChatAgent(ChatLanguageModel chatLanguageModel, ContentRetriever contentRetriever, CodeMigrationTools codeMigrationTools) {
+    CodeMigrationChatAgent codeMigrationChatAgent(ChatLanguageModel chatLanguageModel,CodeMigrationTools codeMigrationTools) {
         return AiServices.builder(CodeMigrationChatAgent.class)
                 .chatLanguageModel(chatLanguageModel)
                 .tools(codeMigrationTools)
