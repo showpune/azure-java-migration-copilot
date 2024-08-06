@@ -20,6 +20,7 @@ class CodeMigrationToolsTest {
     private static final String AZURE_OPENAI_KEY = System.getenv("AZURE_OPENAI_KEY");
     private static final String AZURE_OPENAI_ENDPOINT = System.getenv("AZURE_OPENAI_ENDPOINT");
     private static final String AZURE_DEPLOYMENT_NAME = System.getenv("AZURE_DEPLOYMENT_NAME");
+    private static final String SOURCE_CODE_PATH = "C:\\IdeaProjects\\rabbitmq-servicebus";
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
             .withConfiguration(AutoConfigurations.of(AutoConfig.class))
             .withConfiguration(AutoConfigurations.of(CodeMigrationConfigure.class))
@@ -60,47 +61,47 @@ class CodeMigrationToolsTest {
                 });
     }
 
-    @ParameterizedTest(name = "Source Code: {0}, method {1}")
+    @ParameterizedTest(name = "method {0}")
     @CsvSource({
-            "C:\\IdeaProjects\\rabbitmq-servicebus, ai",
+            "ai",
     })
-    void testMQtoServiceBusWithSimpleAI(String sourceCodeUrl, String method) {
-        testCodeRewrite(sourceCodeUrl,
+    void testMQtoServiceBusWithSimpleAI(String method) {
+        testCodeRewrite(SOURCE_CODE_PATH,
                 method,
                 null,
                 Set.of("azure-mq-config-amqp-101000"),
                 "mq2servicebus-simpleai");
     }
 
-    @ParameterizedTest(name = "Source Code: {0}, method {1}")
+    @ParameterizedTest(name = "method {0}")
     @CsvSource({
-            "C:\\IdeaProjects\\rabbitmq-servicebus, ai",
+            "ai",
     })
-    void testMQtoServiceBusWithAI(String sourceCodeUrl, String method) {
-        testCodeRewrite(sourceCodeUrl,
+    void testMQtoServiceBusWithAI(String method) {
+        testCodeRewrite(SOURCE_CODE_PATH,
                 method,
                 null,
                 Set.of("azure-mq-config-amqp-101000"),
                 "mq2servicebus-onlyai");
     }
 
-    @ParameterizedTest(name = "Source Code: {0}, method {1}")
+    @ParameterizedTest(name = "method {0}")
     @CsvSource({
-            "C:\\IdeaProjects\\rabbitmq-servicebus,recipe",
+            "recipe",
     })
-    void testMQtoServiceBusWithRecipe(String sourceCodeUrl,  String method) {
-        testCodeRewrite(sourceCodeUrl,
+    void testMQtoServiceBusWithRecipe(String method) {
+        testCodeRewrite(SOURCE_CODE_PATH,
                 method,
                 "com.microsoft.azure.migration.RabbitmqToServiceBus",
                 null,
                 "");
     }
-    @ParameterizedTest(name = "Source Code: {0}, method {1}")
+    @ParameterizedTest(name = "method {0}")
     @CsvSource({
-            "C:\\IdeaProjects\\rabbitmq-servicebus,ai|recipe",
+            "recipe|ai",
     })
-    void testMQtoServiceBusWithAIRecipe(String sourceCodeUrl, String method) {
-        testCodeRewrite(sourceCodeUrl,
+    void testMQtoServiceBusWithRecipeAI(String method) {
+        testCodeRewrite(SOURCE_CODE_PATH,
                 method,
                 "com.microsoft.azure.migration.RabbitmqToServiceBus",
                 Set.of("azure-mq-config-amqp-101000"),
