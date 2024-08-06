@@ -84,7 +84,7 @@ public class CodeMigrationTools {
                 if (upgradeCodeForMavenProject("com.microsoft.azure.migration.RabbitmqToServiceBus")
                 & rewriteWithOpenAI(
                         Set.of("azure-mq-config-amqp-101000")
-                        , "mq2servicebus",false))
+                        , "mq2servicebus-afterrecipe",false))
                 {
                     return "Success";
                 }
