@@ -28,9 +28,6 @@ recipeList:
   - org.openrewrite.java.ChangeType:
       oldFullyQualifiedTypeName: org.springframework.amqp.rabbit.annotation.RabbitListener
       newFullyQualifiedTypeName: com.azure.spring.messaging.servicebus.implementation.core.annotation.ServiceBusListener
-  - org.openrewrite.java.ChangeMethodName:
-      methodPattern: org.springframework.amqp.rabbit.core.RabbitTemplate convertAndSend(..)
-      newMethodName: send
   - org.openrewrite.java.ChangeType:
       oldFullyQualifiedTypeName: org.springframework.amqp.rabbit.core.RabbitTemplate
       newFullyQualifiedTypeName: com.azure.spring.messaging.servicebus.core.ServiceBusTemplate
