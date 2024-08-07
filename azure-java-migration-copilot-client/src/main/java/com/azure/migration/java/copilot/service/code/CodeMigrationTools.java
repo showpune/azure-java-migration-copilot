@@ -155,7 +155,7 @@ public class CodeMigrationTools {
                 cmdPath.toString(),
                 "-f",
                 new File((migrationContext.getSourceCodePath())).getCanonicalPath(),
-                "org.openrewrite.maven:rewrite-maven-plugin:5.37.0:run",
+                "org.openrewrite.maven:rewrite-maven-plugin:5.37.1:run",
                 "-Dmaven.test.skip=true",
                 "-Drewrite.recipeArtifactCoordinates=org.openrewrite.recipe:rewrite-spring:RELEASE",
                 "-Drewrite.activeRecipes=" + recipe,
