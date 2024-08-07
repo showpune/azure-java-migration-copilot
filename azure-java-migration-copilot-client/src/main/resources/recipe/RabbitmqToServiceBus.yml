@@ -18,10 +18,24 @@ recipeList:
       groupId: com.azure.spring
       artifactId: spring-cloud-azure-starter
       version: 5.14.0
+  - org.openrewrite.java.spring.AddSpringProperty:
+      property: spring.cloud.azure.servicebus.entity-type
+      value: queue
+      pathExpressions: ["**/application.properties"]
+  - org.openrewrite.java.spring.AddSpringProperty:
+      property: spring.cloud.azure.servicebus.namespace
+      value: <service-bus-namespace-name>
+      pathExpressions: ["**/application.properties"]
   - org.openrewrite.java.ChangeAnnotationAttributeName:
       annotationType: org.springframework.amqp.rabbit.annotation.RabbitListener
       oldAttributeName: queues
       newAttributeName: destination
+  - org.openrewrite.java.RemoveAnnotationAttribute:
+      annotationType: org.springframework.amqp.rabbit.annotation.RabbitListener
+      attributeName: group
+  - org.openrewrite.java.RemoveAnnotationAttribute:
+      annotationType: org.springframework.amqp.rabbit.annotation.RabbitListener
+      attributeName: containerFactory
   - org.openrewrite.java.RemoveAnnotationAttribute:
       annotationType: org.springframework.amqp.rabbit.annotation.RabbitListener
       attributeName: exclusive
