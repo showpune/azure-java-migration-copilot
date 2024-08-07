@@ -11,19 +11,14 @@ import org.beryx.textio.TextTerminal;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 
 
 @Component
@@ -67,7 +62,7 @@ public class CodeMigrationTools {
     }
 
     @Tool(SOLUTIONS_STRING)
-    private String applyMigrationSolution(String solution) throws Exception {
+    public String applyMigrationSolution(String solution) throws Exception {
         int solutionIndex = ALL_CODE_MIGRATION_SOLUTIONS.indexOf(solution);
         switch (solutionIndex) {
             case 0:
@@ -83,7 +78,7 @@ public class CodeMigrationTools {
             case 3:
                 if (upgradeCodeForMavenProject("com.microsoft.azure.migration.RabbitmqToServiceBus")
                 & rewriteWithOpenAI(
-                        Set.of("azure-mq-config-amqp-101000")
+                        Set.of("azure-message-queue-amqp-01000")
                         , "mq2servicebus-afterrecipe",false))
                 {
                     return "Success";
@@ -149,7 +144,12 @@ public class CodeMigrationTools {
         }
         String fileName = recipe.substring(recipe.lastIndexOf('.') + 1)+".yml";
         //reource the path file as the resource stream /recipe/fileName
-        File recipeFile = new File(CodeMigrationTools.class.getResource("/recipe/"+fileName).toURI());
+        File recipeFile = File.createTempFile("recipe-" + fileName, ".yml");
+        if(recipeFile.exists()){
+            recipeFile.delete();
+        }
+        Files.copy(Objects.requireNonNull(CodeMigrationTools.class.getResourceAsStream("/recipe/" + fileName)), recipeFile.toPath());
+//        File recipeFile = new File(CodeMigrationTools.class.getResource("/recipe/"+fileName).toURI());
         Path cmdPath = Path.of(mvnHome, "bin", "mvn");
         String[] commands = {
                 cmdPath.toString(),

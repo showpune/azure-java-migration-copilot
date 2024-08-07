@@ -106,28 +106,14 @@ public class MigrationContext {
                 terminal.println("Skip rebuild the report because find report and manifest.yml under: " + basePath);
             } else {
                 if (baseFile.exists()) {
-                    terminal.print(Ansi.ansi().bold().a("\nThe report already exists, do you want to delete it and rebuild the report?").reset().toString());
-                    String text = textIO.newStringInputReader().withDefaultValue("N").read("");
-                    if(text.equalsIgnoreCase("Y")) {
-                        baseFile.delete();
-                        needScan=true;
-                    }else {
-                        needScan=false;
-                    }
-                }else{
-                    needScan=true;
+                    baseFile.delete();
                 }
+                needScan = true;
             }
 
             if(needScan) {
-                terminal.print("Start to scan the source code with AppCat and Cloud Foundary manifest.yml, it will take some time, continue?");
-                String text = textIO.newStringInputReader().withDefaultValue("N").read("/>");
-                if(text.equalsIgnoreCase("Y")) {
-                    scanCodeWithAppCat();
-                    scanCFManifest();
-                }else{
-                    break;
-                }
+                scanCodeWithAppCat();
+                scanCFManifest();
             }
             initSuccess.set(true);
         }

@@ -43,6 +43,15 @@ public class MigrationCopilotApplication {
 
             migrationContext.init(args);
 
+            if (args.containsOption("codemigration")) {
+                String codeMigrationSolution = args.getOptionValues("codemigration").get(0);
+                terminal.println("Execute Migration Solution: " + codeMigrationSolution);
+                of("code " + codeMigrationSolution).ifPresentOrElse(
+                        cmd -> cmd.execute("execute " + codeMigrationSolution),
+                        () -> terminal.println(error("Unrecognized command: " + "code " + codeMigrationSolution)));
+                return;
+            }
+
             String hint = serviceFacade.recommendService();
 
             loop(

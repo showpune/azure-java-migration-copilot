@@ -24,18 +24,31 @@ public class CodeCommand implements MigrationCommand {
     @Autowired
     private CodeMigrationChatAgent codeMigrationChatAgent;
 
+    @Autowired
+    private CodeMigrationTools codeMigrationTools;
+
     @Override
     public void execute(String commandText) {
-        if(Strings.isEmpty(commandText) || commandText.equals("help")) {
-            commandText = "list migration solutions";
+        if (Strings.isEmpty(commandText) || commandText.startsWith("execute")) {
+            String solution = MigrationCommand.restOfCommand(commandText);
+            try {
+                codeMigrationTools.applyMigrationSolution(solution);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+
+            if (Strings.isEmpty(commandText) || commandText.equals("help")) {
+                commandText = "list migration solutions";
+            }
+            String hint = codeMigrationChatAgent.chat(commandText);
+            loop(
+                    ConsoleContext.builder().hint(answer(hint)).prompt("/code>").defaultValue("done").terminal(terminal).textIO(textIO).build(),
+                    ConsoleContext::exited,
+                    input -> {
+                        terminal.println(answer(codeMigrationChatAgent.chat(input)));
+                    }
+            );
         }
-        String hint = codeMigrationChatAgent.chat(commandText);
-        loop(
-                ConsoleContext.builder().hint(answer(hint)).prompt("/code>").defaultValue("done").terminal(terminal).textIO(textIO).build(),
-                ConsoleContext::exited,
-                input -> {
-                    terminal.println(answer(codeMigrationChatAgent.chat(input)));
-                }
-        );
     }
 }
