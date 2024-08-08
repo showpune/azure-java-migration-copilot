@@ -13,5 +13,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Make build script executable
+        run: chmod +x ./azure-java-migration-copilot-client/build.sh
+
       - name: Run build script
         run: ./azure-java-migration-copilot-client/build.sh
