@@ -1,3 +1,4 @@
 export CODE_DIR=/mnt/c/IdeaProjects/rabbitmq-servicebus
 export FORCE=
-docker run -v "/tmp:/tmp" -v "$CODE_DIR:/code" --env-file env.list showpune/azure-migration-copilot:latest  "--codemigration=Migrate MQ to Service Bus" "$FORCE"
+export RUNTIME=podman
+$RUNTIME run -v "/tmp:/tmp" -v "$CODE_DIR:/code" --env-file env.list showpune/azure-migration-copilot:latest  "--codemigration=Migrate MQ to Service Bus" "$FORCE"
