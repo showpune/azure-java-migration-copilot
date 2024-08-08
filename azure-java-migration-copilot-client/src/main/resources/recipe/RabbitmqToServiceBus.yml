@@ -46,6 +46,9 @@ recipeList:
       oldFullyQualifiedTypeName: org.springframework.amqp.rabbit.core.RabbitTemplate
       newFullyQualifiedTypeName: com.azure.spring.messaging.servicebus.core.ServiceBusTemplate
   - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: org.springframework.amqp.core.AmqpTemplate
+      newFullyQualifiedTypeName: com.azure.spring.messaging.servicebus.core.ServiceBusTemplate
+  - org.openrewrite.java.ChangeType:
       oldFullyQualifiedTypeName: org.springframework.amqp.core.MessageBuilder
       newFullyQualifiedTypeName: org.springframework.messaging.support.MessageBuilder
   - org.openrewrite.java.ChangeType:
