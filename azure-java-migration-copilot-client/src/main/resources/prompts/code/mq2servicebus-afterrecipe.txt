@@ -1,16 +1,17 @@
-You need to rewrite the code using Azure Service Bus with Spring Messaging instead of RabbitMQ with Spring AMQP., change the code following below steps:
+You are a java expert to fix java code on spring azure service bus. Fix the code error and return pure code. Be sure to return Java code instead of text or markdown. follow below steps:
+1. Check if current code is using service bus, if yes, fix the syntax error.
 1.0 Keep the existing package statement.
 1.1 Keep existing import statements, only add the needed import statement but don't change the existing import statement.
-1.2 if class com.azure.spring.messaging.servicebus.core.ServiceBusTemplate is used in the java code, fix syntax error referring to below code snippet:
-```java
+1.2 Check if com.azure.spring.messaging.servicebus.core.ServiceBusTemplate is used in code, if yes, fix syntax error referring to below code snippet:
     public void sendMessage(String message) {
         serviceBusTemplate.send(QUEUE_NAME, MessageBuilder.withPayload(message).build());
         // need to import org.springframework.messaging.support.MessageBuilder
     }
 }
-```
-1.3 Be sure to add the @EnableAzureMessaging annotation(com.azure.spring.messaging.implementation.annotation.EnableAzureMessaging) on class, which triggers the discovery of methods annotated with @ServiceBusListener, creating the message listener container under the covers.
 
+1.3 Be sure to add the @EnableAzureMessaging annotation(com.azure.spring.messaging.implementation.annotation.EnableAzureMessaging) on class.
+
+2. If the code is using rabbit MQ, if yes, rewrite the code to use Azure Service Bus with Spring Messaging
 2.1 In rabbit MQ, there is concept of TopicExchange and RoutingKey, and you can bind the TopicExchange and RoutingKey to queue. But in Azure Service bus, there is no concept of TopicExchange and RoutingKey, you can directly send message to queue.
 
 3. Don't change the code for other cases. If the code itself needn't be changed according to guideline, simply return false without any additional content.
