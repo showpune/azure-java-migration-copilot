@@ -129,7 +129,6 @@ public class CodeMigrationTools {
     private @NotNull List<String> getStrings(Set<String> files, boolean includePom) {
         String base = migrationContext.getSourceCodePath();
         List<String> filesToRewrite = new ArrayList<>();
-        filesToRewrite.add((Path.of(base, "src/main/resources", "application.properties")).toString());
         if(includePom) {
             filesToRewrite.add((Path.of(base, "pom.xml")).toString());
         }
